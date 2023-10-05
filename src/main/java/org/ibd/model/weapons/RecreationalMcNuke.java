@@ -1,8 +1,16 @@
 package org.ibd.model.weapons;
 
-public class RecreationalMcNuke extends Explosive{
+import jakarta.persistence.*;
 
-    public RecreationalMcNuke(Integer Id, String manufacturer, String name, Float price, Integer power) {
-        super(Id, manufacturer, name, price, power);
+@Entity
+@DiscriminatorColumn(name = "type")
+@DiscriminatorValue("McNuke:D")
+@Access(AccessType.FIELD)
+public class RecreationalMcNuke extends Explosive {
+    public RecreationalMcNuke() {
+    }
+
+    public RecreationalMcNuke(String manufacturer, String name, Float price, Integer power) {
+        super(manufacturer, name, price, power);
     }
 }

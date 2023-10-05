@@ -1,10 +1,23 @@
 package org.ibd.model.weapons;
 
-public class Explosive extends Weapon{
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
+@Access(AccessType.FIELD)
+public abstract class Explosive extends Weapon {
+    @NotNull
+    @Min(0)
     private Integer power;
 
-    public Explosive(Integer Id, String manufacturer, String name, Float price, Integer power) {
-        super(Id, manufacturer, name, price);
+    public Explosive() {
+    }
+
+    public Explosive(String manufacturer, String name, Float price, Integer power) {
+        super(manufacturer, name, price);
         this.power = power;
     }
 

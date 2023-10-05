@@ -1,12 +1,22 @@
 package org.ibd.model.weapons;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.ibd.model.enums.GrenadeType;
 
-public class HandGrenade extends Explosive{
+@Entity
+@DiscriminatorColumn(name = "type")
+@DiscriminatorValue("hAnDgReNaDe")
+@Access(AccessType.FIELD)
+public class HandGrenade extends Explosive {
+    @NotNull
     private GrenadeType type;
 
-    public HandGrenade(Integer Id, String manufacturer, String name, Float price, Integer power, GrenadeType type) {
-        super(Id, manufacturer, name, price, power);
+    public HandGrenade() {
+    }
+
+    public HandGrenade(String manufacturer, String name, Float price, Integer power, GrenadeType type) {
+        super(manufacturer, name, price, power);
         this.type = type;
     }
 

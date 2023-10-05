@@ -1,8 +1,16 @@
 package org.ibd.model.weapons;
 
-public class Pistol extends Firearm {
+import jakarta.persistence.*;
 
-    public Pistol(Integer Id, String manufacturer, String name, Float price, String caliber) {
-        super(Id, manufacturer, name, price, caliber);
+@Entity
+@DiscriminatorColumn(name = "type")
+@DiscriminatorValue("pIsToL")
+@Access(AccessType.FIELD)
+public class Pistol extends Firearm {
+    public Pistol() {
+    }
+
+    public Pistol(String manufacturer, String name, Float price, String caliber) {
+        super(manufacturer, name, price, caliber);
     }
 }

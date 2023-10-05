@@ -1,20 +1,42 @@
 package org.ibd.model.weapons;
 
-public class Weapon {
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
-    private final Integer Id;
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
+@Access(AccessType.FIELD)
+public abstract class Weapon {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long Id;
+
+    @NotNull
+    @NotEmpty
     private String manufacturer;
+    @NotNull
+    @NotEmpty
     private String name;
+
+    @NotNull
+    @Min(0)
     private Float price;
 
-    public Weapon(Integer Id, String manufacturer, String name, Float price) {
-        this.Id = Id;
+    public Weapon() {
+
+    }
+
+    public Weapon(String manufacturer, String name, Float price) {
         this.manufacturer = manufacturer;
         this.name = name;
         this.price = price;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return Id;
     }
 

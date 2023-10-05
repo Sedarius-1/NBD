@@ -2,10 +2,10 @@ package org.ibd.repository;
 
 import jakarta.persistence.EntityManager;
 
-public class WeaponRepository {
+public class PurchaseRepository {
     EntityManager entityManager;
 
-    public WeaponRepository(EntityManager entityManager) {
+    public PurchaseRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 }

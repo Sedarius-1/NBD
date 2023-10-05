@@ -1,10 +1,23 @@
 package org.ibd.model.weapons;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@DiscriminatorColumn(name = "type")
+@DiscriminatorValue("rIfEl")
+@Access(AccessType.FIELD)
 public class Rifle extends Firearm {
+    @NotNull
+    @Min(0)
     private Float length;
 
-    public Rifle(Integer Id, String manufacturer, String name, Float price, String caliber, Float length) {
-        super(Id, manufacturer, name, price, caliber);
+    public Rifle() {
+    }
+
+    public Rifle(String manufacturer, String name, Float price, String caliber, Float length) {
+        super(manufacturer, name, price, caliber);
         this.length = length;
     }
 
