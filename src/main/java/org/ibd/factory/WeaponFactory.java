@@ -24,7 +24,7 @@ public class WeaponFactory {
         try {
             price = Float.valueOf(params.get("price"));
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.toString());
             return null;
         }
 
@@ -39,7 +39,7 @@ public class WeaponFactory {
                     Float length = Float.valueOf(params.get("length"));
                     return (T) new Rifle(manufacturer, name, price, caliber, length);
                 } catch (Exception ex) {
-                    logger.error(ex.getMessage());
+                    logger.error(ex.toString());
                     return null;
                 }
             }
@@ -52,7 +52,7 @@ public class WeaponFactory {
                     String caliber = params.get("caliber");
                     return (T) new Pistol(manufacturer, name, price, caliber);
                 } catch (Exception ex) {
-                    logger.error(ex.getMessage());
+                    logger.error(ex.toString());
                     return null;
                 }
             }
@@ -65,7 +65,7 @@ public class WeaponFactory {
                     Integer power = Integer.valueOf(params.get("power"));
                     return (T) new RecreationalMcNuke(manufacturer, name, price, power);
                 } catch (Exception ex) {
-                    logger.error(ex.getMessage());
+                    logger.error(ex.toString());
                     return null;
                 }
             }
@@ -79,7 +79,7 @@ public class WeaponFactory {
                     GrenadeType grenadeType = GrenadeType.valueOf(params.get("grenadeType"));
                     return (T) new HandGrenade(manufacturer, name, price, power, grenadeType);
                 } catch (Exception ex) {
-                    logger.error(ex.getMessage());
+                    logger.error(ex.toString());
                     return null;
                 }
             }
