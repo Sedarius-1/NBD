@@ -9,7 +9,8 @@ public class RecreationalMcNuke extends Explosive {
     public RecreationalMcNuke() {
     }
 
-    public RecreationalMcNuke(String manufacturer, String name, Float price, Integer power) {
-        super(manufacturer, name, price, power);
+
+    public RecreationalMcNuke(Long serialNumber, String manufacturer, String name, Float price, Integer power) {
+        super(serialNumber, manufacturer, name, price, power);
     }
 }

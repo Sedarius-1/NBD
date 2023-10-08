@@ -16,8 +16,8 @@ public abstract class Firearm extends Weapon {
     public Firearm() {
     }
 
-    public Firearm(String manufacturer, String name, Float price, String caliber) {
-        super(manufacturer, name, price);
+    public Firearm(Long serialNumber, String manufacturer, String name, Float price, String caliber) {
+        super(serialNumber, manufacturer, name, price);
         this.caliber = caliber;
     }
 

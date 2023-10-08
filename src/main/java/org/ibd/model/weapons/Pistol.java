@@ -9,7 +9,7 @@ public class Pistol extends Firearm {
     public Pistol() {
     }
 
-    public Pistol(String manufacturer, String name, Float price, String caliber) {
-        super(manufacturer, name, price, caliber);
+    public Pistol(Long serialNumber, String manufacturer, String name, Float price, String caliber) {
+        super(serialNumber, manufacturer, name, price, caliber);
     }
 }

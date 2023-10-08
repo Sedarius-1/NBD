@@ -18,6 +18,13 @@ public class WeaponFactory {
             logger.error("Too few arguments for any kind of weapon!");
             return null;
         }
+        Long serialNumber;
+        try {
+            serialNumber = Long.valueOf(params.get("serialNumber"));
+        } catch (Exception ex) {
+            logger.error(ex.toString());
+            return null;
+        }
         String manufacturer = params.get("manufacturer");
         String name = params.get("name");
         Float price;
@@ -37,7 +44,7 @@ public class WeaponFactory {
                 try {
                     String caliber = params.get("caliber");
                     Float length = Float.valueOf(params.get("length"));
-                    return (T) new Rifle(manufacturer, name, price, caliber, length);
+                    return (T) new Rifle(serialNumber, manufacturer, name, price, caliber, length);
                 } catch (Exception ex) {
                     logger.error(ex.toString());
                     return null;
@@ -50,7 +57,7 @@ public class WeaponFactory {
                 }
                 try {
                     String caliber = params.get("caliber");
-                    return (T) new Pistol(manufacturer, name, price, caliber);
+                    return (T) new Pistol(serialNumber, manufacturer, name, price, caliber);
                 } catch (Exception ex) {
                     logger.error(ex.toString());
                     return null;
@@ -63,7 +70,7 @@ public class WeaponFactory {
                 }
                 try {
                     Integer power = Integer.valueOf(params.get("power"));
-                    return (T) new RecreationalMcNuke(manufacturer, name, price, power);
+                    return (T) new RecreationalMcNuke(serialNumber, manufacturer, name, price, power);
                 } catch (Exception ex) {
                     logger.error(ex.toString());
                     return null;
@@ -77,7 +84,7 @@ public class WeaponFactory {
                 try {
                     Integer power = Integer.valueOf(params.get("power"));
                     GrenadeType grenadeType = GrenadeType.valueOf(params.get("grenadeType"));
-                    return (T) new HandGrenade(manufacturer, name, price, power, grenadeType);
+                    return (T) new HandGrenade(serialNumber, manufacturer, name, price, power, grenadeType);
                 } catch (Exception ex) {
                     logger.error(ex.toString());
                     return null;

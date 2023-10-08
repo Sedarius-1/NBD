@@ -51,8 +51,8 @@ public class Client {
     @Column(name = "birth")
     private LocalDate birth;
     @NotNull
-    @OneToMany
-    @JoinColumn(name = "weaponId")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn
     @Fetch(FetchMode.JOIN)
     private Set<Purchase> purchaseSet;
 

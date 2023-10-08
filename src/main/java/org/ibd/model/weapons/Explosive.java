@@ -16,8 +16,8 @@ public abstract class Explosive extends Weapon {
     public Explosive() {
     }
 
-    public Explosive(String manufacturer, String name, Float price, Integer power) {
-        super(manufacturer, name, price);
+    public Explosive(Long serialNumber, String manufacturer, String name, Float price, Integer power) {
+        super(serialNumber, manufacturer, name, price);
         this.power = power;
     }
 

@@ -15,8 +15,8 @@ public class HandGrenade extends Explosive {
     public HandGrenade() {
     }
 
-    public HandGrenade(String manufacturer, String name, Float price, Integer power, GrenadeType type) {
-        super(manufacturer, name, price, power);
+    public HandGrenade(Long serialNumber, String manufacturer, String name, Float price, Integer power, GrenadeType type) {
+        super(serialNumber, manufacturer, name, price, power);
         this.type = type;
     }
 

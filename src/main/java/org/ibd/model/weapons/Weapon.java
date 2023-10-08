@@ -15,11 +15,12 @@ public abstract class Weapon {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long Id;
+    private Long id;
 
     @NotNull
     @NotEmpty
-    private Long weaponId;
+    @Column(name = "serialNumber")
+    private Long serialNumber;
 
     @NotNull
     @NotEmpty
@@ -39,14 +40,19 @@ public abstract class Weapon {
 
     }
 
-    public Weapon(String manufacturer, String name, Float price) {
+    public Weapon(Long serialNumber, String manufacturer, String name, Float price) {
+        this.serialNumber = serialNumber;
         this.manufacturer = manufacturer;
         this.name = name;
         this.price = price;
     }
 
     public Long getId() {
-        return Id;
+        return id;
+    }
+
+    public Long getSerialNumber() {
+        return serialNumber;
     }
 
     public String getManufacturer() {

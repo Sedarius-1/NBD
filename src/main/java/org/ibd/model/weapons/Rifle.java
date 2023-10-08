@@ -16,10 +16,11 @@ public class Rifle extends Firearm {
     public Rifle() {
     }
 
-    public Rifle(String manufacturer, String name, Float price, String caliber, Float length) {
-        super(manufacturer, name, price, caliber);
+    public Rifle(Long serialNumber, String manufacturer, String name, Float price, String caliber, Float length) {
+        super(serialNumber, manufacturer, name, price, caliber);
         this.length = length;
     }
+
 
     public Float getLength() {
         return length;

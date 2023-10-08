@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.ibd.model.clients.Client;
 import org.ibd.model.weapons.Weapon;
 
 @Entity
@@ -22,11 +23,11 @@ public class Purchase {
     private Long purchaseId;
     @NotNull
     @NotEmpty
-    @Column(name = "Id")
-    private Long clientId;
+    @ManyToOne
+    private Client client;
     @NotNull
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn
     private Weapon weapon;
     @NotNull
     @Min(0)

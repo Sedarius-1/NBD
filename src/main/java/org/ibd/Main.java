@@ -11,6 +11,6 @@ public class Main {
         System.out.println("McDuck gun&fun shop");
         GunShop gunShop = new GunShop();
         Client client = new Client(0L, "Joe", "Ligma", "Uć", LocalDate.of(2000, 10, 1));
-        gunShop.clientRepository.addClient(client);
+        //gunShop.clientRepository.addClient(client);
     }
 }
