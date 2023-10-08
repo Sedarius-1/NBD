@@ -3,7 +3,6 @@ package org.ibd.model.weapons;
 import jakarta.persistence.*;
 
 @Entity
-@DiscriminatorColumn(name = "type")
 @DiscriminatorValue("McNuke:D")
 @Access(AccessType.FIELD)
 public class RecreationalMcNuke extends Explosive {

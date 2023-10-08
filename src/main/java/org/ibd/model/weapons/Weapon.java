@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "Weapon")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 @Access(AccessType.FIELD)
@@ -13,17 +14,25 @@ public abstract class Weapon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long Id;
 
     @NotNull
     @NotEmpty
+    private Long weaponId;
+
+    @NotNull
+    @NotEmpty
+    @Column(name = "manufacturer")
     private String manufacturer;
     @NotNull
     @NotEmpty
+    @Column(name = "name")
     private String name;
 
     @NotNull
     @Min(0)
+    @Column(name = "price")
     private Float price;
 
     public Weapon() {

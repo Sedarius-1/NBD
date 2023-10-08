@@ -6,11 +6,11 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type")
 @Access(AccessType.FIELD)
 public abstract class Explosive extends Weapon {
     @NotNull
     @Min(0)
+    @Column(name = "power")
     private Integer power;
 
     public Explosive() {

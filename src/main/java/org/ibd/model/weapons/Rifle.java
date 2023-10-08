@@ -5,12 +5,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@DiscriminatorColumn(name = "type")
 @DiscriminatorValue("rIfEl")
 @Access(AccessType.FIELD)
 public class Rifle extends Firearm {
     @NotNull
     @Min(0)
+    @Column(name = "length")
     private Float length;
 
     public Rifle() {

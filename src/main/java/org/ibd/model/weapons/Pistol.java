@@ -3,7 +3,6 @@ package org.ibd.model.weapons;
 import jakarta.persistence.*;
 
 @Entity
-@DiscriminatorColumn(name = "type")
 @DiscriminatorValue("pIsToL")
 @Access(AccessType.FIELD)
 public class Pistol extends Firearm {

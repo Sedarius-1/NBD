@@ -9,17 +9,27 @@ import org.hibernate.annotations.FetchMode;
 import org.ibd.model.weapons.Weapon;
 
 @Entity
+@Table(name = "Purchase")
 public class Purchase {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @NotNull
     @NotEmpty
-    private Long client;
+    @Column(name = "purchaseId")
+    private Long purchaseId;
     @NotNull
-    @OneToOne(mappedBy = "Id")
+    @NotEmpty
+    @Column(name = "Id")
+    private Long clientId;
+    @NotNull
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Id")
     private Weapon weapon;
     @NotNull
     @Min(0)
+    @Column(name = "price")
     private Float price;
 }

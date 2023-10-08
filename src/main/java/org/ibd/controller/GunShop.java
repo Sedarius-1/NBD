@@ -11,7 +11,7 @@ import org.ibd.repository.WeaponRepository;
 
 public class GunShop {
     EntityManager entityManager;
-    ClientRepository clientRepository;
+    public ClientRepository clientRepository; //TODO: privete this
     PurchaseRepository purchaseRepository;
     WeaponRepository weaponRepository;
     protected static final Logger logger = (Logger) LogManager.getLogger();

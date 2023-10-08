@@ -5,11 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import org.ibd.model.enums.GrenadeType;
 
 @Entity
-@DiscriminatorColumn(name = "type")
 @DiscriminatorValue("hAnDgReNaDe")
 @Access(AccessType.FIELD)
 public class HandGrenade extends Explosive {
     @NotNull
+    @Column(name = "type")
     private GrenadeType type;
 
     public HandGrenade() {

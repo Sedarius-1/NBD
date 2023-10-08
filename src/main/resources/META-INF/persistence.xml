@@ -3,7 +3,7 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
-    <persistence-unit name="GUNSHOP">
+    <persistence-unit name="org.ibd">
         <class>org.ibd.model.clients.Client</class>
         <class>org.ibd.model.purchases.Purchase</class>
         <class>org.ibd.model.weapons.Explosive</class>
