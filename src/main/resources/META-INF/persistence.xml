@@ -4,6 +4,9 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
     <persistence-unit name="org.ibd">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!--        THIS ISN'T HERE IN EXAMPLE-->
         <class>org.ibd.model.clients.Client</class>
         <class>org.ibd.model.purchases.Purchase</class>
         <class>org.ibd.model.weapons.Explosive</class>

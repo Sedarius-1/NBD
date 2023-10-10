@@ -23,6 +23,7 @@ public class ClientRepository {
 
     public void addClient(final Client client) throws RepositoryException {
         try {
+            // TODO: add transaction
             entityManager.persist(client);
         } catch (Exception e) {
             throw new RepositoryException(e.toString());
@@ -31,6 +32,7 @@ public class ClientRepository {
 
     public final Client getClient(Long clientId) throws RepositoryException {
         try {
+            // TODO: add transaction
             return entityManager.createQuery("SELECT Client FROM Client WHERE Client.clientId = clientId", Client.class).getSingleResult();
         } catch (Exception e) {
             throw new RepositoryException(e.toString());
@@ -40,6 +42,7 @@ public class ClientRepository {
     @Transactional
     public void modifyClientName(Long clientId, String name) throws RepositoryException {
         try {
+            // TODO: add transaction
             Client client = getClient(clientId);
             entityManager.remove(client);
             client.setName(name);
@@ -52,6 +55,7 @@ public class ClientRepository {
     @Transactional
     public void modifyClientSurname(Long clientId, String surname) throws RepositoryException {
         try {
+            // TODO: add transaction
             Client client = getClient(clientId);
             entityManager.remove(client);
             client.setSurname(surname);
@@ -64,6 +68,7 @@ public class ClientRepository {
     @Transactional
     public void modifyClientAddress(Long clientId, String address) throws RepositoryException {
         try {
+            // TODO: add transaction
             Client client = getClient(clientId);
             entityManager.remove(client);
             client.setAddress(address);
@@ -76,6 +81,7 @@ public class ClientRepository {
     @Transactional
     public void modifyClientAddress(Long clientId, LocalDate birth) throws RepositoryException {
         try {
+            // TODO: add transaction
             Client client = getClient(clientId);
             entityManager.remove(client);
             client.setBirth(birth);
@@ -87,6 +93,7 @@ public class ClientRepository {
 
     public void removeClient(Client client) throws RepositoryException {
         try {
+            // TODO: add transaction
             entityManager.remove(client);
         } catch (Exception e) {
             throw new RepositoryException(e.toString());
