@@ -34,74 +34,76 @@ public class ClientRepository {
 
     public final Client getClient(Long clientId) throws RepositoryException {
         try {
-            // TODO: add transaction
+            return entityManager.createQuery("SELECT c FROM Client c WHERE c.clientId = :providedClientId", Client.class).setParameter("providedClientId", clientId).getSingleResult();
+        } catch (Exception e) {
+
+            throw new RepositoryException(e.toString());
+        }
+    }
+
+    public void modifyClientName(Long clientId, String name) throws RepositoryException {
+        try {
             entityManager.getTransaction().begin();
-            Client client = entityManager.createQuery("SELECT c FROM Client c WHERE c.clientId = :providedClientId", Client.class).setParameter("providedClientId", clientId).getSingleResult();
+            Client client = getClient(clientId);
+
+            client.setName(name);
+            entityManager.persist(client);
             entityManager.getTransaction().commit();
-            return client;
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
             throw new RepositoryException(e.toString());
         }
     }
 
-    @Transactional
-    public void modifyClientName(Long clientId, String name) throws RepositoryException {
-        try {
-            // TODO: add transaction
-            Client client = getClient(clientId);
-            entityManager.remove(client);
-            client.setName(name);
-            entityManager.persist(client);
-        } catch (Exception e) {
-            throw new RepositoryException(e.toString());
-        }
-    }
-
-    @Transactional
     public void modifyClientSurname(Long clientId, String surname) throws RepositoryException {
         try {
-            // TODO: add transaction
+            entityManager.getTransaction().begin();
             Client client = getClient(clientId);
             entityManager.remove(client);
             client.setSurname(surname);
             entityManager.persist(client);
+            entityManager.getTransaction().commit();
         } catch (Exception e) {
+            entityManager.getTransaction().rollback();
             throw new RepositoryException(e.toString());
         }
     }
 
-    @Transactional
     public void modifyClientAddress(Long clientId, String address) throws RepositoryException {
         try {
-            // TODO: add transaction
+            entityManager.getTransaction().begin();
             Client client = getClient(clientId);
             entityManager.remove(client);
             client.setAddress(address);
             entityManager.persist(client);
+            entityManager.getTransaction().commit();
         } catch (Exception e) {
+            entityManager.getTransaction().rollback();
             throw new RepositoryException(e.toString());
         }
     }
 
-    @Transactional
     public void modifyClientAddress(Long clientId, LocalDate birth) throws RepositoryException {
         try {
-            // TODO: add transaction
+            entityManager.getTransaction().begin();
             Client client = getClient(clientId);
             entityManager.remove(client);
             client.setBirth(birth);
             entityManager.persist(client);
+            entityManager.getTransaction().commit();
         } catch (Exception e) {
+            entityManager.getTransaction().rollback();
             throw new RepositoryException(e.toString());
         }
     }
 
     public void removeClient(Client client) throws RepositoryException {
         try {
-            // TODO: add transaction
+            entityManager.getTransaction().begin();
             entityManager.remove(client);
+            entityManager.getTransaction().commit();
         } catch (Exception e) {
+            entityManager.getTransaction().rollback();
             throw new RepositoryException(e.toString());
         }
     }

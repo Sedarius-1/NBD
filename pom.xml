@@ -98,6 +98,13 @@
             <artifactId>maven-project-info-reports-plugin</artifactId>
             <version>3.4.5</version>
         </dependency>
+        <!-- LOMBOK -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
