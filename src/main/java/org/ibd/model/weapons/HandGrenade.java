@@ -9,7 +9,7 @@ import org.ibd.model.enums.GrenadeType;
 @Access(AccessType.FIELD)
 public class HandGrenade extends Explosive {
     @NotNull
-    @Column(name = "type")
+    @Column(name = "grenadetype")
     private GrenadeType type;
 
     public HandGrenade() {

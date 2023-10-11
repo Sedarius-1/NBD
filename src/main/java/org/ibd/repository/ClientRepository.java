@@ -23,9 +23,11 @@ public class ClientRepository {
 
     public void addClient(final Client client) throws RepositoryException {
         try {
-            // TODO: add transaction
+            entityManager.getTransaction().begin();
             entityManager.persist(client);
+            entityManager.getTransaction().commit();
         } catch (Exception e) {
+            entityManager.getTransaction().rollback();
             throw new RepositoryException(e.toString());
         }
     }
@@ -33,8 +35,12 @@ public class ClientRepository {
     public final Client getClient(Long clientId) throws RepositoryException {
         try {
             // TODO: add transaction
-            return entityManager.createQuery("SELECT Client FROM Client WHERE Client.clientId = clientId", Client.class).getSingleResult();
+            entityManager.getTransaction().begin();
+            Client client = entityManager.createQuery("SELECT c FROM Client c WHERE c.clientId = :providedClientId", Client.class).setParameter("providedClientId", clientId).getSingleResult();
+            entityManager.getTransaction().commit();
+            return client;
         } catch (Exception e) {
+            entityManager.getTransaction().rollback();
             throw new RepositoryException(e.toString());
         }
     }

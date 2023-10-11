@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class WeaponTest {
     @Test
     void PistolTest() {
-        Pistol pistol = new Pistol("Glock", "Glock 17", Float.valueOf("2137"), "9mm");
+        Pistol pistol = new Pistol(2L,"Glock", "Glock 17", Float.valueOf("2137"), "9mm");
         assertNotNull(pistol);
         assertNull(pistol.getId());
         assertEquals(pistol.getManufacturer(), "Glock");
@@ -31,7 +31,7 @@ public class WeaponTest {
 
     @Test
     void RifleTest() {
-        Rifle rifle = new Rifle("Ruger", "PPC", Float.valueOf("4000"), "22LR", Float.valueOf("15.6"));
+        Rifle rifle = new Rifle(1L,"Ruger", "PPC", Float.valueOf("4000"), "22LR", Float.valueOf("15.6"));
         assertNotNull(rifle);
         assertNull(rifle.getId());
         assertEquals(rifle.getManufacturer(), "Ruger");
@@ -55,7 +55,7 @@ public class WeaponTest {
 
     @Test
     void HandGrenadeTest() {
-        HandGrenade grenade = new HandGrenade("Smolinus Inc.", "Ovirt mk 2", Float.valueOf("2135"), 9001, GrenadeType.Fag);
+        HandGrenade grenade = new HandGrenade(1L, "Smolinus Inc.", "Ovirt mk 2", Float.valueOf("2135"), 9001, GrenadeType.Fag);
         assertNotNull(grenade);
         assertNull(grenade.getId());
         assertEquals(grenade.getManufacturer(), "Smolinus Inc.");
@@ -79,7 +79,7 @@ public class WeaponTest {
 
     @Test
     void RecreationalMcNukeTest() {
-        RecreationalMcNuke nuke = new RecreationalMcNuke("Smolinus Inc.", "VIRTuL", Float.valueOf("69420"), 1234);
+        RecreationalMcNuke nuke = new RecreationalMcNuke(3L, "Smolinus Inc.", "VIRTuL", Float.valueOf("69420"), 1234);
         assertNotNull(nuke);
         assertNull(nuke.getId());
         assertEquals(nuke.getManufacturer(), "Smolinus Inc.");

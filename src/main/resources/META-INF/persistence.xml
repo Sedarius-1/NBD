@@ -3,36 +3,13 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
-    <persistence-unit name="org.ibd">
+    <persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-
-        <!--        THIS ISN'T HERE IN EXAMPLE-->
-        <class>org.ibd.model.clients.Client</class>
-        <class>org.ibd.model.purchases.Purchase</class>
-        <class>org.ibd.model.weapons.Explosive</class>
-        <class>org.ibd.model.weapons.Firearm</class>
-        <class>org.ibd.model.weapons.HandGrenade</class>
-        <class>org.ibd.model.weapons.Pistol</class>
-        <class>org.ibd.model.weapons.RecreationalMcNuke</class>
-        <class>org.ibd.model.weapons.Rifle</class>
-        <class>org.ibd.model.weapons.Weapon</class>
-
-        <exclude-unlisted-classes>true</exclude-unlisted-classes>
-        <shared-cache-mode>NONE</shared-cache-mode>
-        <validation-mode>CALLBACK</validation-mode>
-
         <properties>
-            <property name='hibernate.show_sql' value='true'/>
-            <property name='hibernate.format_sql' value='true'/>
-            <property name='hibernate.dialect' value='org.hibernate.dialect.PostgreSQLDialect'/>
-            <property name='hibernate.hbm2ddl.auto' value='update'/>
-
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/nbddb"/>
             <property name="jakarta.persistence.jdbc.user" value="nbd"/>
             <property name="jakarta.persistence.jdbc.password" value="nbdpassword"/>
-            <property name="jakarta.persistence.schema-generation.scripts.create-target" value="./create.sql"/>
-            <property name="jakarta.persistence.schema-generation.scripts.drop-target" value="./drop.sql"/>
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
         </properties>
     </persistence-unit>
