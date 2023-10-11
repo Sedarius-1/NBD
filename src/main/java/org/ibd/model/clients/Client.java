@@ -51,7 +51,7 @@ public class Client {
     @Column(name = "birth")
     private LocalDate birth;
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn
     @Fetch(FetchMode.JOIN)
     private Set<Purchase> purchaseSet;

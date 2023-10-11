@@ -19,6 +19,8 @@ public class Rifle extends Firearm {
     public Rifle(Long serialNumber, String manufacturer, String name, Float price, String caliber, Float length) {
         super(serialNumber, manufacturer, name, price, caliber);
         this.length = length;
+        setType("Rifle");
+
     }
 
 

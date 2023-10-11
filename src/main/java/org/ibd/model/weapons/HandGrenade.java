@@ -10,21 +10,22 @@ import org.ibd.model.enums.GrenadeType;
 public class HandGrenade extends Explosive {
     @NotNull
     @Column(name = "grenadetype")
-    private GrenadeType type;
+    private GrenadeType grenadeType;
 
     public HandGrenade() {
     }
 
     public HandGrenade(Long serialNumber, String manufacturer, String name, Float price, Integer power, GrenadeType type) {
         super(serialNumber, manufacturer, name, price, power);
-        this.type = type;
+        this.grenadeType = type;
+        setType("HandGrenade");
     }
 
-    public GrenadeType getType() {
-        return type;
+    public GrenadeType getGrenadeType() {
+        return grenadeType;
     }
 
     public void setType(GrenadeType type) {
-        this.type = type;
+        this.grenadeType = type;
     }
 }

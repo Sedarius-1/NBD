@@ -4,8 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "Weapon")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
@@ -36,6 +40,9 @@ public abstract class Weapon {
     @Column(name = "price")
     private Float price;
 
+    @Column(name ="type", insertable = false, updatable = false)
+    private String type;
+
     public Weapon() {
 
     }
@@ -47,35 +54,4 @@ public abstract class Weapon {
         this.price = price;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getSerialNumber() {
-        return serialNumber;
-    }
-
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Float getPrice() {
-        return price;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
-    }
 }

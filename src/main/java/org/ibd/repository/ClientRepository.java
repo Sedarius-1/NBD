@@ -41,6 +41,17 @@ public class ClientRepository {
         }
     }
 
+    public void removeClient(Client client) throws RepositoryException {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.remove(client);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            throw new RepositoryException(e.toString());
+        }
+    }
+
     public void modifyClientName(Long clientId, String name) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
@@ -97,14 +108,5 @@ public class ClientRepository {
         }
     }
 
-    public void removeClient(Client client) throws RepositoryException {
-        try {
-            entityManager.getTransaction().begin();
-            entityManager.remove(client);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            throw new RepositoryException(e.toString());
-        }
-    }
+
 }

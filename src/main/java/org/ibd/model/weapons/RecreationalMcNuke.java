@@ -12,5 +12,7 @@ public class RecreationalMcNuke extends Explosive {
 
     public RecreationalMcNuke(Long serialNumber, String manufacturer, String name, Float price, Integer power) {
         super(serialNumber, manufacturer, name, price, power);
+        setType("Nuke");
+
     }
 }

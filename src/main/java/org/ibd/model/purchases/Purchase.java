@@ -35,15 +35,10 @@ public class Purchase {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
     private Weapon weapon;
-    @NotNull
-    @Min(0)
-    @Column(name = "price")
-    private Float price;
 
-    public Purchase(Long purchaseId, Client client, Weapon weapon, Float price) {
+    public Purchase(Long purchaseId, Client client, Weapon weapon) {
         this.purchaseId = purchaseId;
         this.client = client;
         this.weapon = weapon;
-        this.price = price;
     }
 }
