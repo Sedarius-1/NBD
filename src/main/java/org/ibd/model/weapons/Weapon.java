@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -15,11 +17,11 @@ import lombok.Setter;
 @DiscriminatorColumn(name = "type")
 @Access(AccessType.FIELD)
 public abstract class Weapon {
-
+    //Todo: add sold boolean
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @NotNull
     @NotEmpty

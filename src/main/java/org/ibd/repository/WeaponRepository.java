@@ -2,7 +2,10 @@ package org.ibd.repository;
 
 import jakarta.persistence.EntityManager;
 import org.ibd.exceptions.RepositoryException;
+import org.ibd.model.purchases.Purchase;
 import org.ibd.model.weapons.Weapon;
+
+import java.util.List;
 
 public class WeaponRepository {
     EntityManager entityManager;
@@ -39,6 +42,15 @@ public class WeaponRepository {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
+            throw new RepositoryException(e.toString());
+        }
+    }
+
+    public final List<Weapon> getAllWeapons() throws RepositoryException {
+        try {
+            return entityManager.createQuery("SELECT w FROM Weapon w", Weapon.class).getResultList();
+        } catch (Exception e) {
+
             throw new RepositoryException(e.toString());
         }
     }

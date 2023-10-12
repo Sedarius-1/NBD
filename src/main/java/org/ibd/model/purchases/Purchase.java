@@ -11,6 +11,8 @@ import org.hibernate.annotations.FetchMode;
 import org.ibd.model.clients.Client;
 import org.ibd.model.weapons.Weapon;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -20,8 +22,8 @@ import org.ibd.model.weapons.Weapon;
 public class Purchase {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @NotNull
     @NotEmpty

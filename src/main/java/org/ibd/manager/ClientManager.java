@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.factory.ClientFactory;
+import org.ibd.model.clients.Client;
 import org.ibd.repository.ClientRepository;
 
 import java.time.LocalDate;
@@ -36,6 +37,18 @@ public class ClientManager {
         }
         return Boolean.TRUE;
     }
+
+    public Client getClient(Long clientId) {
+        Client client = null;
+        try {
+            client = clientRepository.getClient(clientId);
+        } catch (RepositoryException e) {
+            logger.error(e.toString());
+
+        }
+        return client;
+    }
+
 
     // TODO: access functions
 }

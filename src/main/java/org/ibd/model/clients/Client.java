@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.ibd.model.purchases.Purchase;
@@ -12,8 +14,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "Client")
 public class Client {
     public Client(Long clientId, String name, String surname, String address, LocalDate birth) {
@@ -27,8 +32,8 @@ public class Client {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @NotNull
     @NotEmpty
@@ -60,51 +65,4 @@ public class Client {
 
     }
 
-    public Long getClientId() {
-        return clientId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public LocalDate getBirth() {
-        return birth;
-    }
-
-    public void setBirth(LocalDate birth) {
-        this.birth = birth;
-    }
-
-    public Set<Purchase> getPurchaseSet() {
-        return purchaseSet;
-    }
-
-    public void setPurchaseSet(Set<Purchase> purchaseSet) {
-        this.purchaseSet = purchaseSet;
-    }
-
-    public Long getId() {
-        return id;
-    }
 }
