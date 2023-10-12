@@ -1,24 +1,17 @@
 package org.ibd.repository;
 
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 
 public class ClientRepository {
     EntityManager entityManager;
-    protected static final Logger logger = (Logger) LogManager.getLogger();
-
 
     public ClientRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
-        logger.debug("Created ClientRepository");
     }
 
     public void addClient(final Client client) throws RepositoryException {
@@ -34,7 +27,9 @@ public class ClientRepository {
 
     public final Client getClient(Long clientId) throws RepositoryException {
         try {
-            return entityManager.createQuery("SELECT c FROM Client c WHERE c.clientId = :providedClientId", Client.class).setParameter("providedClientId", clientId).getSingleResult();
+            return entityManager.createQuery(
+                            "SELECT c FROM Client c WHERE c.clientId = :providedClientId", Client.class)
+                    .setParameter("providedClientId", clientId).getSingleResult();
         } catch (Exception e) {
 
             throw new RepositoryException(e.toString());
