@@ -27,6 +27,7 @@ public class ClientRepository {
 
     public final Client getClient(Long clientId) throws RepositoryException {
         try {
+            // TODO: do this properly
             return entityManager.createQuery(
                             "SELECT c FROM Client c WHERE c.clientId = :providedClientId", Client.class)
                     .setParameter("providedClientId", clientId).getSingleResult();

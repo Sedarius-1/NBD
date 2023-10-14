@@ -33,7 +33,7 @@ public class GunShop {
             // DO NOT MINDLESSLY ADD TRY-WITH-RESOURCES!!!!!
             // THIS FUCKER WAS THE SOURCE OF ALL OF OUR PROBLEMS
             // AT THE END OF TRY, MANAGER GOT DESTROYED
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("NBDunit");
             EntityManager entityManager = entityManagerFactory.createEntityManager();
             PurchaseRepository purchaseRepository = new PurchaseRepository(entityManager);
             clientManager = new ClientManager(new ClientRepository(entityManager));
