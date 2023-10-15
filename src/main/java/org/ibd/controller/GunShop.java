@@ -11,15 +11,17 @@ import org.ibd.manager.PurchaseManager;
 import org.ibd.manager.WeaponManager;
 import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
-import org.ibd.model.weapons.Rifle;
 import org.ibd.model.weapons.Weapon;
 import org.ibd.repository.ClientRepository;
 import org.ibd.repository.PurchaseRepository;
 import org.ibd.repository.WeaponRepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class GunShop {
     private ClientManager clientManager;
@@ -37,7 +39,7 @@ public class GunShop {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
             PurchaseRepository purchaseRepository = new PurchaseRepository(entityManager);
             clientManager = new ClientManager(new ClientRepository(entityManager));
-            weaponManager = new WeaponManager(new WeaponRepository(entityManager), purchaseRepository);
+            weaponManager = new WeaponManager(new WeaponRepository(entityManager));
             purchaseManager = new PurchaseManager(purchaseRepository);
         } catch (Exception e) {
             logger.error("FATAL ERROR CREATING GunShop INSTANCE! ABORTING!");
@@ -45,9 +47,13 @@ public class GunShop {
         }
     }
 
-    public Client registerClient(Long clientId, String name, String surname, String address, LocalDate birth) {
+    /**
+     * Method registering client in a database
+     * @return an instance of {@link Client}, previously saved in a database
+     */
+    public Client registerClient(Long clientId, String name, String surname, String address, LocalDate birth, BigDecimal balance) {
         // clientId is temporary here
-        if (clientManager.registerClient(clientId, name, surname, address, birth)) {
+        if (clientManager.registerClient(clientId, name, surname, address, birth, balance)) {
             System.out.println(AnsiCodes.ANSI_GREEN + "Registered client!" + AnsiCodes.ANSI_RESET);
             return clientManager.getClient(clientId);
         } else {
@@ -57,7 +63,6 @@ public class GunShop {
     }
 
     public <T extends Weapon> Object registerWeapon(WeaponTypeEnum weaponTypeEnum, Map<String, String> paramsMap) {
-        // clientId is temporary here
         if (weaponManager.registerWeapon(weaponTypeEnum, paramsMap)) {
             System.out.println(AnsiCodes.ANSI_GREEN + "Registered weapon!" + AnsiCodes.ANSI_RESET);
             return weaponManager.getWeapon(Long.valueOf(paramsMap.get("serialNumber")));
@@ -68,12 +73,27 @@ public class GunShop {
     }
 
     public Purchase registerPurchase(Long purchaseId, Client client, Weapon weapon) {
-        Purchase purchase = null;
-        // clientId is temporary here
+        if( Objects.isNull(client)){
+            System.out.println(AnsiCodes.ANSI_RED + "Client not provided!" + AnsiCodes.ANSI_RESET);
+            return null;
+        }
+        if( Objects.isNull(weapon)){
+            System.out.println(AnsiCodes.ANSI_RED + "Weapon not provided!" + AnsiCodes.ANSI_RESET);
+            return null;
+        }
+        if(client.getBalance().subtract(weapon.getPrice()).compareTo(BigDecimal.ZERO)<0){
+            System.out.println(AnsiCodes.ANSI_RED + "Insufficient funds!" + AnsiCodes.ANSI_RESET);
+            return null;
+        }
         if (purchaseManager.registerPurchase(purchaseId, client, weapon)) {
-            System.out.println(AnsiCodes.ANSI_GREEN + "Registered purchase!" + AnsiCodes.ANSI_RESET);
-            return purchaseManager.getPurchase(purchaseId);
-
+            if(clientManager.changeBalance(client, client.getBalance().subtract(weapon.getPrice()))){
+                System.out.println(AnsiCodes.ANSI_GREEN + "Registered purchase!" + AnsiCodes.ANSI_RESET);
+                return purchaseManager.getPurchase(purchaseId);
+            }
+            else{
+                System.out.println(AnsiCodes.ANSI_GREEN + "Purchase failed - could not save new balance" + AnsiCodes.ANSI_RESET);
+                return null;
+            }
         } else {
             System.out.println(AnsiCodes.ANSI_RED + "Could not register purchase!" + AnsiCodes.ANSI_RESET);
             return null;
@@ -81,7 +101,29 @@ public class GunShop {
     }
 
     public List<Weapon> getAvailableWeapons() {
-        return weaponManager.getAllWeaponsForSale();
+        try{
+            List<Weapon> allWeapons = weaponManager.getAllWeapons();
+            List<Purchase> purchases = purchaseManager.getAllPurchases();
+            List<Weapon> soldWeapons = new ArrayList<>();
+            purchases.forEach(purchase -> soldWeapons.add(purchase.getWeapon()));
+            allWeapons.removeAll(soldWeapons);
+            return allWeapons;
+        }
+        catch (Exception ex){
+            logger.error(ex.toString());
+            return null;
+        }
+    }
+
+    public BigDecimal getClientBalance(Long clientId) {
+        try{
+            Client client = clientManager.getClient(clientId);
+            return client.getBalance();
+        }
+        catch (Exception ex){
+            logger.error(ex.toString());
+            return null;
+        }
     }
 
 }

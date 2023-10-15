@@ -4,15 +4,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import org.ibd.controller.GunShop;
 import org.ibd.enums.WeaponTypeEnum;
-import org.ibd.exceptions.RepositoryException;
-import org.ibd.factory.WeaponFactory;
-import org.ibd.manager.PurchaseManager;
 import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
 import org.ibd.model.weapons.Rifle;
 import org.ibd.model.weapons.Weapon;
-import org.ibd.repository.PurchaseRepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +18,9 @@ import java.util.Map;
 public class Main {
     protected static final Logger logger = (Logger) LogManager.getLogger();
 
-    public static void main(String[] args) throws RepositoryException {
+    public static void main(String[] args) {
         GunShop gunShop = new GunShop();
-        Client client = gunShop.registerClient(1L, "Tomasz", "Kowalczyk", "Bolzga", LocalDate.of(2003, 2, 5));
+        Client client = gunShop.registerClient(1L, "Tomunek", "UwU", "Bolzga", LocalDate.of(2003, 2, 5), new BigDecimal("600"));
         Map<String, String> rifleMap = new HashMap<>();
         rifleMap.put("serialNumber", "1");
         rifleMap.put("manufacturer", "uwu");

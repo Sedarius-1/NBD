@@ -10,6 +10,7 @@ import org.ibd.model.purchases.Purchase;
 import org.ibd.model.weapons.Weapon;
 import org.ibd.repository.PurchaseRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class PurchaseManager {
@@ -36,10 +37,15 @@ public class PurchaseManager {
         return Boolean.FALSE;
     }
 
-    public Double calculateClientExpenses(Client client) throws RepositoryException {
+    public BigDecimal calculateTotalSumOfClientPurchases(Client client) throws RepositoryException {
         List<Purchase> listOfPurchases = purchaseRepository.getAllPurchasesForSingleClient(client.getClientId());
-        return listOfPurchases.stream().mapToDouble(purchase -> purchase.getWeapon().getPrice()).sum();
-
+        var ref = new Object() {
+            BigDecimal totalSum = BigDecimal.ZERO;
+        };       
+        listOfPurchases.forEach(purchase -> {
+            ref.totalSum = ref.totalSum.add(purchase.getWeapon().getPrice());
+        });
+        return ref.totalSum;
     }
 
     public List<Purchase> getAllPurchases() throws RepositoryException {

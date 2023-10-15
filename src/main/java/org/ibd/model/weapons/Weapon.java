@@ -5,19 +5,21 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 @Table(name = "Weapon")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 @Access(AccessType.FIELD)
 public abstract class Weapon {
     //Todo: add sold boolean
+    @SuppressWarnings("unused")
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
@@ -40,20 +42,31 @@ public abstract class Weapon {
     @NotNull
     @Min(0)
     @Column(name = "price")
-    private Float price;
+    private BigDecimal price;
 
     @Column(name ="type", insertable = false, updatable = false)
     private String type;
 
-    public Weapon() {
-
-    }
-
-    public Weapon(Long serialNumber, String manufacturer, String name, Float price) {
+    public Weapon(Long serialNumber, String manufacturer, String name, BigDecimal price) {
         this.serialNumber = serialNumber;
         this.manufacturer = manufacturer;
         this.name = name;
         this.price = price;
     }
 
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

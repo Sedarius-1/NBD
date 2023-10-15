@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
@@ -66,7 +67,6 @@ public class ClientRepository {
         try {
             entityManager.getTransaction().begin();
             Client client = getClient(clientId);
-            entityManager.remove(client);
             client.setSurname(surname);
             entityManager.persist(client);
             entityManager.getTransaction().commit();
@@ -80,7 +80,6 @@ public class ClientRepository {
         try {
             entityManager.getTransaction().begin();
             Client client = getClient(clientId);
-            entityManager.remove(client);
             client.setAddress(address);
             entityManager.persist(client);
             entityManager.getTransaction().commit();
@@ -94,8 +93,20 @@ public class ClientRepository {
         try {
             entityManager.getTransaction().begin();
             Client client = getClient(clientId);
-            entityManager.remove(client);
             client.setBirth(birth);
+            entityManager.persist(client);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            throw new RepositoryException(e.toString());
+        }
+    }
+
+    public void modifyClientBalance(Long clientId, BigDecimal newBalance) throws RepositoryException {
+        try {
+            entityManager.getTransaction().begin();
+            Client client = getClient(clientId);
+            client.setBalance(newBalance);
             entityManager.persist(client);
             entityManager.getTransaction().commit();
         } catch (Exception e) {

@@ -7,6 +7,7 @@ import org.ibd.factory.ClientFactory;
 import org.ibd.model.clients.Client;
 import org.ibd.repository.ClientRepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ClientManager {
@@ -17,10 +18,10 @@ public class ClientManager {
         this.clientRepository = clientRepository;
     }
 
-    public Boolean registerClient(Long clientId, String name, String surname, String address, LocalDate birth) {
+    public Boolean registerClient(Long clientId, String name, String surname, String address, LocalDate birth, BigDecimal balance) {
         // TODO: add auto-generation of clientId
         try {
-            clientRepository.addClient(ClientFactory.createClient(clientId, name, surname, address, birth));
+            clientRepository.addClient(ClientFactory.createClient(clientId, name, surname, address, birth, balance));
         } catch (RepositoryException e) {
             logger.error(e.toString());
             return Boolean.FALSE;
@@ -49,6 +50,15 @@ public class ClientManager {
         return client;
     }
 
+    public Boolean changeBalance(Client client, BigDecimal newBalance){
+        try {
+            clientRepository.modifyClientBalance(client.getClientId(), newBalance);
+            return true;
+        } catch (RepositoryException e) {
+            logger.error(e.toString());
 
+        }
+        return false;
+    }
     // TODO: access functions
 }

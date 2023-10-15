@@ -1,35 +1,36 @@
 package org.ibd.model.clients;
 
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.ibd.model.purchases.Purchase;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 @Table(name = "Client")
 public class Client {
-    public Client(Long clientId, String name, String surname, String address, LocalDate birth) {
+    public Client(Long clientId, String name, String surname, String address, LocalDate birth, BigDecimal balance) {
         this.clientId = clientId;
         this.name = name;
         this.surname = surname;
         this.address = address;
         this.birth = birth;
+        this.balance = balance;
         this.purchaseSet = new HashSet<>();
     }
 
+    @SuppressWarnings("unused")
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -44,25 +45,53 @@ public class Client {
     @NotEmpty
     @Column(name = "name")
     private String name;
+
     @NotNull
     @NotEmpty
     @Column(name = "surename")
     private String surname;
+
     @NotNull
     @NotEmpty
     @Column(name = "address")
     private String address;
+
     @NotNull
     @Column(name = "birth")
     private LocalDate birth;
+
+    @NotNull
+    @Column(name = "balance")
+    private BigDecimal balance;
+
     @NotNull
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn
     @Fetch(FetchMode.JOIN)
     private Set<Purchase> purchaseSet;
 
-    public Client() {
 
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setBirth(LocalDate birth) {
+        this.birth = birth;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public void setPurchaseSet(Set<Purchase> purchaseSet) {
+        this.purchaseSet = purchaseSet;
+    }
 }

@@ -2,9 +2,15 @@ package org.ibd.model.weapons;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import org.ibd.model.enums.GrenadeType;
 
+import java.math.BigDecimal;
+
 @Entity
+@Getter
+@Setter
 @DiscriminatorValue("hAnDgReNaDe")
 @Access(AccessType.FIELD)
 public class HandGrenade extends Explosive {
@@ -15,17 +21,9 @@ public class HandGrenade extends Explosive {
     public HandGrenade() {
     }
 
-    public HandGrenade(Long serialNumber, String manufacturer, String name, Float price, Integer power, GrenadeType type) {
+    public HandGrenade(Long serialNumber, String manufacturer, String name, BigDecimal price, Integer power, GrenadeType type) {
         super(serialNumber, manufacturer, name, price, power);
         this.grenadeType = type;
         setType("HandGrenade");
-    }
-
-    public GrenadeType getGrenadeType() {
-        return grenadeType;
-    }
-
-    public void setType(GrenadeType type) {
-        this.grenadeType = type;
     }
 }

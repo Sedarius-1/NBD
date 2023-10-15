@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 
 @Table(name = "Purchase")
@@ -43,4 +42,18 @@ public class Purchase {
         this.client = client;
         this.weapon = weapon;
     }
+
+    public void setPurchaseId(Long purchaseId) {
+        this.purchaseId = purchaseId;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
+    }
+
+
 }

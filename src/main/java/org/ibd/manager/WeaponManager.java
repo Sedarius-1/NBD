@@ -20,12 +20,10 @@ import java.util.Map;
 public class WeaponManager {
     private final WeaponRepository weaponRepository;
 
-    private final PurchaseRepository purchaseRepository;
     protected static final Logger logger = (Logger) LogManager.getLogger();
 
-    public WeaponManager(WeaponRepository weaponRepository, PurchaseRepository purchaseRepository) {
+    public WeaponManager(WeaponRepository weaponRepository) {
         this.weaponRepository = weaponRepository;
-        this.purchaseRepository = purchaseRepository;
     }
 
     public Boolean registerWeapon(WeaponTypeEnum weaponType, Map<String, String> params) {
@@ -59,14 +57,10 @@ public class WeaponManager {
         }
         return weapon;
     }
-    public List<Weapon> getAllWeaponsForSale() {
+
+    public List<Weapon> getAllWeapons() {
         try{
-            List<Weapon> allWeapons = weaponRepository.getAllWeapons();
-            List<Purchase> purchases = purchaseRepository.getAllPurchases();
-            List<Weapon> soldWeapons = new ArrayList<>();
-            purchases.forEach(purchase -> soldWeapons.add(purchase.getWeapon()));
-            allWeapons.removeAll(soldWeapons);
-            return allWeapons;
+            return weaponRepository.getAllWeapons();
         }
         catch (Exception ex){
             logger.error("SOMETHING WRONG");

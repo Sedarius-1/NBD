@@ -1,3 +1,5 @@
+package factory;
+
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.factory.WeaponFactory;
 import org.ibd.model.enums.GrenadeType;
@@ -9,6 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -16,6 +19,13 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WeaponFactoryTest {
+
+    @Test
+    void WeaponFactoryCreationTest() {
+        WeaponFactory weaponFactory = new WeaponFactory();
+        assertNotNull(weaponFactory);
+    }
+
     @ParameterizedTest
     @ArgumentsSource(MapTooFewArgumentsProvider.class)
     void TooFewArgumentsTest(Map<String, String> badParams) {
@@ -103,51 +113,61 @@ public class WeaponFactoryTest {
             map0.put("price", "dosyć drogo");
             map0.put("caliber", "9mm");
 
-            // Rifle - bad length
+            // Any - bad serial
             Map<String, String> map1 = new HashMap<>();
-            map1.put("type", WeaponTypeEnum.RIFLE.toString());
-            map1.put("serialNumber", "2137");
-            map1.put("manufacturer", "Ruger");
-            map1.put("name", "PPC");
-            map1.put("price", "4000");
-            map1.put("caliber", "22LR");
-            map1.put("length", "smol riefel");
+            map1.put("type", WeaponTypeEnum.PISTOL.toString());
+            map1.put("serialNumber", "2a137");
+            map1.put("manufacturer", "Glock");
+            map1.put("name", "Glock 19");
+            map1.put("price", "2500");
+            map1.put("caliber", "9mm");
+
+            // Rifle - bad length
+            Map<String, String> map2 = new HashMap<>();
+            map2.put("type", WeaponTypeEnum.RIFLE.toString());
+            map2.put("serialNumber", "2137");
+            map2.put("manufacturer", "Ruger");
+            map2.put("name", "PPC");
+            map2.put("price", "4000");
+            map2.put("caliber", "22LR");
+            map2.put("length", "smol riefel");
 
             // McNuke - bad power
-            Map<String, String> map2 = new HashMap<>();
-            map2.put("type", WeaponTypeEnum.MCNUKE.toString());
-            map2.put("serialNumber", "2137");
-            map2.put("manufacturer", "Smolinus Inc.");
-            map2.put("name", "VIRTuL");
-            map2.put("price", "69420");
-            map2.put("power", "jebutna");
-
-            // Grenade - bad power
             Map<String, String> map3 = new HashMap<>();
-            map3.put("type", WeaponTypeEnum.HANDGRENADE.toString());
+            map3.put("type", WeaponTypeEnum.MCNUKE.toString());
             map3.put("serialNumber", "2137");
             map3.put("manufacturer", "Smolinus Inc.");
-            map3.put("name", "Ovirt mk 2");
-            map3.put("price", "2135");
-            map3.put("power", "mogło być więcej");
-            map3.put("grenadeType", GrenadeType.Fag.toString());
+            map3.put("name", "VIRTuL");
+            map3.put("price", "69420");
+            map3.put("power", "jebutna");
 
-            // Grenade - bad type
+            // Grenade - bad power
             Map<String, String> map4 = new HashMap<>();
             map4.put("type", WeaponTypeEnum.HANDGRENADE.toString());
             map4.put("serialNumber", "2137");
             map4.put("manufacturer", "Smolinus Inc.");
             map4.put("name", "Ovirt mk 2");
             map4.put("price", "2135");
-            map4.put("power", "1");
-            map4.put("grenadeType", "idk");
+            map4.put("power", "mogło być więcej");
+            map4.put("grenadeType", GrenadeType.Fag.toString());
+
+            // Grenade - bad type
+            Map<String, String> map5 = new HashMap<>();
+            map5.put("type", WeaponTypeEnum.HANDGRENADE.toString());
+            map5.put("serialNumber", "2137");
+            map5.put("manufacturer", "Smolinus Inc.");
+            map5.put("name", "Ovirt mk 2");
+            map5.put("price", "2135");
+            map5.put("power", "1");
+            map5.put("grenadeType", "idk");
 
             return Stream.of(
                     Arguments.of(map0),
                     Arguments.of(map1),
                     Arguments.of(map2),
                     Arguments.of(map3),
-                    Arguments.of(map4)
+                    Arguments.of(map4),
+                    Arguments.of(map5)
             );
         }
     }
@@ -285,9 +305,10 @@ public class WeaponFactoryTest {
         Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, map);
         assertNotNull(pistol);
         assertEquals(pistol.getSerialNumber(), 2137L);
+        assertEquals(pistol.getType(), "Pistol");
         assertEquals(pistol.getManufacturer(), "Glock");
         assertEquals(pistol.getName(), "Glock 19");
-        assertEquals(pistol.getPrice(), Float.valueOf("213.7"));
+        assertEquals(pistol.getPrice(), new BigDecimal("213.7"));
         assertEquals(pistol.getCaliber(), "9mm");
     }
 
@@ -304,9 +325,10 @@ public class WeaponFactoryTest {
         Rifle rifle = WeaponFactory.manufactureWeapon(WeaponTypeEnum.RIFLE, map);
         assertNotNull(rifle);
         assertEquals(rifle.getSerialNumber(), 2137L);
+        assertEquals(rifle.getType(), "Rifle");
         assertEquals(rifle.getManufacturer(), "Ruger");
         assertEquals(rifle.getName(), "PPC");
-        assertEquals(rifle.getPrice(), Float.valueOf("4000"));
+        assertEquals(rifle.getPrice(), new BigDecimal("4000"));
         assertEquals(rifle.getCaliber(), "22LR");
         assertEquals(rifle.getLength(), Float.valueOf("15.6"));
     }
@@ -324,9 +346,10 @@ public class WeaponFactoryTest {
         HandGrenade grenade = WeaponFactory.manufactureWeapon(WeaponTypeEnum.HANDGRENADE, map);
         assertNotNull(grenade);
         assertEquals(grenade.getSerialNumber(), 2137L);
+        assertEquals(grenade.getType(), "HandGrenade");
         assertEquals(grenade.getManufacturer(), "Smolinus Inc.");
         assertEquals(grenade.getName(), "Ovirt mk 2");
-        assertEquals(grenade.getPrice(), Float.valueOf("2135"));
+        assertEquals(grenade.getPrice(), new BigDecimal("2135"));
         assertEquals(grenade.getPower(), 9001);
         assertEquals(grenade.getGrenadeType(), GrenadeType.Fag);
     }
@@ -343,9 +366,10 @@ public class WeaponFactoryTest {
         RecreationalMcNuke nuke = WeaponFactory.manufactureWeapon(WeaponTypeEnum.MCNUKE, map);
         assertNotNull(nuke);
         assertEquals(nuke.getSerialNumber(), 2137L);
+        assertEquals(nuke.getType(), "Nuke");
         assertEquals(nuke.getManufacturer(), "Smolinus Inc.");
         assertEquals(nuke.getName(), "VIRTuL");
-        assertEquals(nuke.getPrice(), Float.valueOf("69420"));
+        assertEquals(nuke.getPrice(), new BigDecimal("69420"));
         assertEquals(nuke.getPower(), 1);
     }
 }

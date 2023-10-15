@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
+
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Access(AccessType.FIELD)
@@ -16,7 +18,7 @@ public abstract class Explosive extends Weapon {
     public Explosive() {
     }
 
-    public Explosive(Long serialNumber, String manufacturer, String name, Float price, Integer power) {
+    public Explosive(Long serialNumber, String manufacturer, String name, BigDecimal price, Integer power) {
         super(serialNumber, manufacturer, name, price);
         this.power = power;
     }
