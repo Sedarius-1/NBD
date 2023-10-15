@@ -1,6 +1,7 @@
 package org.ibd.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
 
@@ -28,10 +29,7 @@ public class ClientRepository {
 
     public final Client getClient(Long clientId) throws RepositoryException {
         try {
-            // TODO: do this properly
-            return entityManager.createQuery(
-                            "SELECT c FROM Client c WHERE c.clientId = :providedClientId", Client.class)
-                    .setParameter("providedClientId", clientId).getSingleResult();
+            return entityManager.find(Client.class, clientId, LockModeType.PESSIMISTIC_WRITE);
         } catch (Exception e) {
 
             throw new RepositoryException(e.toString());

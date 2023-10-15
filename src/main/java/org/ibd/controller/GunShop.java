@@ -81,6 +81,7 @@ public class GunShop {
             System.out.println(AnsiCodes.ANSI_RED + "Weapon not provided!" + AnsiCodes.ANSI_RESET);
             return null;
         }
+        client = clientManager.getClient(client.getClientId());
         if(client.getBalance().subtract(weapon.getPrice()).compareTo(BigDecimal.ZERO)<0){
             System.out.println(AnsiCodes.ANSI_RED + "Insufficient funds!" + AnsiCodes.ANSI_RESET);
             return null;
