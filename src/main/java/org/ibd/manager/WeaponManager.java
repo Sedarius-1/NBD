@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class WeaponManager {
     private final WeaponRepository weaponRepository;
@@ -29,6 +30,7 @@ public class WeaponManager {
     public Boolean registerWeapon(WeaponTypeEnum weaponType, Map<String, String> params) {
         // TODO: might make this more user-friendly
         try {
+            if(Objects.isNull(weaponType) || Objects.isNull(params)) throw new RepositoryException("Null passed!");
             weaponRepository.add(WeaponFactory.manufactureWeapon(weaponType, params));
         } catch (RepositoryException e) {
             logger.error(e.toString());

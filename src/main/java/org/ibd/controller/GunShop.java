@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
+import org.ibd.enums.ClientParamEnum;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.manager.ClientManager;
 import org.ibd.manager.PurchaseManager;
@@ -137,4 +138,41 @@ public class GunShop {
         }
     }
 
+    public Client modifyClient(ClientParamEnum clientParamEnum, Object param, Long clientId){
+        switch(clientParamEnum){
+            case NAME ->{
+                String name = (String) param;
+                clientManager.changeName(clientId, name);
+            }
+            case SURNAME -> {
+                String surname = (String) param;
+                clientManager.changeSurname(clientId, surname);
+            }
+            case ADDRESS -> {
+                String address = (String) param;
+                clientManager.changeAddress(clientId, address);
+            }
+            case BIRTH -> {
+                try{
+                    LocalDate birth = (LocalDate) param;
+                    clientManager.changeBirth(clientId, birth);
+                }
+                catch(Exception ex){
+                    logger.info("Wrong date!");
+                    return null;
+                }
+            }
+            case BALANCE -> {
+                try{
+                    BigDecimal balance = (BigDecimal) param;
+                    clientManager.changeBalance(clientId, balance);
+                }
+                catch(Exception ex){
+                    logger.info("Wrong balance!");
+                return null;
+            }
+            }
+        }
+        return clientManager.getClient(clientId);
+    }
 }

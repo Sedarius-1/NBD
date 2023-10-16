@@ -34,7 +34,7 @@ public class WeaponRepositoryTest {
         map.put("price", "2500");
         map.put("caliber", "9mm");
         Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, map);
-        weaponRepository.add(pistol); // TODO: add doesNotThrow assert
+        assertDoesNotThrow(()->weaponRepository.add(pistol));
 
         Weapon weapon = weaponRepository.get(1L);
         assertNotNull(weapon);
@@ -53,6 +53,30 @@ public class WeaponRepositoryTest {
         entityManagerFactory.close();
     }
 
-    // TODO: modify tests
-    // TODO: bad case tests
+    @Test
+    void WeaponRepositoryAddFailureTest()  {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        WeaponRepository weaponRepository = new WeaponRepository(entityManager);
+        assertThrows(RepositoryException.class, ()->weaponRepository.add(null));
+        entityManagerFactory.close();
+    }
+
+    @Test
+    void WeaponRepositoryRemoveFailureTest()  {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        WeaponRepository weaponRepository = new WeaponRepository(entityManager);
+        assertThrows(RepositoryException.class, ()->weaponRepository.remove(null));
+        entityManagerFactory.close();
+    }
+
+    @Test
+    void WeaponRepositoryGetAllWeaponsTest()  {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        WeaponRepository weaponRepository = new WeaponRepository(entityManager);
+        assertDoesNotThrow(weaponRepository::getAllWeapons);
+        entityManagerFactory.close();
+    }
 }

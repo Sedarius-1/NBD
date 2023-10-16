@@ -49,5 +49,71 @@ public class WeaponManagerTest {
         entityManagerFactory.close();
     }
 
-    // TODO: add bad case tests
+    @Test
+    void WeaponManagerRegisterWeaponFail() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
+        assertFalse(weaponManager.registerWeapon(null, null));
+        assertFalse(weaponManager.registerWeapon(WeaponTypeEnum.PISTOL, null));
+
+        entityManagerFactory.close();
+
+    }
+
+    @Test
+    void WeaponManagerUnregisterWeaponSuccess() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
+        Map<String, String> map = new HashMap<>();
+        map.put("serialNumber", "2137");
+        map.put("manufacturer", "Ruger");
+        map.put("name", "PPC");
+        map.put("price", "4000");
+        map.put("caliber", "22LR");
+        map.put("length", "15.6");
+        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
+        assertTrue(weaponManager.unregisterWeapon(2137L));
+        entityManagerFactory.close();
+
+    }
+    @Test
+    void WeaponManagerUnregisterWeaponFail() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
+        assertFalse(weaponManager.unregisterWeapon(null));
+        entityManagerFactory.close();
+
+    }
+
+    @Test
+    void WeaponManagerGetWeaponFail() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
+        assertNull(weaponManager.getWeapon((null)));
+        entityManagerFactory.close();
+
+    }
+
+    @Test
+    void WeaponManagerGetAllWeaponsSuccess() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
+        Map<String, String> map = new HashMap<>();
+        map.put("serialNumber", "2137");
+        map.put("manufacturer", "Ruger");
+        map.put("name", "PPC");
+        map.put("price", "4000");
+        map.put("caliber", "22LR");
+        map.put("length", "15.6");
+        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
+        assertDoesNotThrow(weaponManager::getAllWeapons);
+        assertNotNull(weaponManager.getAllWeapons());
+        assertEquals(1, weaponManager.getAllWeapons().size());
+        entityManagerFactory.close();
+    }
 }
