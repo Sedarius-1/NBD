@@ -92,6 +92,7 @@ public class GunShop {
                 return purchaseManager.getPurchase(purchaseId);
             }
             else{
+                purchaseManager.undoPurchase(purchaseManager.getPurchase(purchaseId));
                 System.out.println(AnsiCodes.ANSI_GREEN + "Purchase failed - could not save new balance" + AnsiCodes.ANSI_RESET);
                 return null;
             }

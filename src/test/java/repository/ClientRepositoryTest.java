@@ -58,11 +58,11 @@ public class ClientRepositoryTest {
         Client client2 = clientRepository.get(1L);
         assertNotNull(client2);
         assertEquals(client2.getClientId(), 1L);
-        assertEquals(client2.getName(), "Name2");
-        assertEquals(client2.getSurname(), "Surname2");
-        assertEquals(client2.getAddress(), "Address2");
-        assertEquals(client2.getBirth(), LocalDate.of(2222, 11, 22));
-        assertEquals(client2.getBalance(), new BigDecimal(2137));
+        assertEquals("Name2", client2.getName());
+        assertEquals("Surname2", client2.getSurname());
+        assertEquals("Address2", client2.getAddress(), "Address2");
+        assertEquals(LocalDate.of(2222, 11, 22), client2.getBirth());
+        assertEquals(new BigDecimal(2137), client2.getBalance());
 
         entityManagerFactory.close();
     }

@@ -76,10 +76,12 @@ public class ClientRepository implements Repository<Client> {
         try {
             Client client = get(clientId);
             entityManager.getTransaction().begin();
-            Query query = entityManager.createQuery("UPDATE Client client SET client.name = :clientName WHERE client.clientId = :providedClientId");
-            query.setParameter("providedClientId", clientId);
-            query.setParameter("clientName", name);
-            query.executeUpdate();
+//            Query query = entityManager.createQuery("UPDATE Client client SET client.name = :clientName WHERE client.clientId = :providedClientId");
+//            query.setParameter("providedClientId", clientId);
+//            query.setParameter("clientName", name);
+//            query.executeUpdate();
+            Client merge = entityManager.merge(client);
+            merge.setName(name);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
@@ -91,10 +93,8 @@ public class ClientRepository implements Repository<Client> {
         try {
             Client client = get(clientId);
             entityManager.getTransaction().begin();
-            Query query = entityManager.createQuery("UPDATE Client client SET client.surname = :clientSurname WHERE client.clientId = :providedClientId");
-            query.setParameter("providedClientId", clientId);
-            query.setParameter("clientSurname", surname);
-            query.executeUpdate();
+            Client merge = entityManager.merge(client);
+            merge.setSurname(surname);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
@@ -106,10 +106,8 @@ public class ClientRepository implements Repository<Client> {
         try {
             Client client = get(clientId);
             entityManager.getTransaction().begin();
-            Query query = entityManager.createQuery("UPDATE Client client SET client.address = :clientAddress WHERE client.clientId = :providedClientId");
-            query.setParameter("providedClientId", clientId);
-            query.setParameter("clientAddress", address);
-            query.executeUpdate();
+            Client merge = entityManager.merge(client);
+            merge.setAddress(address);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
@@ -121,10 +119,8 @@ public class ClientRepository implements Repository<Client> {
         try {
             Client client = get(clientId);
             entityManager.getTransaction().begin();
-            Query query = entityManager.createQuery("UPDATE Client client SET client.birth = :clientBirth WHERE client.clientId = :providedClientId");
-            query.setParameter("providedClientId", clientId);
-            query.setParameter("clientBirth", birth);
-            query.executeUpdate();
+            Client merge = entityManager.merge(client);
+            merge.setBirth(birth);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
@@ -138,10 +134,8 @@ public class ClientRepository implements Repository<Client> {
             if(!entityManager.getTransaction().isActive()){
                 entityManager.getTransaction().begin();
             }
-            Query query = entityManager.createQuery("UPDATE Client client SET client.balance = :clientBalas WHERE client.clientId = :providedClientId");
-            query.setParameter("providedClientId", clientId);
-            query.setParameter("clientBalas", newBalance);
-            query.executeUpdate();
+            Client merge = entityManager.merge(client);
+            merge.setBalance(newBalance);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
