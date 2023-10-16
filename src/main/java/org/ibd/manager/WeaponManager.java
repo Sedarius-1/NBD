@@ -29,7 +29,7 @@ public class WeaponManager {
     public Boolean registerWeapon(WeaponTypeEnum weaponType, Map<String, String> params) {
         // TODO: might make this more user-friendly
         try {
-            weaponRepository.addWeapon(WeaponFactory.manufactureWeapon(weaponType, params));
+            weaponRepository.add(WeaponFactory.manufactureWeapon(weaponType, params));
         } catch (RepositoryException e) {
             logger.error(e.toString());
             return Boolean.FALSE;
@@ -39,7 +39,7 @@ public class WeaponManager {
 
     public Boolean unregisterWeapon(Long serialNumber) {
         try {
-            weaponRepository.removeWeapon(weaponRepository.getWeapon(serialNumber));
+            weaponRepository.remove(weaponRepository.get(serialNumber));
         } catch (RepositoryException e) {
             logger.error(e.toString());
             return Boolean.FALSE;
@@ -50,7 +50,7 @@ public class WeaponManager {
     public Weapon getWeapon(Long serialNumber){
         Weapon weapon = null;
         try {
-            weapon = weaponRepository.getWeapon(serialNumber);
+            weapon = weaponRepository.get(serialNumber);
         } catch (RepositoryException e) {
             logger.error(e.toString());
 

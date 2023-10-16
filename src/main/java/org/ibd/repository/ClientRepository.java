@@ -9,14 +9,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
-public class ClientRepository {
+public class ClientRepository implements Repository<Client> {
     EntityManager entityManager;
 
     public ClientRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
-    public void addClient(final Client client) throws RepositoryException {
+    public void add(final Client client) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(client);
@@ -27,7 +27,7 @@ public class ClientRepository {
         }
     }
 
-    public final Client getClient(Long clientId) throws RepositoryException {
+    public final Client get(Long clientId) throws RepositoryException {
         try {
             return entityManager.find(Client.class, clientId, LockModeType.PESSIMISTIC_WRITE);
         } catch (Exception e) {
@@ -36,7 +36,7 @@ public class ClientRepository {
         }
     }
 
-    public void removeClient(Client client) throws RepositoryException {
+    public void remove(Client client) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
             entityManager.remove(client);
@@ -50,7 +50,7 @@ public class ClientRepository {
     public void modifyClientName(Long clientId, String name) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
-            Client client = getClient(clientId);
+            Client client = get(clientId);
 
             client.setName(name);
             entityManager.persist(client);
@@ -64,7 +64,7 @@ public class ClientRepository {
     public void modifyClientSurname(Long clientId, String surname) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
-            Client client = getClient(clientId);
+            Client client = get(clientId);
             client.setSurname(surname);
             entityManager.persist(client);
             entityManager.getTransaction().commit();
@@ -77,7 +77,7 @@ public class ClientRepository {
     public void modifyClientAddress(Long clientId, String address) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
-            Client client = getClient(clientId);
+            Client client = get(clientId);
             client.setAddress(address);
             entityManager.persist(client);
             entityManager.getTransaction().commit();
@@ -90,7 +90,7 @@ public class ClientRepository {
     public void modifyClientAddress(Long clientId, LocalDate birth) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
-            Client client = getClient(clientId);
+            Client client = get(clientId);
             client.setBirth(birth);
             entityManager.persist(client);
             entityManager.getTransaction().commit();
@@ -103,7 +103,7 @@ public class ClientRepository {
     public void modifyClientBalance(Long clientId, BigDecimal newBalance) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
-            Client client = getClient(clientId);
+            Client client = get(clientId);
             client.setBalance(newBalance);
             entityManager.persist(client);
             entityManager.getTransaction().commit();

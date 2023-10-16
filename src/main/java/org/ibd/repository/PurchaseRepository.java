@@ -2,19 +2,20 @@ package org.ibd.repository;
 
 import jakarta.persistence.EntityManager;
 import org.ibd.exceptions.RepositoryException;
+import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
 
 import java.util.List;
 
 
-public class PurchaseRepository {
+public class PurchaseRepository implements Repository<Purchase> {
     EntityManager entityManager;
 
     public PurchaseRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
-    public void persistPurchase(final Purchase purchase) throws RepositoryException {
+    public void add(final Purchase purchase) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(purchase);
@@ -25,7 +26,7 @@ public class PurchaseRepository {
         }
     }
 
-    public final Purchase getPurchase(Long purchaseId) throws RepositoryException {
+    public final Purchase get(Long purchaseId) throws RepositoryException {
         try {
             return entityManager.createQuery("SELECT p FROM Purchase p WHERE p.purchaseId = :providedPurchaseId", Purchase.class).setParameter("providedPurchaseId", purchaseId).getSingleResult();
         } catch (Exception e) {
@@ -55,7 +56,7 @@ public class PurchaseRepository {
         }
     }
 
-    public void removePurchase(Purchase purchase) throws RepositoryException {
+    public void remove(Purchase purchase) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
             entityManager.remove(purchase);

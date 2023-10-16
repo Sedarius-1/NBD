@@ -21,9 +21,9 @@ public class ClientRepositoryTest {
         ClientRepository clientRepository = new ClientRepository(entityManager);
         Client client1 = new Client(1L, "Name", "Surname",
                 "Address", LocalDate.of(2000, 1, 1), new BigDecimal(0));
-        clientRepository.addClient(client1); // TODO: add doesNotThrow assert
+        clientRepository.add(client1); // TODO: add doesNotThrow assert
 
-        Client client2 = clientRepository.getClient(1L); // client repo may be fuk
+        Client client2 = clientRepository.get(1L); // client repo may be fuk
         assertNotNull(client2);
         assertEquals(client2.getClientId(), 1L);
         assertEquals(client2.getName(), "Name");
@@ -33,9 +33,9 @@ public class ClientRepositoryTest {
         assertEquals(client2.getBalance(), BigDecimal.ZERO);
         assertEquals(client2.getPurchaseSet().size(), 0);
 
-        clientRepository.removeClient(client2);
+        clientRepository.remove(client2);
 
-        assertNull(clientRepository.getClient(1L));
+        assertNull(clientRepository.get(1L));
 
         entityManagerFactory.close();
     }

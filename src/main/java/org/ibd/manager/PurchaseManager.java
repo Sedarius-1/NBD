@@ -3,7 +3,6 @@ package org.ibd.manager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import org.ibd.exceptions.RepositoryException;
-import org.ibd.factory.ClientFactory;
 import org.ibd.factory.PurchaseFactory;
 import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
@@ -24,7 +23,7 @@ public class PurchaseManager {
 
     public Boolean registerPurchase(Long purchaseId, Client client, Weapon weapon) {
         try {
-            purchaseRepository.persistPurchase(PurchaseFactory.createPurchase(purchaseId, client, weapon));
+            purchaseRepository.add(PurchaseFactory.createPurchase(purchaseId, client, weapon));
         } catch (RepositoryException e) {
             logger.error(e.toString());
             return Boolean.FALSE;
@@ -41,7 +40,7 @@ public class PurchaseManager {
         List<Purchase> listOfPurchases = purchaseRepository.getAllPurchasesForSingleClient(client.getClientId());
         var ref = new Object() {
             BigDecimal totalSum = BigDecimal.ZERO;
-        };       
+        };
         listOfPurchases.forEach(purchase -> {
             ref.totalSum = ref.totalSum.add(purchase.getWeapon().getPrice());
         });
@@ -55,7 +54,7 @@ public class PurchaseManager {
     public Purchase getPurchase(Long purchaseId) {
         Purchase purchase = null;
         try {
-            purchase = purchaseRepository.getPurchase(purchaseId);
+            purchase = purchaseRepository.get(purchaseId);
         } catch (RepositoryException e) {
             logger.error(e.toString());
 

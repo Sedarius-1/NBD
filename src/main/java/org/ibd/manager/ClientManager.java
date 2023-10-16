@@ -21,7 +21,7 @@ public class ClientManager {
     public Boolean registerClient(Long clientId, String name, String surname, String address, LocalDate birth, BigDecimal balance) {
         // TODO: add auto-generation of clientId
         try {
-            clientRepository.addClient(ClientFactory.createClient(clientId, name, surname, address, birth, balance));
+            clientRepository.add(ClientFactory.createClient(clientId, name, surname, address, birth, balance));
         } catch (RepositoryException e) {
             logger.error(e.toString());
             return Boolean.FALSE;
@@ -31,7 +31,7 @@ public class ClientManager {
 
     public Boolean unregisterClient(Long clientId) {
         try {
-            clientRepository.removeClient(clientRepository.getClient(clientId));
+            clientRepository.remove(clientRepository.get(clientId));
         } catch (RepositoryException e) {
             logger.error(e.toString());
             return Boolean.FALSE;
@@ -42,7 +42,7 @@ public class ClientManager {
     public Client getClient(Long clientId) {
         Client client = null;
         try {
-            client = clientRepository.getClient(clientId);
+            client = clientRepository.get(clientId);
         } catch (RepositoryException e) {
             logger.error(e.toString());
 

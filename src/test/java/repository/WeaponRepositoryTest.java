@@ -33,9 +33,9 @@ public class WeaponRepositoryTest {
         map.put("price", "2500");
         map.put("caliber", "9mm");
         Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, map);
-        weaponRepository.addWeapon(pistol); // TODO: add doesNotThrow assert
+        weaponRepository.add(pistol); // TODO: add doesNotThrow assert
 
-        Weapon weapon = weaponRepository.getWeapon(1L);
+        Weapon weapon = weaponRepository.get(1L);
         assertNotNull(weapon);
         assertInstanceOf(Pistol.class, weapon);
         Pistol pistol2 = (Pistol) weapon;
@@ -45,9 +45,9 @@ public class WeaponRepositoryTest {
         assertEquals(pistol2.getPrice(), new BigDecimal(2500));
         assertEquals(pistol2.getCaliber(), "9mm");
 
-        weaponRepository.removeWeapon(pistol2); // fuk
+        weaponRepository.remove(pistol2); // fuk
 
-        assertNull(weaponRepository.getWeapon(1L));
+        assertNull(weaponRepository.get(1L));
 
         entityManagerFactory.close();
     }

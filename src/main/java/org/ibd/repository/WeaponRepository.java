@@ -2,19 +2,20 @@ package org.ibd.repository;
 
 import jakarta.persistence.EntityManager;
 import org.ibd.exceptions.RepositoryException;
+import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
 import org.ibd.model.weapons.Weapon;
 
 import java.util.List;
 
-public class WeaponRepository {
+public class WeaponRepository implements Repository<Weapon> {
     EntityManager entityManager;
 
     public WeaponRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
-    public void addWeapon(final Weapon weapon) throws RepositoryException {
+    public void add(final Weapon weapon) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(weapon);
@@ -25,7 +26,7 @@ public class WeaponRepository {
         }
     }
 
-    public final Weapon getWeapon(Long serialNumber) throws RepositoryException {
+    public final Weapon get(Long serialNumber) throws RepositoryException {
         try {
             return entityManager.createQuery(
                             "SELECT w FROM Weapon w WHERE w.serialNumber = :providedSerialNumber", Weapon.class)
@@ -35,7 +36,7 @@ public class WeaponRepository {
         }
     }
 
-    public void removeWeapon(Weapon weapon) throws RepositoryException {
+    public void remove(Weapon weapon) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
             entityManager.remove(weapon);
