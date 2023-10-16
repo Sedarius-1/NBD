@@ -18,6 +18,16 @@ public class ClientManager {
         this.clientRepository = clientRepository;
     }
 
+    public Boolean saveClient(Client client) {
+        try {
+            clientRepository.add(client);
+        } catch (RepositoryException e) {
+            logger.error(e.toString());
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
     public Boolean registerClient(Long clientId, String name, String surname, String address, LocalDate birth, BigDecimal balance) {
         // TODO: add auto-generation of clientId
         try {
@@ -50,9 +60,9 @@ public class ClientManager {
         return client;
     }
 
-    public Boolean changeBalance(Client client, BigDecimal newBalance){
+    public Boolean changeBalance(Long clientId, BigDecimal newBalance){
         try {
-            clientRepository.modifyClientBalance(client.getClientId(), newBalance);
+            clientRepository.modifyClientBalance(clientId, newBalance);
             return true;
         } catch (RepositoryException e) {
             logger.error(e.toString());

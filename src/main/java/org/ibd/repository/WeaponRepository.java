@@ -1,6 +1,8 @@
 package org.ibd.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.Query;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
@@ -28,9 +30,12 @@ public class WeaponRepository implements Repository<Weapon> {
 
     public final Weapon get(Long serialNumber) throws RepositoryException {
         try {
-            return entityManager.createQuery(
-                            "SELECT w FROM Weapon w WHERE w.serialNumber = :providedSerialNumber", Weapon.class)
-                    .setParameter("providedSerialNumber", serialNumber).getSingleResult();
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery("SELECT weapon FROM Weapon weapon WHERE weapon.serialNumber = :providedSerialNumber");
+            query.setParameter("providedSerialNumber", serialNumber);
+            Weapon weapon = (Weapon) query.getSingleResult();
+            entityManager.getTransaction().commit();
+            return weapon;
         } catch (Exception e) {
             throw new RepositoryException(e.toString());
         }
@@ -39,7 +44,11 @@ public class WeaponRepository implements Repository<Weapon> {
     public void remove(Weapon weapon) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
-            entityManager.remove(weapon);
+            Long weaponId = weapon.getSerialNumber();
+            weapon = null;
+            Query query = entityManager.createQuery("DELETE FROM Weapon weapon WHERE weapon.serialNumber = :providedSerialNumber");
+            query.setParameter("providedSerialNumber", weaponId);
+            query.executeUpdate();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();

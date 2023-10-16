@@ -31,9 +31,14 @@ public class PurchaseManager {
         return Boolean.TRUE;
     }
 
-    public Boolean undoPurchase(Long purchaseId) {
-        logger.error("undoPurchase not implemented!");
-        return Boolean.FALSE;
+    public Boolean undoPurchase(Purchase purchase) {
+        try {
+            purchaseRepository.remove(purchase);
+        } catch (RepositoryException e) {
+            logger.error(e.toString());
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     public BigDecimal calculateTotalSumOfClientPurchases(Client client) throws RepositoryException {

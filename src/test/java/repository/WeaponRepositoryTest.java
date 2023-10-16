@@ -2,6 +2,7 @@ package repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.exceptions.RepositoryException;
@@ -45,9 +46,9 @@ public class WeaponRepositoryTest {
         assertEquals(pistol2.getPrice(), new BigDecimal(2500));
         assertEquals(pistol2.getCaliber(), "9mm");
 
-        weaponRepository.remove(pistol2); // fuk
+        weaponRepository.remove(pistol);
 
-        assertNull(weaponRepository.get(1L));
+        assertThrows(RepositoryException.class, ()-> weaponRepository.get(1L));
 
         entityManagerFactory.close();
     }

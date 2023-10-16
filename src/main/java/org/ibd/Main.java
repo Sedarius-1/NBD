@@ -35,5 +35,6 @@ public class Main {
         Purchase purchase = gunShop.registerPurchase(1L, client, rifle2);
         List<Weapon> availableWeapons = gunShop.getAvailableWeapons();
         logger.info(availableWeapons.size());
+        logger.info("All purchases:"+gunShop.getAllPurchases().size());
     }
 }

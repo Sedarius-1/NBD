@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OptimisticLockType;
+import org.hibernate.annotations.OptimisticLocking;
 import org.ibd.model.clients.Client;
 import org.ibd.model.weapons.Weapon;
 
@@ -16,7 +18,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
-
+@OptimisticLocking(type = OptimisticLockType.NONE)
 @Table(name = "Purchase")
 public class Purchase {
     @Id
@@ -30,7 +32,7 @@ public class Purchase {
     private Long purchaseId;
     @NotNull
     @NotEmpty
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Client client;
     @NotNull
     @OneToOne(cascade = CascadeType.ALL)

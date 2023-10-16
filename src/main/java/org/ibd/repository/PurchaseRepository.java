@@ -1,9 +1,11 @@
 package org.ibd.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
+import org.ibd.model.weapons.Weapon;
 
 import java.util.List;
 
@@ -28,7 +30,12 @@ public class PurchaseRepository implements Repository<Purchase> {
 
     public final Purchase get(Long purchaseId) throws RepositoryException {
         try {
-            return entityManager.createQuery("SELECT p FROM Purchase p WHERE p.purchaseId = :providedPurchaseId", Purchase.class).setParameter("providedPurchaseId", purchaseId).getSingleResult();
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery("SELECT purchase FROM Purchase purchase WHERE purchase.purchaseId = :providedPurchaseId");
+            query.setParameter("providedPurchaseId", purchaseId);
+            Purchase purchase = (Purchase) query.getSingleResult();
+            entityManager.getTransaction().commit();
+            return purchase;
         } catch (Exception e) {
 
             throw new RepositoryException(e.toString());
@@ -59,7 +66,11 @@ public class PurchaseRepository implements Repository<Purchase> {
     public void remove(Purchase purchase) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
-            entityManager.remove(purchase);
+            Long purchaseId = purchase.getPurchaseId();
+            purchase = null;
+            Query query = entityManager.createQuery("DELETE FROM Purchase purchase WHERE purchase.purchaseId = :providedPurchaseId");
+            query.setParameter("providedPurchaseId", purchaseId);
+            query.executeUpdate();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();

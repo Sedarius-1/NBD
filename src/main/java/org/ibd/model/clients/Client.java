@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OptimisticLockType;
+import org.hibernate.annotations.OptimisticLocking;
 import org.ibd.model.purchases.Purchase;
 
 import java.math.BigDecimal;
@@ -65,7 +67,7 @@ public class Client {
     private BigDecimal balance;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn
     @Fetch(FetchMode.JOIN)
     private Set<Purchase> purchaseSet;

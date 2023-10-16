@@ -87,7 +87,7 @@ public class GunShop {
             return null;
         }
         if (purchaseManager.registerPurchase(purchaseId, client, weapon)) {
-            if(clientManager.changeBalance(client, client.getBalance().subtract(weapon.getPrice()))){
+            if(clientManager.changeBalance(client.getClientId(), client.getBalance().subtract(weapon.getPrice()))){
                 System.out.println(AnsiCodes.ANSI_GREEN + "Registered purchase!" + AnsiCodes.ANSI_RESET);
                 return purchaseManager.getPurchase(purchaseId);
             }
@@ -116,6 +116,15 @@ public class GunShop {
         }
     }
 
+    public List<Purchase> getAllPurchases() {
+        try{
+            return purchaseManager.getAllPurchases();
+        }
+        catch (Exception ex){
+            logger.error(ex.toString());
+            return null;
+        }
+    }
     public BigDecimal getClientBalance(Long clientId) {
         try{
             Client client = clientManager.getClient(clientId);

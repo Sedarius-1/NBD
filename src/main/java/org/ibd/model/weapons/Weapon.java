@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OptimisticLockType;
+import org.hibernate.annotations.OptimisticLocking;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -17,6 +19,7 @@ import java.util.UUID;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 @Access(AccessType.FIELD)
+@OptimisticLocking(type = OptimisticLockType.NONE)
 public abstract class Weapon {
     //Todo: add sold boolean
     @SuppressWarnings("unused")

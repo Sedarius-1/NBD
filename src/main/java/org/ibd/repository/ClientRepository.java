@@ -2,6 +2,7 @@ package org.ibd.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
+import jakarta.persistence.Query;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
 
@@ -29,17 +30,41 @@ public class ClientRepository implements Repository<Client> {
 
     public final Client get(Long clientId) throws RepositoryException {
         try {
-            return entityManager.find(Client.class, clientId, LockModeType.PESSIMISTIC_WRITE);
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery("SELECT client FROM Client client WHERE client.clientId = :providedClientId");
+            query.setParameter("providedClientId", clientId);
+            query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
+            Client client = (Client) query.getSingleResult();
+            entityManager.getTransaction().commit();
+            return client;
         } catch (Exception e) {
-
+            entityManager.getTransaction().rollback();
             throw new RepositoryException(e.toString());
         }
     }
 
+//    public void remove(Long clientId) throws RepositoryException {
+//        try {
+//            entityManager.getTransaction().begin();
+//            Query query = entityManager.createQuery("DELETE FROM Client client WHERE client.clientId = :providedClientId");
+//            query.setParameter("providedClientId", clientId);
+//            query.executeUpdate();
+//            entityManager.getTransaction().commit();
+//        } catch (Exception e) {
+//            entityManager.getTransaction().rollback();
+//            throw new RepositoryException(e.toString());
+//        }
+//    }
+
     public void remove(Client client) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
-            entityManager.remove(client);
+            Long clientId = client.getClientId();
+            client.getPurchaseSet().clear();
+            client = null;
+            Query query = entityManager.createQuery("DELETE FROM Client client WHERE client.clientId = :providedClientId");
+            query.setParameter("providedClientId", clientId);
+            query.executeUpdate();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
@@ -49,11 +74,12 @@ public class ClientRepository implements Repository<Client> {
 
     public void modifyClientName(Long clientId, String name) throws RepositoryException {
         try {
-            entityManager.getTransaction().begin();
             Client client = get(clientId);
-
-            client.setName(name);
-            entityManager.persist(client);
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery("UPDATE Client client SET client.name = :clientName WHERE client.clientId = :providedClientId");
+            query.setParameter("providedClientId", clientId);
+            query.setParameter("clientName", name);
+            query.executeUpdate();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
@@ -63,10 +89,12 @@ public class ClientRepository implements Repository<Client> {
 
     public void modifyClientSurname(Long clientId, String surname) throws RepositoryException {
         try {
-            entityManager.getTransaction().begin();
             Client client = get(clientId);
-            client.setSurname(surname);
-            entityManager.persist(client);
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery("UPDATE Client client SET client.surname = :clientSurname WHERE client.clientId = :providedClientId");
+            query.setParameter("providedClientId", clientId);
+            query.setParameter("clientSurname", surname);
+            query.executeUpdate();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
@@ -76,10 +104,12 @@ public class ClientRepository implements Repository<Client> {
 
     public void modifyClientAddress(Long clientId, String address) throws RepositoryException {
         try {
-            entityManager.getTransaction().begin();
             Client client = get(clientId);
-            client.setAddress(address);
-            entityManager.persist(client);
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery("UPDATE Client client SET client.address = :clientAddress WHERE client.clientId = :providedClientId");
+            query.setParameter("providedClientId", clientId);
+            query.setParameter("clientAddress", address);
+            query.executeUpdate();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
@@ -87,12 +117,14 @@ public class ClientRepository implements Repository<Client> {
         }
     }
 
-    public void modifyClientAddress(Long clientId, LocalDate birth) throws RepositoryException {
+    public void modifyClientBirth(Long clientId, LocalDate birth) throws RepositoryException {
         try {
-            entityManager.getTransaction().begin();
             Client client = get(clientId);
-            client.setBirth(birth);
-            entityManager.persist(client);
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery("UPDATE Client client SET client.birth = :clientBirth WHERE client.clientId = :providedClientId");
+            query.setParameter("providedClientId", clientId);
+            query.setParameter("clientBirth", birth);
+            query.executeUpdate();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
@@ -100,18 +132,21 @@ public class ClientRepository implements Repository<Client> {
         }
     }
 
-    public void modifyClientBalance(Long clientId, BigDecimal newBalance) throws RepositoryException {
+    public void modifyClientBalance(Long clientId,  BigDecimal newBalance) throws RepositoryException {
         try {
-            entityManager.getTransaction().begin();
             Client client = get(clientId);
-            client.setBalance(newBalance);
-            entityManager.persist(client);
+            if(!entityManager.getTransaction().isActive()){
+                entityManager.getTransaction().begin();
+            }
+            Query query = entityManager.createQuery("UPDATE Client client SET client.balance = :clientBalas WHERE client.clientId = :providedClientId");
+            query.setParameter("providedClientId", clientId);
+            query.setParameter("clientBalas", newBalance);
+            query.executeUpdate();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
             throw new RepositoryException(e.toString());
         }
     }
-
 
 }
