@@ -33,4 +33,6 @@ public class ClientManagerTest {
         assertEquals(client.getPurchaseSet().size(), 0);
         entityManagerFactory.close();
     }
+
+    // TODO: add bad case tests
 }

@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class GunShopTest {
     @Test
     void GunShopTestFailed() {
-//        fail("Implement gunshop tests!");
-
+        fail("Implement gunshop tests!");
     }
 }
