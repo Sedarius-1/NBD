@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @DiscriminatorValue("rIfEl")
 @Access(AccessType.FIELD)

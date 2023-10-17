@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @DiscriminatorValue("McNuke:D")
 @Access(AccessType.FIELD)

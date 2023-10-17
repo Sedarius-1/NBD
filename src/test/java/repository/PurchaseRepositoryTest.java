@@ -28,42 +28,41 @@ public class PurchaseRepositoryTest {
         Client client = spy(Client.class);
         client.setPurchaseSet(new HashSet<>());
         Pistol pistol = mock(Pistol.class);
-        assertDoesNotThrow(()->purchaseRepository.add(new Purchase(1L, client, pistol)));
+        assertDoesNotThrow(() -> purchaseRepository.add(new Purchase(1L, client, pistol)));
 
         Purchase purchase = purchaseRepository.get(1L);
         assertNotNull(purchase);
-        Purchase purchase2 = purchase;
-        assertEquals(purchase2.getPurchaseId(), 1L);
-        assertEquals(purchase2.getClient(), client);
-        assertEquals(purchase2.getWeapon(), pistol);
+        assertEquals(purchase.getPurchaseId(), 1L);
+        assertEquals(purchase.getClient(), client);
+        assertEquals(purchase.getWeapon(), pistol);
 
-        purchaseRepository.remove(purchase2);
+        purchaseRepository.remove(purchase);
 
-        assertThrows(RepositoryException.class, ()-> purchaseRepository.get(1L));
+        assertThrows(RepositoryException.class, () -> purchaseRepository.get(1L));
 
         entityManagerFactory.close();
     }
 
     @Test
-    void PurchaseRepositoryAddFailureTest()  {
+    void PurchaseRepositoryAddFailureTest() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         PurchaseRepository purchaseRepository = new PurchaseRepository(entityManager);
-        assertThrows(RepositoryException.class, ()->purchaseRepository.add(null));
+        assertThrows(RepositoryException.class, () -> purchaseRepository.add(null));
         entityManagerFactory.close();
     }
 
     @Test
-    void PurchaseRepositoryRemoveFailureTest()  {
+    void PurchaseRepositoryRemoveFailureTest() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         PurchaseRepository purchaseRepository = new PurchaseRepository(entityManager);
-        assertThrows(RepositoryException.class, ()->purchaseRepository.remove(null));
+        assertThrows(RepositoryException.class, () -> purchaseRepository.remove(null));
         entityManagerFactory.close();
     }
 
     @Test
-    void PurchaseRepositoryGetAllPurchasesTest()  {
+    void PurchaseRepositoryGetAllPurchasesTest() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         PurchaseRepository purchaseRepository = new PurchaseRepository(entityManager);
@@ -77,11 +76,11 @@ public class PurchaseRepositoryTest {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         PurchaseRepository purchaseRepository = new PurchaseRepository(entityManager);
 
-        Client client = ClientFactory.createClient(1L,"test","test","test", LocalDate.now(),new BigDecimal(0));
+        Client client = ClientFactory.createClient(1L, "test", "test", "test", LocalDate.now(), new BigDecimal(0));
         Pistol pistol = mock(Pistol.class);
-        assertDoesNotThrow(()->purchaseRepository.add(new Purchase(1L, client, pistol)));
-        assertDoesNotThrow(()->purchaseRepository.getAllPurchasesForSingleClient(1L));
-        assertEquals(1,purchaseRepository.getAllPurchasesForSingleClient(1L).size());
+        assertDoesNotThrow(() -> purchaseRepository.add(new Purchase(1L, client, pistol)));
+        assertDoesNotThrow(() -> purchaseRepository.getAllPurchasesForSingleClient(1L));
+        assertEquals(1, purchaseRepository.getAllPurchasesForSingleClient(1L).size());
         entityManagerFactory.close();
     }
 }

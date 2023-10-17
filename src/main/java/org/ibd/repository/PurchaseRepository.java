@@ -3,9 +3,7 @@ package org.ibd.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.ibd.exceptions.RepositoryException;
-import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
-import org.ibd.model.weapons.Weapon;
 
 import java.util.List;
 
@@ -67,7 +65,6 @@ public class PurchaseRepository implements Repository<Purchase> {
         try {
             entityManager.getTransaction().begin();
             Long purchaseId = purchase.getPurchaseId();
-            purchase = null;
             Query query = entityManager.createQuery("DELETE FROM Purchase purchase WHERE purchase.purchaseId = :providedPurchaseId");
             query.setParameter("providedPurchaseId", purchaseId);
             query.executeUpdate();

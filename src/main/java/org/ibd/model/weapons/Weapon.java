@@ -12,6 +12,7 @@ import org.hibernate.annotations.OptimisticLocking;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Getter
 @NoArgsConstructor
@@ -47,7 +48,7 @@ public abstract class Weapon {
     @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name ="type", insertable = false, updatable = false)
+    @Column(name = "type", insertable = false, updatable = false)
     private String type;
 
     public Weapon(Long serialNumber, String manufacturer, String name, BigDecimal price) {

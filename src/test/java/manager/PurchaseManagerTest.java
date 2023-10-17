@@ -9,26 +9,21 @@ import org.ibd.factory.ClientFactory;
 import org.ibd.factory.WeaponFactory;
 import org.ibd.manager.ClientManager;
 import org.ibd.manager.PurchaseManager;
-import org.ibd.manager.WeaponManager;
 import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
 import org.ibd.model.weapons.Pistol;
 import org.ibd.model.weapons.Rifle;
 import org.ibd.repository.ClientRepository;
 import org.ibd.repository.PurchaseRepository;
-import org.ibd.repository.WeaponRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.spy;
 
 public class PurchaseManagerTest {
     private Map<String, String> pistolMap;
@@ -81,7 +76,7 @@ public class PurchaseManagerTest {
         purchaseManager.registerPurchase(1024L, client, pistol);
 
         Purchase purchase = purchaseManager.getPurchase(1024L);
-        purchaseManager.undoPurchase(purchase);
+        assertTrue(purchaseManager.undoPurchase(purchase));
 
         assertNull(purchaseManager.getPurchase(1024L));
         assertEquals(0, purchaseManager.getAllPurchases().size());

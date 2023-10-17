@@ -4,17 +4,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.ibd.enums.WeaponTypeEnum;
-import org.ibd.manager.ClientManager;
 import org.ibd.manager.WeaponManager;
-import org.ibd.model.clients.Client;
 import org.ibd.model.weapons.Rifle;
 import org.ibd.model.weapons.Weapon;
-import org.ibd.repository.ClientRepository;
 import org.ibd.repository.WeaponRepository;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +54,6 @@ public class WeaponManagerTest {
         assertFalse(weaponManager.registerWeapon(WeaponTypeEnum.PISTOL, null));
 
         entityManagerFactory.close();
-
     }
 
     @Test
@@ -76,8 +71,8 @@ public class WeaponManagerTest {
         weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
         assertTrue(weaponManager.unregisterWeapon(2137L));
         entityManagerFactory.close();
-
     }
+
     @Test
     void WeaponManagerUnregisterWeaponFail() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
@@ -85,7 +80,6 @@ public class WeaponManagerTest {
         WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
         assertFalse(weaponManager.unregisterWeapon(null));
         entityManagerFactory.close();
-
     }
 
     @Test
@@ -95,7 +89,6 @@ public class WeaponManagerTest {
         WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
         assertNull(weaponManager.getWeapon((null)));
         entityManagerFactory.close();
-
     }
 
     @Test

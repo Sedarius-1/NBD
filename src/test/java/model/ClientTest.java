@@ -1,8 +1,6 @@
 package model;
 
-import org.ibd.factory.ClientFactory;
 import org.ibd.model.clients.Client;
-import org.ibd.model.purchases.Purchase;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

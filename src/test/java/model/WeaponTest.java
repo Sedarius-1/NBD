@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class WeaponTest {
     @Test
     void PistolTest() {
-        Pistol pistol = new Pistol(2L,"Glock", "Glock 17", new BigDecimal("2137"), "9mm");
+        Pistol pistol = new Pistol(2L, "Glock", "Glock 17", new BigDecimal("2137"), "9mm");
         assertNotNull(pistol);
         assertNull(pistol.getId());
         assertEquals(pistol.getSerialNumber(), 2L);
@@ -37,7 +37,7 @@ public class WeaponTest {
 
     @Test
     void RifleTest() {
-        Rifle rifle = new Rifle(1L,"Ruger", "PPC", new BigDecimal("4000"), "22LR", Float.valueOf("15.6"));
+        Rifle rifle = new Rifle(1L, "Ruger", "PPC", new BigDecimal("4000"), "22LR", Float.valueOf("15.6"));
         assertNotNull(rifle);
         assertNull(rifle.getId());
         assertEquals(rifle.getSerialNumber(), 1L);

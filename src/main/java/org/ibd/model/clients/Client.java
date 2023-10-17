@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OptimisticLockType;
-import org.hibernate.annotations.OptimisticLocking;
 import org.ibd.model.purchases.Purchase;
 
 import java.math.BigDecimal;
@@ -17,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Getter
 @NoArgsConstructor
@@ -50,7 +49,7 @@ public class Client {
 
     @NotNull
     @NotEmpty
-    @Column(name = "surename")
+    @Column(name = "surname")
     private String surname;
 
     @NotNull

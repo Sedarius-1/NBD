@@ -6,11 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GunShopTest {
     @Test
-    void DummyTest(){
+    void DummyTest() {
         assertTrue(true);
-    }
-    @Test
-    void GunShopTestFailed() {
-        assertEquals(1,1);
     }
 }

@@ -20,7 +20,7 @@ public class Main {
 
     public static void main(String[] args) {
         GunShop gunShop = new GunShop();
-        Client client = gunShop.registerClient(1L, "Tomunek", "UwU", "Bolzga", LocalDate.of(2003, 2, 5), new BigDecimal("600"));
+        Client client = gunShop.registerClient(1L, "User", "Userer", "Address", LocalDate.of(2003, 2, 5), new BigDecimal("600"));
         Map<String, String> rifleMap = new HashMap<>();
         rifleMap.put("serialNumber", "1");
         rifleMap.put("manufacturer", "uwu");

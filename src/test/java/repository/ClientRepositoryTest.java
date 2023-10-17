@@ -6,7 +6,6 @@ import jakarta.persistence.Persistence;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
 import org.ibd.repository.ClientRepository;
-import org.ibd.repository.WeaponRepository;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -69,33 +68,33 @@ public class ClientRepositoryTest {
     }
 
     @Test
-    void ClientRepositoryAddFailureTest()  {
+    void ClientRepositoryAddFailureTest() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         ClientRepository clientRepository = new ClientRepository(entityManager);
-        assertThrows(RepositoryException.class, ()->clientRepository.add(null));
+        assertThrows(RepositoryException.class, () -> clientRepository.add(null));
         entityManagerFactory.close();
     }
 
     @Test
-    void ClientRepositoryRemoveFailureTest()  {
+    void ClientRepositoryRemoveFailureTest() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         ClientRepository clientRepository = new ClientRepository(entityManager);
-        assertThrows(RepositoryException.class, ()->clientRepository.remove(null));
+        assertThrows(RepositoryException.class, () -> clientRepository.remove(null));
         entityManagerFactory.close();
     }
 
     @Test
-    void ClientRepositoryModifyFailureTest()  {
+    void ClientRepositoryModifyFailureTest() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         ClientRepository clientRepository = new ClientRepository(entityManager);
-        assertThrows(RepositoryException.class, ()->clientRepository.modifyClientName(null, null));
-        assertThrows(RepositoryException.class, ()->clientRepository.modifyClientSurname(null, null));
-        assertThrows(RepositoryException.class, ()->clientRepository.modifyClientBirth(null, null));
-        assertThrows(RepositoryException.class, ()->clientRepository.modifyClientAddress(null, null));
-        assertThrows(RepositoryException.class, ()->clientRepository.modifyClientBalance(null, null));
+        assertThrows(RepositoryException.class, () -> clientRepository.modifyClientName(null, null));
+        assertThrows(RepositoryException.class, () -> clientRepository.modifyClientSurname(null, null));
+        assertThrows(RepositoryException.class, () -> clientRepository.modifyClientBirth(null, null));
+        assertThrows(RepositoryException.class, () -> clientRepository.modifyClientAddress(null, null));
+        assertThrows(RepositoryException.class, () -> clientRepository.modifyClientBalance(null, null));
 
         entityManagerFactory.close();
     }

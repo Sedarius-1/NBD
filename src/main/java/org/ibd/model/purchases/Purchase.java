@@ -1,13 +1,10 @@
 package org.ibd.model.purchases;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
-
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 import org.ibd.model.clients.Client;
@@ -15,6 +12,7 @@ import org.ibd.model.weapons.Weapon;
 
 import java.util.UUID;
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Getter
 @NoArgsConstructor

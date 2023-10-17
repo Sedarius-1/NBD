@@ -15,21 +15,15 @@ import static org.mockito.Mockito.spy;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-
 public class PurchaseFactoryTest {
-    @Test
-    void PurchaseFactoryCreationTest() {
-        PurchaseFactory purchaseFactory = new PurchaseFactory();
-        assertNotNull(purchaseFactory);
-    }
 
     @Test
-    void PurchaseFactoryPurchaseCreationTest(){
+    void PurchaseFactoryPurchaseCreationTest() {
         Long purchaseId = 1L;
         Client client = spy(Client.class);
         client.setPurchaseSet(new HashSet<>());
         Pistol pistol = mock(Pistol.class);
-        PurchaseFactory.createPurchase(purchaseId, client,pistol);
+        PurchaseFactory.createPurchase(purchaseId, client, pistol);
         assertEquals(1, client.getPurchaseSet().size());
     }
 }

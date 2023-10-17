@@ -1,11 +1,8 @@
 package org.ibd.repository;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.LockModeType;
 import jakarta.persistence.Query;
 import org.ibd.exceptions.RepositoryException;
-import org.ibd.model.clients.Client;
-import org.ibd.model.purchases.Purchase;
 import org.ibd.model.weapons.Weapon;
 
 import java.util.List;
@@ -45,7 +42,6 @@ public class WeaponRepository implements Repository<Weapon> {
         try {
             entityManager.getTransaction().begin();
             Long weaponId = weapon.getSerialNumber();
-            weapon = null;
             Query query = entityManager.createQuery("DELETE FROM Weapon weapon WHERE weapon.serialNumber = :providedSerialNumber");
             query.setParameter("providedSerialNumber", weaponId);
             query.executeUpdate();

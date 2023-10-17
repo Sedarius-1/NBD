@@ -32,13 +32,13 @@ public class ClientManager {
     public Boolean registerClient(Long clientId, String name, String surname, String address, LocalDate birth, BigDecimal balance) {
 
         try {
-            if(
-                Objects.isNull(clientId) ||
-                Objects.isNull(name) ||
-                Objects.isNull(surname) ||
-                Objects.isNull(address) ||
-                Objects.isNull(birth) ||
-                Objects.isNull(balance)
+            if (
+                    Objects.isNull(clientId) ||
+                            Objects.isNull(name) ||
+                            Objects.isNull(surname) ||
+                            Objects.isNull(address) ||
+                            Objects.isNull(birth) ||
+                            Objects.isNull(balance)
             ) throw new RepositoryException("Null passed!");
             clientRepository.add(ClientFactory.createClient(clientId, name, surname, address, birth, balance));
         } catch (RepositoryException e) {
@@ -69,12 +69,11 @@ public class ClientManager {
         return client;
     }
 
-    public Boolean changeName(Long clientId, String name){
+    public Boolean changeName(Long clientId, String name) {
         try {
-            if(name!= null){
+            if (name != null) {
                 clientRepository.modifyClientName(clientId, name);
-            }
-            else throw new RepositoryException("null passed");
+            } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
             logger.error(e.toString());
@@ -82,12 +81,12 @@ public class ClientManager {
         }
         return false;
     }
-    public Boolean changeSurname(Long clientId, String surname){
+
+    public Boolean changeSurname(Long clientId, String surname) {
         try {
-            if(surname!= null){
+            if (surname != null) {
                 clientRepository.modifyClientSurname(clientId, surname);
-            }
-            else throw new RepositoryException("null passed");
+            } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
             logger.error(e.toString());
@@ -95,12 +94,12 @@ public class ClientManager {
         }
         return false;
     }
-    public Boolean changeAddress(Long clientId, String address){
+
+    public Boolean changeAddress(Long clientId, String address) {
         try {
-            if(address!= null){
+            if (address != null) {
                 clientRepository.modifyClientAddress(clientId, address);
-            }
-            else throw new RepositoryException("null passed");
+            } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
             logger.error(e.toString());
@@ -108,12 +107,12 @@ public class ClientManager {
         }
         return false;
     }
-    public Boolean changeBirth(Long clientId, LocalDate birth){
+
+    public Boolean changeBirth(Long clientId, LocalDate birth) {
         try {
-            if(birth!= null){
+            if (birth != null) {
                 clientRepository.modifyClientBirth(clientId, birth);
-            }
-            else throw new RepositoryException("null passed");
+            } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
             logger.error(e.toString());
@@ -121,12 +120,12 @@ public class ClientManager {
         }
         return false;
     }
-    public Boolean changeBalance(Long clientId, BigDecimal newBalance){
+
+    public Boolean changeBalance(Long clientId, BigDecimal newBalance) {
         try {
-            if(newBalance!= null){
-            clientRepository.modifyClientBalance(clientId, newBalance);
-            }
-            else throw new RepositoryException("null passed");
+            if (newBalance != null) {
+                clientRepository.modifyClientBalance(clientId, newBalance);
+            } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
             logger.error(e.toString());

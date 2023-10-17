@@ -2,20 +2,16 @@ package repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.factory.WeaponFactory;
-import org.ibd.model.clients.Client;
 import org.ibd.model.weapons.Pistol;
 import org.ibd.model.weapons.Weapon;
-import org.ibd.repository.ClientRepository;
 import org.ibd.repository.WeaponRepository;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +30,7 @@ public class WeaponRepositoryTest {
         map.put("price", "2500");
         map.put("caliber", "9mm");
         Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, map);
-        assertDoesNotThrow(()->weaponRepository.add(pistol));
+        assertDoesNotThrow(() -> weaponRepository.add(pistol));
 
         Weapon weapon = weaponRepository.get(1L);
         assertNotNull(weapon);
@@ -48,31 +44,31 @@ public class WeaponRepositoryTest {
 
         weaponRepository.remove(pistol);
 
-        assertThrows(RepositoryException.class, ()-> weaponRepository.get(1L));
+        assertThrows(RepositoryException.class, () -> weaponRepository.get(1L));
 
         entityManagerFactory.close();
     }
 
     @Test
-    void WeaponRepositoryAddFailureTest()  {
+    void WeaponRepositoryAddFailureTest() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         WeaponRepository weaponRepository = new WeaponRepository(entityManager);
-        assertThrows(RepositoryException.class, ()->weaponRepository.add(null));
+        assertThrows(RepositoryException.class, () -> weaponRepository.add(null));
         entityManagerFactory.close();
     }
 
     @Test
-    void WeaponRepositoryRemoveFailureTest()  {
+    void WeaponRepositoryRemoveFailureTest() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         WeaponRepository weaponRepository = new WeaponRepository(entityManager);
-        assertThrows(RepositoryException.class, ()->weaponRepository.remove(null));
+        assertThrows(RepositoryException.class, () -> weaponRepository.remove(null));
         entityManagerFactory.close();
     }
 
     @Test
-    void WeaponRepositoryGetAllWeaponsTest()  {
+    void WeaponRepositoryGetAllWeaponsTest() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         WeaponRepository weaponRepository = new WeaponRepository(entityManager);

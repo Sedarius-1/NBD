@@ -10,11 +10,6 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ClientFactoryTest {
-    @Test
-    void ClientFactoryCreationTest() {
-        ClientFactory clientFactory = new ClientFactory();
-        assertNotNull(clientFactory);
-    }
 
     @Test
     void ClientFactoryClientCreationTest() {
@@ -26,7 +21,7 @@ public class ClientFactoryTest {
         assertEquals(client.getSurname(), "Surname");
         assertEquals(client.getAddress(), "Address");
         assertEquals(client.getBirth(), LocalDate.of(2000, 1, 1));
-        assertEquals(client.getBalance(),BigDecimal.ZERO);
+        assertEquals(client.getBalance(), BigDecimal.ZERO);
         assertEquals(client.getPurchaseSet().size(), 0);
     }
 }

@@ -46,9 +46,7 @@ public class PurchaseManager {
         var ref = new Object() {
             BigDecimal totalSum = BigDecimal.ZERO;
         };
-        listOfPurchases.forEach(purchase -> {
-            ref.totalSum = ref.totalSum.add(purchase.getWeapon().getPrice());
-        });
+        listOfPurchases.forEach(purchase -> ref.totalSum = ref.totalSum.add(purchase.getWeapon().getPrice()));
         return ref.totalSum;
     }
 

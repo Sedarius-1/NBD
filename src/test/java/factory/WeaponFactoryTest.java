@@ -20,12 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class WeaponFactoryTest {
 
-    @Test
-    void WeaponFactoryCreationTest() {
-        WeaponFactory weaponFactory = new WeaponFactory();
-        assertNotNull(weaponFactory);
-    }
-
     @ParameterizedTest
     @ArgumentsSource(MapTooFewArgumentsProvider.class)
     void TooFewArgumentsTest(Map<String, String> badParams) {

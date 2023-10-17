@@ -43,25 +43,11 @@ public class ClientRepository implements Repository<Client> {
         }
     }
 
-//    public void remove(Long clientId) throws RepositoryException {
-//        try {
-//            entityManager.getTransaction().begin();
-//            Query query = entityManager.createQuery("DELETE FROM Client client WHERE client.clientId = :providedClientId");
-//            query.setParameter("providedClientId", clientId);
-//            query.executeUpdate();
-//            entityManager.getTransaction().commit();
-//        } catch (Exception e) {
-//            entityManager.getTransaction().rollback();
-//            throw new RepositoryException(e.toString());
-//        }
-//    }
-
     public void remove(Client client) throws RepositoryException {
         try {
             entityManager.getTransaction().begin();
             Long clientId = client.getClientId();
             client.getPurchaseSet().clear();
-            client = null;
             Query query = entityManager.createQuery("DELETE FROM Client client WHERE client.clientId = :providedClientId");
             query.setParameter("providedClientId", clientId);
             query.executeUpdate();
@@ -76,10 +62,6 @@ public class ClientRepository implements Repository<Client> {
         try {
             Client client = get(clientId);
             entityManager.getTransaction().begin();
-//            Query query = entityManager.createQuery("UPDATE Client client SET client.name = :clientName WHERE client.clientId = :providedClientId");
-//            query.setParameter("providedClientId", clientId);
-//            query.setParameter("clientName", name);
-//            query.executeUpdate();
             Client merge = entityManager.merge(client);
             merge.setName(name);
             entityManager.getTransaction().commit();
@@ -128,10 +110,10 @@ public class ClientRepository implements Repository<Client> {
         }
     }
 
-    public void modifyClientBalance(Long clientId,  BigDecimal newBalance) throws RepositoryException {
+    public void modifyClientBalance(Long clientId, BigDecimal newBalance) throws RepositoryException {
         try {
             Client client = get(clientId);
-            if(!entityManager.getTransaction().isActive()){
+            if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }
             Client merge = entityManager.merge(client);

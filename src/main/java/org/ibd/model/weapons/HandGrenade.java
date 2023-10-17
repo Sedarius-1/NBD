@@ -8,6 +8,7 @@ import org.ibd.model.enums.GrenadeType;
 
 import java.math.BigDecimal;
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Getter
 @Setter

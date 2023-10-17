@@ -4,16 +4,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.exceptions.RepositoryException;
-import org.ibd.factory.ClientFactory;
 import org.ibd.factory.WeaponFactory;
-import org.ibd.model.clients.Client;
-import org.ibd.model.purchases.Purchase;
 import org.ibd.model.weapons.Weapon;
-import org.ibd.repository.PurchaseRepository;
 import org.ibd.repository.WeaponRepository;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

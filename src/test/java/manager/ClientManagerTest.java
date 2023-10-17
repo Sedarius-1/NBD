@@ -41,7 +41,6 @@ public class ClientManagerTest {
         ClientManager clientManager = new ClientManager(new ClientRepository(entityManager));
         assertFalse(clientManager.saveClient(null));
         entityManagerFactory.close();
-
     }
 
     @Test
@@ -49,36 +48,33 @@ public class ClientManagerTest {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         ClientManager clientManager = new ClientManager(new ClientRepository(entityManager));
-        assertFalse(clientManager.registerClient(null, null, null, null, null,null));
-        assertFalse(clientManager.registerClient(1L, null, null, null, null,null));
-        assertFalse(clientManager.registerClient(1L, "jan", null, null, null,null));
-        assertFalse(clientManager.registerClient(1L, "jan", "kowalski", null, null,null));
-        assertFalse(clientManager.registerClient(1L, "jan", "kowalski", "test", null,null));
-        assertFalse(clientManager.registerClient(1L, "jan", "kowalski", "test", LocalDate.now(),null));
+        assertFalse(clientManager.registerClient(null, null, null, null, null, null));
+        assertFalse(clientManager.registerClient(1L, null, null, null, null, null));
+        assertFalse(clientManager.registerClient(1L, "jan", null, null, null, null));
+        assertFalse(clientManager.registerClient(1L, "jan", "kowalski", null, null, null));
+        assertFalse(clientManager.registerClient(1L, "jan", "kowalski", "test", null, null));
+        assertFalse(clientManager.registerClient(1L, "jan", "kowalski", "test", LocalDate.now(), null));
 
         entityManagerFactory.close();
-
     }
 
     @Test
-    void ClientManagerUnegisterClientSuccess() {
+    void ClientManagerUnregisterClientSuccess() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         ClientManager clientManager = new ClientManager(new ClientRepository(entityManager));
-        clientManager.registerClient(1L,"test","test","test", LocalDate.now(),new BigDecimal(0));
+        clientManager.registerClient(1L, "test", "test", "test", LocalDate.now(), new BigDecimal(0));
         assertTrue(clientManager.unregisterClient(1L));
         entityManagerFactory.close();
-
     }
 
     @Test
-    void ClientManagerUnegisterClientFail() {
+    void ClientManagerUnregisterClientFail() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         ClientManager clientManager = new ClientManager(new ClientRepository(entityManager));
         assertFalse(clientManager.unregisterClient(null));
         entityManagerFactory.close();
-
     }
 
     @Test
@@ -88,7 +84,6 @@ public class ClientManagerTest {
         ClientManager clientManager = new ClientManager(new ClientRepository(entityManager));
         assertNull(clientManager.getClient(null));
         entityManagerFactory.close();
-
     }
 
     @Test
@@ -96,7 +91,7 @@ public class ClientManagerTest {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("NBDunit"); // TODO: change to `test`
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         ClientManager clientManager = new ClientManager(new ClientRepository(entityManager));
-        clientManager.registerClient(1L,"test","test","test", LocalDate.now(),new BigDecimal(0));
+        clientManager.registerClient(1L, "test", "test", "test", LocalDate.now(), new BigDecimal(0));
         assertTrue(clientManager.changeName(1L, "ntest2"));
         assertTrue(clientManager.changeSurname(1L, "stest2"));
         assertTrue(clientManager.changeAddress(1L, "atest2"));
@@ -111,7 +106,6 @@ public class ClientManagerTest {
         assertEquals(new BigDecimal(200L), client.getBalance());
         assertEquals(0, client.getPurchaseSet().size());
         entityManagerFactory.close();
-
     }
 
     @Test
@@ -119,7 +113,7 @@ public class ClientManagerTest {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         ClientManager clientManager = new ClientManager(new ClientRepository(entityManager));
-        clientManager.registerClient(1L,"ntest","stest","atest", LocalDate.of(2001, 1, 1),new BigDecimal(0));
+        clientManager.registerClient(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0));
         assertFalse(clientManager.changeName(1L, null));
         assertFalse(clientManager.changeSurname(1L, null));
         assertFalse(clientManager.changeAddress(1L, null));
@@ -134,6 +128,5 @@ public class ClientManagerTest {
         assertEquals(new BigDecimal(0), client.getBalance());
         assertEquals(0, client.getPurchaseSet().size());
         entityManagerFactory.close();
-
     }
 }
