@@ -13,10 +13,13 @@ import org.ibd.manager.WeaponManager;
 import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
 import org.ibd.model.weapons.Pistol;
+import org.ibd.model.weapons.Rifle;
 import org.ibd.repository.ClientRepository;
 import org.ibd.repository.PurchaseRepository;
 import org.ibd.repository.WeaponRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,38 +31,91 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.spy;
 
 public class PurchaseManagerTest {
+    private Map<String, String> pistolMap;
+
+    @BeforeEach
+    void prepareMap() {
+        pistolMap = new HashMap<>();
+        pistolMap.put("serialNumber", "1");
+        pistolMap.put("manufacturer", "Glock");
+        pistolMap.put("name", "Glock 19");
+        pistolMap.put("price", "2500");
+        pistolMap.put("caliber", "9mm");
+    }
 
     @Test
-    void DummyTest(){
-        assertTrue(true);
-    }
-    @Test
     void PersistPurchaseTest() throws RepositoryException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+        // RUN DOCKER COMPOSE BEFORE TESTS!!!
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("NBDunit"); // TODO: change to `test`
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         PurchaseManager purchaseManager = new PurchaseManager(new PurchaseRepository(entityManager));
         ClientManager clientManager = new ClientManager(new ClientRepository(entityManager));
         Client client = ClientFactory.createClient(1024L, "test", "Test", "test", LocalDate.now(), new BigDecimal("0"));
-        Map<String, String> map = new HashMap<>();
-        map.put("serialNumber", "1");
-        map.put("manufacturer", "Glock");
-        map.put("name", "Glock 19");
-        map.put("price", "2500");
-        map.put("caliber", "9mm");
-        Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, map);
+
+        Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, pistolMap);
         clientManager.saveClient(client);
         client = clientManager.getClient(client.getClientId());
         purchaseManager.registerPurchase(1024L, client, pistol);
 
         assertDoesNotThrow(purchaseManager::getAllPurchases);
-        assertEquals(1, purchaseManager.getAllPurchases().size()); // Fuk
+        assertEquals(1, purchaseManager.getAllPurchases().size());
         Purchase purchase = purchaseManager.getPurchase(1024L);
         assertEquals(purchase.getPurchaseId(), 1024L);
         assertEquals(purchase.getWeapon(), pistol);
         assertEquals(purchase.getClient(), client);
-        purchaseManager.undoPurchase(purchase);
         entityManagerFactory.close();
     }
 
-    // TODO: add bad case tests
+    @Test
+    void PersistPurchaseUndoTest() throws RepositoryException {
+        // RUN DOCKER COMPOSE BEFORE TESTS!!!
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("NBDunit"); // TODO: change to `test`
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        PurchaseManager purchaseManager = new PurchaseManager(new PurchaseRepository(entityManager));
+        ClientManager clientManager = new ClientManager(new ClientRepository(entityManager));
+        Client client = ClientFactory.createClient(1024L, "test", "Test", "test", LocalDate.now(), new BigDecimal("0"));
+
+        Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, pistolMap);
+        clientManager.saveClient(client);
+        client = clientManager.getClient(client.getClientId());
+        purchaseManager.registerPurchase(1024L, client, pistol);
+
+        Purchase purchase = purchaseManager.getPurchase(1024L);
+        purchaseManager.undoPurchase(purchase);
+
+        assertNull(purchaseManager.getPurchase(1024L));
+        assertEquals(0, purchaseManager.getAllPurchases().size());
+        entityManagerFactory.close();
+    }
+
+    @Test
+    void CalculateTotalTest() throws RepositoryException {
+        // RUN DOCKER COMPOSE BEFORE TESTS!!!
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("NBDunit"); // TODO: change to `test`
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        PurchaseManager purchaseManager = new PurchaseManager(new PurchaseRepository(entityManager));
+
+        ClientManager clientManager = new ClientManager(new ClientRepository(entityManager));
+        Client client = ClientFactory.createClient(1024L, "test", "Test", "test", LocalDate.now(), new BigDecimal("4000"));
+        clientManager.saveClient(client);
+        client = clientManager.getClient(client.getClientId());
+
+        Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, pistolMap);
+        Map<String, String> rifleMap = new HashMap<>();
+        rifleMap.put("serialNumber", "1");
+        rifleMap.put("manufacturer", "Glock");
+        rifleMap.put("name", "Glock 19");
+        rifleMap.put("price", "1000");
+        rifleMap.put("caliber", "9mm");
+        rifleMap.put("length", "15.6");
+
+        Rifle rifle = WeaponFactory.manufactureWeapon(WeaponTypeEnum.RIFLE, rifleMap);
+
+        purchaseManager.registerPurchase(1024L, client, pistol);
+        purchaseManager.registerPurchase(1024L, client, rifle);
+
+        assertEquals(purchaseManager.calculateTotalSumOfClientPurchases(client), new BigDecimal(3500));
+        entityManagerFactory.close();
+    }
+
 }

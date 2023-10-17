@@ -43,7 +43,7 @@ public class ClientRepositoryTest {
 
     @Test
     void ClientRepositoryClientModifyTest() throws RepositoryException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("NBDunit"); // TODO: change to `test`
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         ClientRepository clientRepository = new ClientRepository(entityManager);
         Client client1 = new Client(1L, "Name", "Surname",

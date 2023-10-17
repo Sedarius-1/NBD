@@ -93,7 +93,7 @@ public class ClientManagerTest {
 
     @Test
     void ClientManagerModifyClientSuccess() {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("NBDunit"); // TODO: change to `test`
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         ClientManager clientManager = new ClientManager(new ClientRepository(entityManager));
         clientManager.registerClient(1L,"test","test","test", LocalDate.now(),new BigDecimal(0));
