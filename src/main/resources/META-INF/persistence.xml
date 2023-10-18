@@ -11,7 +11,8 @@
             <property name="jakarta.persistence.jdbc.user" value="nbd"/>
             <property name="jakarta.persistence.jdbc.password" value="nbdpassword"/>
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
-            <property name="org.hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
+            <property name="hibernate.connection.isolation" value="8"/>
+            <!-- TRANSACTION_SERIALIZABLE-->
         </properties>
     </persistence-unit>
 </persistence>

@@ -23,7 +23,7 @@ public class ClientRepositoryTest {
                 "Address", LocalDate.of(2000, 1, 1), new BigDecimal(0));
         clientRepository.add(client1); // TODO: add doesNotThrow assert
 
-        Client client2 = clientRepository.get(1L);
+        Client client2 = clientRepository.getTransactive(1L);
         assertNotNull(client2);
         assertEquals(client2.getClientId(), 1L);
         assertEquals(client2.getName(), "Name");
@@ -55,7 +55,7 @@ public class ClientRepositoryTest {
         clientRepository.modifyClientBirth(1L, LocalDate.of(2222, 11, 22));
         clientRepository.modifyClientBalance(1L, new BigDecimal(2137));
 
-        Client client2 = clientRepository.get(1L);
+        Client client2 = clientRepository.getTransactive(1L);
         assertNotNull(client2);
         assertEquals(client2.getClientId(), 1L);
         assertEquals("Name2", client2.getName());

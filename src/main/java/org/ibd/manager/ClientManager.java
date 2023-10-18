@@ -50,7 +50,7 @@ public class ClientManager {
 
     public Boolean unregisterClient(Long clientId) {
         try {
-            clientRepository.remove(clientRepository.get(clientId));
+            clientRepository.remove(clientRepository.getTransactive(clientId));
         } catch (RepositoryException e) {
             logger.error(e.toString());
             return Boolean.FALSE;
@@ -61,7 +61,7 @@ public class ClientManager {
     public Client getClient(Long clientId) {
         Client client = null;
         try {
-            client = clientRepository.get(clientId);
+            client = clientRepository.getTransactive(clientId);
         } catch (RepositoryException e) {
             logger.error(e.toString());
 
