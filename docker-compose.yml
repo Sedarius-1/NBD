@@ -1,16 +1,70 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_DB: nbddb
-      POSTGRES_USER: nbd
-      POSTGRES_PASSWORD: nbdpassword
-    ports:
-      - 5432:5432
+  mongo0:
+    container_name: mongo0
+    image: mongo:latest
     volumes:
-      - pg:/var/lib/postgresql/data
+      - mongo0:/data/db
+    ports:
+      - 27017:27017
+    command: --config /etc/mongod.conf --port 27017 --replSet mongo_repl
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 2s
+      retries: 5
+
+  mongo1:
+    container_name: mongo1
+    image: mongo:latest
+    volumes:
+      - mongo1:/data/db
+    ports:
+      - 27018:27017
+    command: --config /etc/mongod.conf --port 27017 --replSet mongo_repl
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 2s
+      retries: 5
+
+  mongo2:
+    container_name: mongo2
+    image: mongo:latest
+    volumes:
+      - mongo2:/data/db
+    ports:
+      - 27019:27017
+    command: "--config /etc/mongod.conf --port 27017 --replSet mongo_repl"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 2s
+      retries: 5
+
+  mongoInit:
+    container_name: mongoInit
+    depends_on:
+      mongo0:
+        condition: service_healthy
+      mongo1:
+        condition: service_healthy
+      mongo2:
+        condition: service_healthy
+    command: >
+    rs.initiate({
+    _id: "mongo_repl",
+    members: [
+      {_id: 0, host: "localhost:27017"},
+      {_id: 1, host: "localhost:27018"},
+      {_id: 2, host: "localhost:27019"}
+    ]
+    });
+
+#netowrks:
+
 volumes:
-  pg:
+  mongo0:
+  mongo1:
+  mongo2:
