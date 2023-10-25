@@ -2,13 +2,18 @@ version: '3.8'
 
 services:
   mongo0:
+    build: .
+    image: mongocustom:6.0.2
     container_name: mongo0
-    image: mongo:latest
-    volumes:
-      - mongo0:/data/db
+    hostname: mongo0
+    networks:
+      - mongonet
     ports:
       - 27017:27017
-    command: --config /etc/mongod.conf --port 27017 --replSet mongo_repl
+    enviroment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    command: --config /etc/mongod.conf --port 27017
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
@@ -16,13 +21,18 @@ services:
       retries: 5
 
   mongo1:
+    build: .
+    image: mongocustom:6.0.2
     container_name: mongo1
-    image: mongo:latest
-    volumes:
-      - mongo1:/data/db
+    hostname: mongo1
+    networks:
+      - mongonet
     ports:
-      - 27018:27017
-    command: --config /etc/mongod.conf --port 27017 --replSet mongo_repl
+      - 27018:27018
+    enviroment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    command: --config /etc/mongod.conf --port 27018
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
@@ -30,13 +40,18 @@ services:
       retries: 5
 
   mongo2:
+    build: .
+    image: mongocustom:6.0.2
     container_name: mongo2
-    image: mongo:latest
-    volumes:
-      - mongo2:/data/db
+    hostname: mongo2
+    networks:
+      - mongonet
     ports:
-      - 27019:27017
-    command: "--config /etc/mongod.conf --port 27017 --replSet mongo_repl"
+      - 27019:27019
+    enviroment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    command: --config /etc/mongod.conf --port 27019
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
@@ -44,7 +59,10 @@ services:
       retries: 5
 
   mongoInit:
-    container_name: mongoInit
+    build: .
+    image: mongocustom:6.0.2
+    hostname: mongoinit
+    container_name: mongoinit
     depends_on:
       mongo0:
         condition: service_healthy
@@ -53,18 +71,19 @@ services:
       mongo2:
         condition: service_healthy
     command: >
+    mongosh --host mongo0:27017 --username admin --password password --authenticationDatabase admin --eval
+    '
     rs.initiate({
     _id: "mongo_repl",
+    version: 1,
     members: [
       {_id: 0, host: "localhost:27017"},
       {_id: 1, host: "localhost:27018"},
       {_id: 2, host: "localhost:27019"}
     ]
-    });
+    });'
 
-#netowrks:
+networks:
+  mongonet: {}
 
-volumes:
-  mongo0:
-  mongo1:
-  mongo2:
+
