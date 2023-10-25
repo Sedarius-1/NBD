@@ -9,8 +9,8 @@ services:
     networks:
       - mongonet
     ports:
-      - 27017:27017
-    enviroment:
+      - "27017:27017"
+    environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     command: --config /etc/mongod.conf --port 27017
@@ -28,13 +28,13 @@ services:
     networks:
       - mongonet
     ports:
-      - 27018:27018
-    enviroment:
+      - "27018:27017"
+    environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
-    command: --config /etc/mongod.conf --port 27018
+    command: --config /etc/mongod.conf
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
       interval: 10s
       timeout: 2s
       retries: 5
@@ -47,13 +47,13 @@ services:
     networks:
       - mongonet
     ports:
-      - 27019:27019
-    enviroment:
+      - "27019:27017"
+    environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
-    command: --config /etc/mongod.conf --port 27019
+    command: --config /etc/mongod.conf
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
       interval: 10s
       timeout: 2s
       retries: 5
@@ -62,6 +62,8 @@ services:
     build: .
     image: mongocustom:6.0.2
     hostname: mongoinit
+    networks:
+      - mongonet
     container_name: mongoinit
     depends_on:
       mongo0:
@@ -71,17 +73,17 @@ services:
       mongo2:
         condition: service_healthy
     command: >
-    mongosh --host mongo0:27017 --username admin --password password --authenticationDatabase admin --eval
-    '
-    rs.initiate({
-    _id: "mongo_repl",
-    version: 1,
-    members: [
-      {_id: 0, host: "localhost:27017"},
-      {_id: 1, host: "localhost:27018"},
-      {_id: 2, host: "localhost:27019"}
-    ]
-    });'
+      mongosh --host mongo0:27017 --username admin --password password --authenticationDatabase admin --eval
+      '
+      rs.initiate({
+      _id: "mongo_repl",
+      version: 1,
+      members: [
+        {_id: 0, host: "mongo0:27017", priority: 3},
+        {_id: 1, host: "mongo1:27017", priority: 2},
+        {_id: 2, host: "mongo2:27017", priority: 1}
+      ]
+      });'
 
 networks:
   mongonet: {}
