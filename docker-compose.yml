@@ -1,5 +1,20 @@
 version: '3.8'
 
+# IMPORTANT:
+# To make this cluster connectable:
+# On Linux:
+#   add :
+# 127.0.0.1 mongo0
+# 127.0.0.1 mongo1
+# 127.0.0.1 mongo2
+#   at the end of your /etc/hosts file
+# On windows:
+#   switch to a real OS
+#   or
+#   add:
+# 127.0.0.1 mongo0 127.0.0.1 mongo1 127.0.0.1 mongo2
+#   at the end of your C:/Windows/System32/drivers/etc/hosts file
+
 services:
   mongo0:
     build: .
@@ -13,9 +28,9 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
-    command: --config /etc/mongod.conf --port 27017
+    command: "--config /etc/mongod.conf --port 27017"
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: [ "CMD", "mongosh", "--port", "27017", "--eval", "db.adminCommand('ping')" ]
       interval: 10s
       timeout: 2s
       retries: 5
@@ -28,13 +43,13 @@ services:
     networks:
       - mongonet
     ports:
-      - "27018:27017"
+      - "27018:27018"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
-    command: --config /etc/mongod.conf
+    command: "--config /etc/mongod.conf --port 27018"
     healthcheck:
-      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      test: [ "CMD", "mongosh", "--port", "27018", "--eval", "db.adminCommand('ping')" ]
       interval: 10s
       timeout: 2s
       retries: 5
@@ -47,13 +62,13 @@ services:
     networks:
       - mongonet
     ports:
-      - "27019:27017"
+      - "27019:27019"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
-    command: --config /etc/mongod.conf
+    command: "--config /etc/mongod.conf --port 27019"
     healthcheck:
-      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      test: [ "CMD", "mongosh", "--port", "27019","--eval", "db.adminCommand('ping')" ]
       interval: 10s
       timeout: 2s
       retries: 5
@@ -80,12 +95,12 @@ services:
       version: 1,
       members: [
         {_id: 0, host: "mongo0:27017", priority: 3},
-        {_id: 1, host: "mongo1:27017", priority: 2},
-        {_id: 2, host: "mongo2:27017", priority: 1}
+        {_id: 1, host: "mongo1:27018", priority: 2},
+        {_id: 2, host: "mongo2:27019", priority: 1}
       ]
       });'
 
 networks:
-  mongonet: {}
+  mongonet: { }
 
 
