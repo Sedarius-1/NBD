@@ -1,11 +1,12 @@
 package org.ibd.manager;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
+import com.mongodb.client.model.Updates;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.factory.ClientFactory;
 import org.ibd.model.clients.Client;
 import org.ibd.repository.ClientRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ import java.util.Objects;
 
 public class ClientManager {
     private final ClientRepository clientRepository;
-    protected static final Logger logger = (Logger) LogManager.getLogger();
+    Logger log = LoggerFactory.getLogger("NBD");
 
     public ClientManager(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
@@ -23,7 +24,7 @@ public class ClientManager {
         try {
             clientRepository.add(client);
         } catch (RepositoryException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
@@ -42,7 +43,7 @@ public class ClientManager {
             ) throw new RepositoryException("Null passed!");
             clientRepository.add(ClientFactory.createClient(clientId, name, surname, address, birth, balance));
         } catch (RepositoryException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
@@ -50,9 +51,9 @@ public class ClientManager {
 
     public Boolean unregisterClient(Long clientId) {
         try {
-            clientRepository.remove(clientRepository.getTransactive(clientId));
+            clientRepository.remove(clientId);
         } catch (RepositoryException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
@@ -61,9 +62,9 @@ public class ClientManager {
     public Client getClient(Long clientId) {
         Client client = null;
         try {
-            client = clientRepository.getTransactive(clientId);
+            client = clientRepository.get(clientId);
         } catch (RepositoryException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
 
         }
         return client;
@@ -72,11 +73,11 @@ public class ClientManager {
     public Boolean changeName(Long clientId, String name) {
         try {
             if (name != null) {
-                clientRepository.modifyClientName(clientId, name);
+                clientRepository.updateOne(clientId, Updates.set("name",name));
             } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
 
         }
         return false;
@@ -85,11 +86,11 @@ public class ClientManager {
     public Boolean changeSurname(Long clientId, String surname) {
         try {
             if (surname != null) {
-                clientRepository.modifyClientSurname(clientId, surname);
+                clientRepository.updateOne(clientId, Updates.set("surname",surname));
             } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
 
         }
         return false;
@@ -98,11 +99,11 @@ public class ClientManager {
     public Boolean changeAddress(Long clientId, String address) {
         try {
             if (address != null) {
-                clientRepository.modifyClientAddress(clientId, address);
+                clientRepository.updateOne(clientId, Updates.set("address",address));
             } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
 
         }
         return false;
@@ -111,11 +112,11 @@ public class ClientManager {
     public Boolean changeBirth(Long clientId, LocalDate birth) {
         try {
             if (birth != null) {
-                clientRepository.modifyClientBirth(clientId, birth);
+                clientRepository.updateOne(clientId, Updates.set("birth",birth));
             } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
 
         }
         return false;
@@ -124,14 +125,14 @@ public class ClientManager {
     public Boolean changeBalance(Long clientId, BigDecimal newBalance) {
         try {
             if (newBalance != null) {
-                clientRepository.modifyClientBalance(clientId, newBalance);
+                clientRepository.updateOne(clientId, Updates.set("balance",newBalance));
             } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
 
         }
         return false;
     }
-    // TODO: access functions
+
 }

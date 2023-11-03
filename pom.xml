@@ -26,12 +26,11 @@
             <artifactId>log4j-core</artifactId>
             <version>2.20.0</version>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.logging.log4j</groupId>-->
-        <!--            <artifactId>log4j-slf4j-impl</artifactId>-->
-        <!--            <version>2.20.0</version>-->
-        <!--        </dependency>-->
-        <!--        DB (TO YEET) -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.20.0</version>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -75,11 +74,11 @@
             <version>1.8.0</version>
         </dependency>
         <!--        TODO: COMMENT THIS OUT!!! -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.4.8</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>ch.qos.logback</groupId>-->
+<!--            <artifactId>logback-classic</artifactId>-->
+<!--            <version>1.4.8</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

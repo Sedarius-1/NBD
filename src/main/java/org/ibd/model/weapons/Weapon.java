@@ -1,76 +1,65 @@
 package org.ibd.model.weapons;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OptimisticLockType;
-import org.hibernate.annotations.OptimisticLocking;
+import lombok.Setter;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
-@SuppressWarnings("JpaDataSourceORMInspection")
-@Entity
+
+
+@Setter
 @Getter
 @NoArgsConstructor
-@Table(name = "Weapon")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type")
-@Access(AccessType.FIELD)
-@OptimisticLocking(type = OptimisticLockType.NONE)
 public abstract class Weapon {
-    //Todo: add sold boolean
-    @SuppressWarnings("unused")
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
-    private UUID id;
 
     @NotNull
     @NotEmpty
-    @Column(name = "serialNumber")
+    @BsonProperty("serialNumber")
     private Long serialNumber;
 
     @NotNull
     @NotEmpty
-    @Column(name = "manufacturer")
+    @BsonProperty("manufacturer")
     private String manufacturer;
     @NotNull
     @NotEmpty
-    @Column(name = "name")
+    @BsonProperty("name")
     private String name;
 
     @NotNull
     @Min(0)
-    @Column(name = "price")
+    @BsonProperty("price")
     private BigDecimal price;
 
-    @Column(name = "type", insertable = false, updatable = false)
+    @BsonProperty("type")
     private String type;
 
-    public Weapon(Long serialNumber, String manufacturer, String name, BigDecimal price) {
+    @BsonCreator
+    public Weapon(@BsonProperty("serialNumber")Long serialNumber,
+                  @BsonProperty("manufacturer")String manufacturer,
+                  @BsonProperty("name")String name,
+                  @BsonProperty("price")BigDecimal price) {
         this.serialNumber = serialNumber;
         this.manufacturer = manufacturer;
         this.name = name;
         this.price = price;
+        this.type = null;
     }
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    @Override
+    public String toString() {
+        return "Weapon{" +
+                "serialNumber=" + serialNumber +
+                ", manufacturer='" + manufacturer + '\'' +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

@@ -1,98 +1,76 @@
 package org.ibd.model.clients;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.ibd.model.purchases.Purchase;
+import lombok.Setter;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
-@SuppressWarnings("JpaDataSourceORMInspection")
-@Entity
+
+@Setter
 @Getter
 @NoArgsConstructor
-@Table(name = "Client")
-public class Client {
-    public Client(Long clientId, String name, String surname, String address, LocalDate birth, BigDecimal balance) {
+
+
+public class Client implements Serializable {
+    @BsonCreator
+    public Client(@BsonProperty("clientId") Long clientId,
+                  @BsonProperty("name") String name,
+                  @BsonProperty("surname") String surname,
+                  @BsonProperty("address") String address,
+                  @BsonProperty("birth") LocalDate birth,
+                  @BsonProperty("balance") BigDecimal balance) {
         this.clientId = clientId;
         this.name = name;
         this.surname = surname;
         this.address = address;
         this.birth = birth;
         this.balance = balance;
-        this.purchaseSet = new HashSet<>();
     }
-
-    @SuppressWarnings("unused")
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
 
     @NotNull
     @NotEmpty
-    @Column(name = "clientId")
+    @BsonProperty("clientId")
     private Long clientId;
 
     @NotNull
     @NotEmpty
-    @Column(name = "name")
+    @BsonProperty("name")
     private String name;
 
     @NotNull
     @NotEmpty
-    @Column(name = "surname")
+    @BsonProperty("surname")
     private String surname;
 
     @NotNull
     @NotEmpty
-    @Column(name = "address")
+    @BsonProperty("address")
     private String address;
 
     @NotNull
-    @Column(name = "birth")
+    @BsonProperty("birth")
     private LocalDate birth;
 
     @NotNull
-    @Column(name = "balance")
+    @BsonProperty("balance")
     private BigDecimal balance;
 
-    @NotNull
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn
-    @Fetch(FetchMode.JOIN)
-    private Set<Purchase> purchaseSet;
 
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setBirth(LocalDate birth) {
-        this.birth = birth;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
-    public void setPurchaseSet(Set<Purchase> purchaseSet) {
-        this.purchaseSet = purchaseSet;
+    @Override
+    public String toString() {
+        return "Client{" +
+                "clientId=" + clientId +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", address='" + address + '\'' +
+                ", birth=" + birth +
+                ", balance=" + balance +'}';
     }
 }

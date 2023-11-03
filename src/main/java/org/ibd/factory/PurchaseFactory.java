@@ -9,7 +9,7 @@ public class PurchaseFactory {
 
     public static Purchase createPurchase(Long purchaseId, Client client, Weapon weapon) {
         Purchase purchase = new Purchase(purchaseId, client, weapon);
-        client.getPurchaseSet().add(purchase);
+//        client.getPurchaseSet().add(purchase);
         return purchase;
     }
 }

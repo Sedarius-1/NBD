@@ -1,30 +1,45 @@
 package org.ibd.model.weapons;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.ibd.model.enums.GrenadeType;
 
 import java.math.BigDecimal;
 
-@SuppressWarnings("JpaDataSourceORMInspection")
-@Entity
+
 @Getter
 @Setter
-@DiscriminatorValue("hAnDgReNaDe")
-@Access(AccessType.FIELD)
 public class HandGrenade extends Explosive {
     @NotNull
-    @Column(name = "grenadetype")
+    @BsonProperty("grenadetype")
     private GrenadeType grenadeType;
 
-    public HandGrenade() {
+    @BsonCreator
+    public HandGrenade(@BsonProperty("serialNumber")Long serialNumber,
+                       @BsonProperty("manufacturer")String manufacturer,
+                       @BsonProperty("name")String name,
+                       @BsonProperty("price")BigDecimal price,
+                       @BsonProperty("power")Integer power,
+                       @BsonProperty("grenadeType")GrenadeType grenadeType) {
+        super(serialNumber, manufacturer, name, price, power);
+        setType("HandGrenade");
+        this.grenadeType = grenadeType;
+
     }
 
-    public HandGrenade(Long serialNumber, String manufacturer, String name, BigDecimal price, Integer power, GrenadeType type) {
-        super(serialNumber, manufacturer, name, price, power);
-        this.grenadeType = type;
-        setType("HandGrenade");
+    @Override
+    public String toString() {
+        return "HandGrenade{" +
+                "serialNumber=" + getSerialNumber() +
+                ", manufacturer='" + getManufacturer() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", price=" + getPrice() +
+                ", type='" + getType() + '\'' +
+                ", power=" + getPower() +
+                ", grenadeType=" + grenadeType.toString() +
+                '}';
     }
 }
