@@ -2,24 +2,30 @@ package org.ibd.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.ibd.enums.ClientParamEnum;
+import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.manager.ClientManager;
+import org.ibd.manager.WeaponManager;
 import org.ibd.model.clients.Client;
+import org.ibd.model.weapons.Weapon;
 import org.ibd.repository.ClientRepository;
+import org.ibd.repository.WeaponRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 
 public class GunShop {
     private ClientManager clientManager;
-//    private WeaponManager weaponManager;
-//    private PurchaseManager purchaseManager;
+    private WeaponManager weaponManager;
+    //    private PurchaseManager purchaseManager;
     Logger log = LoggerFactory.getLogger("NBD");
 
     public GunShop() {
         try {
             clientManager = new ClientManager(new ClientRepository());
+            weaponManager = new WeaponManager(new WeaponRepository());
         } catch (Exception e) {
             log.error("FATAL ERROR CREATING GunShop INSTANCE! ABORTING!");
             System.exit(1);
@@ -43,31 +49,46 @@ public class GunShop {
     }
 
     public String getClientInfo(Long clientId) {
-        try{
+        try {
             Client client = clientManager.getClient(clientId);
             return
-                     "Client: \nName: "   + AnsiCodes.ANSI_GREEN +client.getName() + AnsiCodes.ANSI_RESET
-                            +"\nSurname: "+ AnsiCodes.ANSI_GREEN +client.getSurname()+ AnsiCodes.ANSI_RESET
-                            +"\nAddress: "+ AnsiCodes.ANSI_GREEN +client.getAddress()+ AnsiCodes.ANSI_RESET
-                            +"\nBirth: "  + AnsiCodes.ANSI_GREEN +client.getBirth().toString() + AnsiCodes.ANSI_RESET
-                            +"\nBalance: "+ AnsiCodes.ANSI_GREEN +client.getBalance() + AnsiCodes.ANSI_RESET;
-        }
-        catch (Exception ex) {
+                    "Client: \nName: " + AnsiCodes.ANSI_GREEN + client.getName() + AnsiCodes.ANSI_RESET
+                            + "\nSurname: " + AnsiCodes.ANSI_GREEN + client.getSurname() + AnsiCodes.ANSI_RESET
+                            + "\nAddress: " + AnsiCodes.ANSI_GREEN + client.getAddress() + AnsiCodes.ANSI_RESET
+                            + "\nBirth: " + AnsiCodes.ANSI_GREEN + client.getBirth().toString() + AnsiCodes.ANSI_RESET
+                            + "\nBalance: " + AnsiCodes.ANSI_GREEN + client.getBalance() + AnsiCodes.ANSI_RESET;
+        } catch (Exception ex) {
             return AnsiCodes.ANSI_RED + "Could not find client!" + AnsiCodes.ANSI_RESET;
             // clientId is temporary here
         }
     }
 
+    public void getAllClients() {
+        try {
+            clientManager.getAllClients().forEach(System.out::println);
+        } catch (Exception ex) {
+//            return AnsiCodes.ANSI_RED + "Could not find client!" + AnsiCodes.ANSI_RESET;
+            // clientId is temporary here
+        }
+    }
+    public void getAllWeapons() {
+        try {
+            weaponManager.getAllWeapons().forEach(System.out::println);
+        } catch (Exception ex) {
+//            return AnsiCodes.ANSI_RED + "Could not find client!" + AnsiCodes.ANSI_RESET;
+            // clientId is temporary here
+        }
+    }
 
-//    public Weapon registerWeapon(WeaponTypeEnum weaponTypeEnum, Map<String, String> paramsMap) {
-//        if (weaponManager.registerWeapon(weaponTypeEnum, paramsMap)) {
-//            System.out.println(AnsiCodes.ANSI_GREEN + "Registered weapon!" + AnsiCodes.ANSI_RESET);
-//            return weaponManager.getWeapon(Long.valueOf(paramsMap.get("serialNumber")));
-//        } else {
-//            System.out.println(AnsiCodes.ANSI_RED + "Could not register weapon!" + AnsiCodes.ANSI_RESET);
-//        }
-//        return null;
-//    }
+    public Weapon registerWeapon(WeaponTypeEnum weaponTypeEnum, Map<String, String> paramsMap) {
+        if (weaponManager.registerWeapon(weaponTypeEnum, paramsMap)) {
+            System.out.println(AnsiCodes.ANSI_GREEN + "Registered weapon!" + AnsiCodes.ANSI_RESET);
+            return weaponManager.getWeapon(Long.valueOf(paramsMap.get("serialNumber")));
+        } else {
+            System.out.println(AnsiCodes.ANSI_RED + "Could not register weapon!" + AnsiCodes.ANSI_RESET);
+        }
+        return null;
+    }
 //
 //    public Purchase registerPurchase(Long purchaseId, Client client, Weapon weapon) {
 //        if (Objects.isNull(client)) {

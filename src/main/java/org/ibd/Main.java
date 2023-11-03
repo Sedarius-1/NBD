@@ -3,14 +3,15 @@ package org.ibd;
 
 import org.ibd.controller.GunShop;
 import org.ibd.enums.ClientParamEnum;
+import org.ibd.enums.WeaponTypeEnum;
+import org.ibd.model.enums.GrenadeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.eq;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Main {
@@ -89,8 +90,47 @@ public class Main {
 //        }
 
         GunShop gunShop = new GunShop();
-        gunShop.registerClient(1L, "Name", "Surname","Address", LocalDate.of(2000, 1, 1), BigDecimal.ZERO);
+        gunShop.registerClient(1L, "Name", "Surname", "Address", LocalDate.of(2000, 1, 1), BigDecimal.ZERO);
         gunShop.modifyClient(ClientParamEnum.NAME, "Stanislaw", 1L);
+        gunShop.registerClient(2L, "Name", "Surname1", "Address", LocalDate.of(2000, 1, 1), BigDecimal.ZERO);
         System.out.println(gunShop.getClientInfo(1L));
+        System.out.println(gunShop.getClientBalance(1L));
+        gunShop.getAllClients();
+        Map<String, String> rifleMap = new HashMap<>();
+        rifleMap.put("type", WeaponTypeEnum.RIFLE.toString());
+        rifleMap.put("serialNumber", "2137");
+        rifleMap.put("manufacturer", "Ruger");
+        rifleMap.put("name", "PPC");
+        rifleMap.put("price", "4000");
+        rifleMap.put("caliber", "22LR");
+        rifleMap.put("length", "15.6");
+        gunShop.registerWeapon(WeaponTypeEnum.RIFLE, rifleMap);
+        Map<String, String> hgMap = new HashMap<>();
+        hgMap.put("type", WeaponTypeEnum.HANDGRENADE.toString());
+        hgMap.put("serialNumber", "2137");
+        hgMap.put("manufacturer", "Smolinus Inc.");
+        hgMap.put("name", "Ovirt mk 2");
+        hgMap.put("price", "2135");
+        hgMap.put("power", "9001");
+        hgMap.put("grenadeType", GrenadeType.Fag.toString());
+        gunShop.registerWeapon(WeaponTypeEnum.HANDGRENADE, hgMap);
+        Map<String, String> nukeMap = new HashMap<>();
+        nukeMap.put("type", WeaponTypeEnum.MCNUKE.toString());
+        nukeMap.put("serialNumber", "2137");
+        nukeMap.put("manufacturer", "Smolinus Inc.");
+        nukeMap.put("name", "VIRTuL");
+        nukeMap.put("price", "69420");
+        nukeMap.put("power", "1");
+        gunShop.registerWeapon(WeaponTypeEnum.MCNUKE, nukeMap);
+        Map<String, String> pistolMap = new HashMap<>();
+        pistolMap.put("type", WeaponTypeEnum.PISTOL.toString());
+        pistolMap.put("serialNumber", "2137");
+        pistolMap.put("manufacturer", "Glock");
+        pistolMap.put("name", "Glock 19");
+        pistolMap.put("price", "213.7");
+        pistolMap.put("caliber", "9mm");
+        gunShop.registerWeapon(WeaponTypeEnum.PISTOL, pistolMap);
+        gunShop.getAllWeapons();
+
     }
 }

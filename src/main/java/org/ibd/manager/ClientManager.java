@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ClientManager {
@@ -18,16 +19,6 @@ public class ClientManager {
 
     public ClientManager(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
-    }
-
-    public Boolean saveClient(Client client) {
-        try {
-            clientRepository.add(client);
-        } catch (RepositoryException e) {
-            log.error(e.toString());
-            return Boolean.FALSE;
-        }
-        return Boolean.TRUE;
     }
 
     public Boolean registerClient(Long clientId, String name, String surname, String address, LocalDate birth, BigDecimal balance) {
@@ -70,6 +61,11 @@ public class ClientManager {
         return client;
     }
 
+    public ArrayList<Client> getAllClients(){
+        ArrayList<Client> clientList;
+        clientList = clientRepository.getAll();
+        return clientList;
+    }
     public Boolean changeName(Long clientId, String name) {
         try {
             if (name != null) {
@@ -86,7 +82,7 @@ public class ClientManager {
     public Boolean changeSurname(Long clientId, String surname) {
         try {
             if (surname != null) {
-                clientRepository.updateOne(clientId, Updates.set("surname",surname));
+                clientRepository.updateOne(clientId, Updates.set("surname", surname));
             } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {

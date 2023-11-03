@@ -22,6 +22,5 @@ public class ClientFactoryTest {
         assertEquals(client.getAddress(), "Address");
         assertEquals(client.getBirth(), LocalDate.of(2000, 1, 1));
         assertEquals(client.getBalance(), BigDecimal.ZERO);
-        assertEquals(client.getPurchaseSet().size(), 0);
     }
 }

@@ -48,19 +48,27 @@ public class ClientRepository implements Repository<Client>, AutoCloseable {
     //Create
     @Override
     public void add(Client client) throws RepositoryException {
-        MongoCollection<Client> testDBItemMongoCollection =
-                this.database.getCollection(clientCollectionName, Client.class);
-        testDBItemMongoCollection.insertOne(client);
+        try {
+            MongoCollection<Client> testDBItemMongoCollection =
+                    this.database.getCollection(clientCollectionName, Client.class);
+            testDBItemMongoCollection.insertOne(client);
+        } catch (Exception ex) {
+            throw new RepositoryException(ex.toString());
+        }
     }
 
     //Read
     @Override
     public Client get(Long id) throws RepositoryException {
-        return this.database
-                .getCollection(clientCollectionName, Client.class)
-                .find(eq("clientId", id))
-                .into(new ArrayList<>())
-                .getFirst();
+        try {
+            return this.database
+                    .getCollection(clientCollectionName, Client.class)
+                    .find(eq("clientId", id))
+                    .into(new ArrayList<>())
+                    .getFirst();
+        } catch (Exception ex) {
+            throw new RepositoryException(ex.toString());
+        }
     }
 
     @Override
@@ -77,6 +85,7 @@ public class ClientRepository implements Repository<Client>, AutoCloseable {
                 this.database.getCollection(clientCollectionName, Client.class);
         return testDBItemMongoCollection.find().into(new ArrayList<>());
     }
+
     //Update
     @Override
     public boolean updateOne(Long id, org.bson.conversions.Bson updater) {
@@ -90,12 +99,17 @@ public class ClientRepository implements Repository<Client>, AutoCloseable {
         }
 
     }
+
     //Delete
     @Override
     public void remove(Long id) throws RepositoryException {
-        database
-                .getCollection(clientCollectionName, Client.class)
-                .deleteOne(eq("clientId", id));
+        try {
+            database
+                    .getCollection(clientCollectionName, Client.class)
+                    .deleteOne(eq("clientId", id));
+        } catch (Exception ex) {
+            throw new RepositoryException(ex.toString());
+        }
     }
 
 
