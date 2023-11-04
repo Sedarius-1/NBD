@@ -1,14 +1,13 @@
 package repository;
 
 
+import com.mongodb.client.model.Updates;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.factory.WeaponFactory;
-import org.ibd.model.clients.Client;
 import org.ibd.model.weapons.Pistol;
 import org.ibd.model.weapons.Rifle;
 import org.ibd.model.weapons.Weapon;
-import org.ibd.repository.ClientRepository;
 import org.ibd.repository.WeaponRepository;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -30,9 +28,9 @@ public class WeaponRepositoryTest {
     /* CREATE TESTS */
     @Test
     @Order(1)
-    void WeaponRepositoryCreateWeaponSuccessTest()  {
+    void WeaponRepositoryCreateWeaponSuccessTest() {
 
-        try(WeaponRepository weaponRepository = new WeaponRepository()){
+        try (WeaponRepository weaponRepository = new WeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
@@ -42,7 +40,7 @@ public class WeaponRepositoryTest {
             Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, map);
             assertDoesNotThrow(() -> weaponRepository.add(pistol));
 
-            Weapon weapon = assertDoesNotThrow(()-> weaponRepository.get(1L));
+            Weapon weapon = assertDoesNotThrow(() -> weaponRepository.get(1L));
             assertNotNull(weapon);
             assertInstanceOf(Pistol.class, weapon);
             Pistol pistol2 = (Pistol) weapon;
@@ -52,7 +50,7 @@ public class WeaponRepositoryTest {
             assertEquals(pistol2.getPrice(), new BigDecimal(2500));
             assertEquals(pistol2.getCaliber(), "9mm");
 
-            assertDoesNotThrow(()-> weaponRepository.remove(1L));
+            assertDoesNotThrow(() -> weaponRepository.remove(1L));
 
             assertThrows(RepositoryException.class, () -> weaponRepository.get(1L));
 
@@ -64,17 +62,16 @@ public class WeaponRepositoryTest {
     @Order(2)
     void WeaponRepositoryCreateWeaponFailureTest() {
 
-       try( WeaponRepository weaponRepository = new WeaponRepository()) {
-           assertThrows(RepositoryException.class, () -> weaponRepository.add(null));
-       }
+        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+            assertThrows(RepositoryException.class, () -> weaponRepository.add(null));
+        }
     }
 
     /* READ TESTS */
-
     @Test
     @Order(3)
     void WeaponRepositoryGetSuccessTest() {
-        try( WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository = new WeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
@@ -86,18 +83,20 @@ public class WeaponRepositoryTest {
             assertDoesNotThrow(() -> weaponRepository.get(1L));
         }
     }
+
     @Test
     @Order(4)
     void WeaponRepositoryGetFailureTest() {
-        try(WeaponRepository weaponRepository = new WeaponRepository()) {
-            assertThrows(RepositoryException.class,() -> weaponRepository.get(1L));
+        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+            assertThrows(RepositoryException.class, () -> weaponRepository.get(1L));
         }
 
     }
+
     @Test
     @Order(5)
     void WeaponRepositoryGetAllTest() {
-        try(WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository = new WeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
@@ -117,30 +116,32 @@ public class WeaponRepositoryTest {
             Rifle rifleTest = WeaponFactory.manufactureWeapon(WeaponTypeEnum.RIFLE, map2);
             assertDoesNotThrow(() -> weaponRepository.add(rifleTest));
             assertEquals(2, weaponRepository.getAll().size());
+            // TODO: fix warning on .get()
             Pistol pistol2 = (Pistol) weaponRepository.getAll().stream().filter(weapon -> Objects.equals(weapon.getSerialNumber(), 1L)).findFirst().get();
             assertNotNull(pistol2);
-            assertEquals( 1L,pistol2.getSerialNumber());
-            assertEquals("Pistol",pistol2.getType());
-            assertEquals("Glock",pistol2.getManufacturer());
-            assertEquals("Glock 19",pistol2.getName());
-            assertEquals(new BigDecimal("2500"),pistol2.getPrice());
-            assertEquals( "9mm",pistol2.getCaliber());
+            assertEquals(1L, pistol2.getSerialNumber());
+            assertEquals("Pistol", pistol2.getType());
+            assertEquals("Glock", pistol2.getManufacturer());
+            assertEquals("Glock 19", pistol2.getName());
+            assertEquals(new BigDecimal("2500"), pistol2.getPrice());
+            assertEquals("9mm", pistol2.getCaliber());
             Rifle rifle = (Rifle) weaponRepository.getAll().stream().filter(weapon -> Objects.equals(weapon.getSerialNumber(), 2137L)).findFirst().get();
             assertNotNull(rifle);
-            assertEquals(2137L,rifle.getSerialNumber());
-            assertEquals("Rifle",rifle.getType() );
-            assertEquals("Ruger",rifle.getManufacturer());
-            assertEquals( "PPC",rifle.getName());
-            assertEquals( new BigDecimal("4000"),rifle.getPrice());
-            assertEquals( "22LR",rifle.getCaliber());
-            assertEquals(Float.valueOf("15.6"),rifle.getLength());
+            assertEquals(2137L, rifle.getSerialNumber());
+            assertEquals("Rifle", rifle.getType());
+            assertEquals("Ruger", rifle.getManufacturer());
+            assertEquals("PPC", rifle.getName());
+            assertEquals(new BigDecimal("4000"), rifle.getPrice());
+            assertEquals("22LR", rifle.getCaliber());
+            assertEquals(Float.valueOf("15.6"), rifle.getLength());
         }
 
     }
+
     @Test
     @Order(6)
     void WeaponRepositoryFindTest() {
-        try(WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository = new WeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
@@ -162,27 +163,41 @@ public class WeaponRepositoryTest {
             assertEquals(1, weaponRepository.find(eq("type", "Rifle")).size());
             Rifle rifle = (Rifle) weaponRepository.getAll().stream().filter(weapon -> Objects.equals(weapon.getType(), "Rifle")).findFirst().get();
             assertNotNull(rifle);
-            assertEquals(2137L,rifle.getSerialNumber());
-            assertEquals("Rifle",rifle.getType());
-            assertEquals("Ruger",rifle.getManufacturer());
-            assertEquals( "PPC",rifle.getName());
-            assertEquals( new BigDecimal("4000"),rifle.getPrice());
-            assertEquals( "22LR",rifle.getCaliber());
-            assertEquals(Float.valueOf("15.6"),rifle.getLength());
+            assertEquals(2137L, rifle.getSerialNumber());
+            assertEquals("Rifle", rifle.getType());
+            assertEquals("Ruger", rifle.getManufacturer());
+            assertEquals("PPC", rifle.getName());
+            assertEquals(new BigDecimal("4000"), rifle.getPrice());
+            assertEquals("22LR", rifle.getCaliber());
+            assertEquals(Float.valueOf("15.6"), rifle.getLength());
         }
 
     }
 
     /* UPDATE TESTS */
-    /*  XDDD */
-
-    /*DELETE TESTS */
-
     @Test
     @Order(9)
+    void WeaponRepositoryUpdateTest() {
+        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+            Map<String, String> map = new HashMap<>();
+            map.put("serialNumber", "1");
+            map.put("manufacturer", "Glock");
+            map.put("name", "Glock 19");
+            map.put("price", "2500");
+            map.put("caliber", "9mm");
+            Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, map);
+            assertDoesNotThrow(() -> weaponRepository.add(pistol));
+            assertTrue(weaponRepository.updateOne(1L, Updates.set("price", BigDecimal.ONE)));
+            assertDoesNotThrow(() -> assertEquals(weaponRepository.get(1L).getPrice(), BigDecimal.ONE));
+        }
+    }
+
+    /*DELETE TESTS */
+    @Test
+    @Order(10)
     void WeaponRepositoryDeleteWeaponSuccessTest() {
 
-        try(WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository = new WeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
@@ -196,19 +211,10 @@ public class WeaponRepositoryTest {
     }
 
     @Test
-    @Order(10)
+    @Order(11)
     void WeaponRepositoryDeleteWeaponFailureTest() {
-        try( WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository = new WeaponRepository()) {
             assertThrows(RepositoryException.class, () -> weaponRepository.remove(5L));
         }
     }
-//
-//    @Test
-//    void WeaponRepositoryGetAllWeaponsTest() {
-//        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
-//        EntityManager entityManager = entityManagerFactory.createEntityManager();
-//        WeaponRepository weaponRepository = new WeaponRepository(entityManager);
-//        assertDoesNotThrow(weaponRepository::getAllWeapons);
-//        entityManagerFactory.close();
-//    }
 }

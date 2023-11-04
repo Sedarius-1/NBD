@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WeaponManagerTest {
@@ -70,6 +71,30 @@ public class WeaponManagerTest {
         assertDoesNotThrow(weaponManager::getAllWeapons);
         assertNotNull(weaponManager.getAllWeapons());
         assertEquals(1, weaponManager.getAllWeapons().size());
+    }
+
+    @Test
+    void WeaponManagerFindWeaponSuccess() {
+        Map<String, String> map = new HashMap<>();
+        map.put("serialNumber", "2137");
+        map.put("manufacturer", "Ruger");
+        map.put("name", "PPC");
+        map.put("price", "4000");
+        map.put("caliber", "22LR");
+        map.put("length", "15.6");
+        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
+        Map<String, String> map2 = new HashMap<>();
+        map2.put("serialNumber", "2138");
+        map2.put("manufacturer", "Ruger");
+        map2.put("name", "PPC");
+        map2.put("price", "1234");
+        map2.put("caliber", "9mm");
+        map2.put("length", "15.6");
+        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map2);
+        assertEquals(1, weaponManager.findWeapons(eq("serialNumber", 2137L)).size());
+        assertEquals(2, weaponManager.findWeapons(eq("manufacturer", "Ruger")).size());
+        assertEquals(1, weaponManager.findWeapons(eq("price", new BigDecimal("4000"))).size());
+        assertEquals(0, weaponManager.findWeapons(eq("caliber", "50")).size());
     }
 
     @Test
