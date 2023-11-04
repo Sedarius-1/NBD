@@ -1,112 +1,131 @@
-//package manager;
-//
-//import jakarta.persistence.EntityManager;
-//import jakarta.persistence.EntityManagerFactory;
-//import jakarta.persistence.Persistence;
-//import org.ibd.enums.WeaponTypeEnum;
-//import org.ibd.manager.WeaponManager;
-//import org.ibd.model.weapons.Rifle;
-//import org.ibd.model.weapons.Weapon;
-//import org.ibd.repository.WeaponRepository;
-//import org.junit.jupiter.api.Test;
-//
-//import java.math.BigDecimal;
-//import java.util.HashMap;
-//import java.util.Map;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//public class WeaponManagerTest {
-//    @Test
-//    void PersistWeaponTest() {
-//        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
-//        EntityManager entityManager = entityManagerFactory.createEntityManager();
-//        WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
-//        Map<String, String> map = new HashMap<>();
-//        map.put("serialNumber", "2137");
-//        map.put("manufacturer", "Ruger");
-//        map.put("name", "PPC");
-//        map.put("price", "4000");
-//        map.put("caliber", "22LR");
-//        map.put("length", "15.6");
-//        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
-//        Weapon weapon = weaponManager.getWeapon(2137L);
-//        assertInstanceOf(Rifle.class, weapon);
-//        Rifle rifle = (Rifle) weapon;
-//        assertNotNull(rifle);
-//        assertNotNull(rifle.getId());
-//        assertEquals(rifle.getSerialNumber(), 2137L);
-//        assertEquals(rifle.getType(), "Rifle");
-//        assertEquals(rifle.getManufacturer(), "Ruger");
-//        assertEquals(rifle.getName(), "PPC");
-//        assertEquals(rifle.getPrice(), new BigDecimal("4000"));
-//        assertEquals(rifle.getCaliber(), "22LR");
-//        assertEquals(rifle.getLength(), Float.valueOf("15.6"));
-//        entityManagerFactory.close();
-//    }
-//
-//    @Test
-//    void WeaponManagerRegisterWeaponFail() {
-//        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
-//        EntityManager entityManager = entityManagerFactory.createEntityManager();
-//        WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
-//        assertFalse(weaponManager.registerWeapon(null, null));
-//        assertFalse(weaponManager.registerWeapon(WeaponTypeEnum.PISTOL, null));
-//
-//        entityManagerFactory.close();
-//    }
-//
-//    @Test
-//    void WeaponManagerUnregisterWeaponSuccess() {
-//        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
-//        EntityManager entityManager = entityManagerFactory.createEntityManager();
-//        WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
-//        Map<String, String> map = new HashMap<>();
-//        map.put("serialNumber", "2137");
-//        map.put("manufacturer", "Ruger");
-//        map.put("name", "PPC");
-//        map.put("price", "4000");
-//        map.put("caliber", "22LR");
-//        map.put("length", "15.6");
-//        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
-//        assertTrue(weaponManager.unregisterWeapon(2137L));
-//        entityManagerFactory.close();
-//    }
-//
-//    @Test
-//    void WeaponManagerUnregisterWeaponFail() {
-//        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
-//        EntityManager entityManager = entityManagerFactory.createEntityManager();
-//        WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
-//        assertFalse(weaponManager.unregisterWeapon(null));
-//        entityManagerFactory.close();
-//    }
-//
-//    @Test
-//    void WeaponManagerGetWeaponFail() {
-//        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
-//        EntityManager entityManager = entityManagerFactory.createEntityManager();
-//        WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
-//        assertNull(weaponManager.getWeapon((null)));
-//        entityManagerFactory.close();
-//    }
-//
-//    @Test
-//    void WeaponManagerGetAllWeaponsSuccess() {
-//        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
-//        EntityManager entityManager = entityManagerFactory.createEntityManager();
-//        WeaponManager weaponManager = new WeaponManager(new WeaponRepository(entityManager));
-//        Map<String, String> map = new HashMap<>();
-//        map.put("serialNumber", "2137");
-//        map.put("manufacturer", "Ruger");
-//        map.put("name", "PPC");
-//        map.put("price", "4000");
-//        map.put("caliber", "22LR");
-//        map.put("length", "15.6");
-//        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
-//        assertDoesNotThrow(weaponManager::getAllWeapons);
-//        assertNotNull(weaponManager.getAllWeapons());
-//        assertEquals(1, weaponManager.getAllWeapons().size());
-//        entityManagerFactory.close();
-//    }
-//}
+package manager;
+
+import org.ibd.enums.WeaponTypeEnum;
+import org.ibd.manager.WeaponManager;
+import org.ibd.model.weapons.Rifle;
+import org.ibd.model.weapons.Weapon;
+import org.ibd.repository.WeaponRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class WeaponManagerTest {
+    WeaponManager weaponManager;
+
+    @BeforeEach
+    void InitWeaponManager() {
+        weaponManager = new WeaponManager(new WeaponRepository());
+    }
+
+    /* CREATE TESTS */
+    @Test
+    @Order(1)
+    void PersistWeaponTest() {
+        Map<String, String> map = new HashMap<>();
+        map.put("serialNumber", "2137");
+        map.put("manufacturer", "Ruger");
+        map.put("name", "PPC");
+        map.put("price", "4000");
+        map.put("caliber", "22LR");
+        map.put("length", "15.6");
+        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
+        Weapon weapon = weaponManager.getWeapon(2137L);
+        assertInstanceOf(Rifle.class, weapon);
+        Rifle rifle = (Rifle) weapon;
+        assertNotNull(rifle);
+        assertEquals(rifle.getSerialNumber(), 2137L);
+        assertEquals(rifle.getType(), "Rifle");
+        assertEquals(rifle.getManufacturer(), "Ruger");
+        assertEquals(rifle.getName(), "PPC");
+        assertEquals(rifle.getPrice(), new BigDecimal("4000"));
+        assertEquals(rifle.getCaliber(), "22LR");
+        assertEquals(rifle.getLength(), Float.valueOf("15.6"));
+    }
+
+    @Test
+    @Order(2)
+    void WeaponManagerRegisterWeaponFail() {
+        assertFalse(weaponManager.registerWeapon(null, null));
+        assertFalse(weaponManager.registerWeapon(WeaponTypeEnum.PISTOL, null));
+    }
+
+    /* READ TESTS */
+    @Test
+    @Order(3)
+    void WeaponManagerGetAllWeaponsSuccess() {
+        Map<String, String> map = new HashMap<>();
+        map.put("serialNumber", "2137");
+        map.put("manufacturer", "Ruger");
+        map.put("name", "PPC");
+        map.put("price", "4000");
+        map.put("caliber", "22LR");
+        map.put("length", "15.6");
+        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
+        assertDoesNotThrow(weaponManager::getAllWeapons);
+        assertNotNull(weaponManager.getAllWeapons());
+        assertEquals(1, weaponManager.getAllWeapons().size());
+    }
+
+    @Test
+    @Order(4)
+    void WeaponManagerGetWeaponFail() {
+        assertNull(weaponManager.getWeapon((null)));
+    }
+
+    /* UPDATE TESTS */
+    @Test
+    @Order(5)
+    void WeaponManagerChangePrice() {
+        Map<String, String> map = new HashMap<>();
+        map.put("serialNumber", "2137");
+        map.put("manufacturer", "Ruger");
+        map.put("name", "PPC");
+        map.put("price", "4000");
+        map.put("caliber", "22LR");
+        map.put("length", "15.6");
+        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
+        weaponManager.changePrice(2137L, BigDecimal.ONE);
+        assertEquals(weaponManager.getWeapon(2137L).getPrice(), BigDecimal.ONE);
+    }
+
+    @Test
+    @Order(5)
+    void WeaponManagerChangePriceFailOnNull() {
+        Map<String, String> map = new HashMap<>();
+        map.put("serialNumber", "2137");
+        map.put("manufacturer", "Ruger");
+        map.put("name", "PPC");
+        map.put("price", "4000");
+        map.put("caliber", "22LR");
+        map.put("length", "15.6");
+        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
+        assertFalse(weaponManager.changePrice(2137L, null));
+    }
+
+    /* DELETE TESTS */
+    @Test
+    void WeaponManagerUnregisterWeaponSuccess() {
+        Map<String, String> map = new HashMap<>();
+        map.put("serialNumber", "2137");
+        map.put("manufacturer", "Ruger");
+        map.put("name", "PPC");
+        map.put("price", "4000");
+        map.put("caliber", "22LR");
+        map.put("length", "15.6");
+        weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
+        assertTrue(weaponManager.unregisterWeapon(2137L));
+    }
+
+    @Test
+    void WeaponManagerUnregisterWeaponFail() {
+        assertFalse(weaponManager.unregisterWeapon(null));
+    }
+
+
+}

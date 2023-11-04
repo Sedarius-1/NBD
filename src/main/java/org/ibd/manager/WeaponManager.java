@@ -1,6 +1,6 @@
 package org.ibd.manager;
 
-import org.apache.logging.log4j.LogManager;
+import com.mongodb.client.model.Updates;
 import org.bson.conversions.Bson;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.exceptions.RepositoryException;
@@ -10,8 +10,8 @@ import org.ibd.repository.WeaponRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -35,8 +35,8 @@ public class WeaponManager {
         }
         return Boolean.TRUE;
     }
-    //Read
 
+    //Read
     public Weapon getWeapon(Long serialNumber) {
         Weapon weapon = null;
         try {
@@ -66,8 +66,18 @@ public class WeaponManager {
             return null;
         }
     }
-    //Update
 
+    //Update (yes, we will assume everything aside from price is constant)
+    public Boolean changePrice(Long serialNumber, BigDecimal price) {
+        try {
+            if (price != null) {
+                return weaponRepository.updateOne(serialNumber, Updates.set("price", price));
+            } else throw new RepositoryException("null passed");
+        } catch (RepositoryException e) {
+            log.error(e.toString());
+        }
+        return false;
+    }
 
     //Delete
     public Boolean unregisterWeapon(Long serialNumber) {
@@ -79,7 +89,6 @@ public class WeaponManager {
         }
         return Boolean.TRUE;
     }
-
 
 
 }

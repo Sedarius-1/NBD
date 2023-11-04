@@ -5,7 +5,6 @@ import com.mongodb.client.*;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.ibd.exceptions.RepositoryException;
-import org.ibd.model.clients.Client;
 import org.ibd.model.weapons.*;
 
 import java.util.ArrayList;
@@ -48,19 +47,20 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
         // Create test collection
         this.database.createCollection(weaponCollectionName);
     }
+
     //Create
     @Override
     public void add(Weapon weapon) throws RepositoryException {
-        try{
+        try {
             MongoCollection<Weapon> testDBItemMongoCollection =
                     this.database.getCollection(weaponCollectionName, Weapon.class);
             testDBItemMongoCollection.insertOne(weapon);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             throw new RepositoryException(ex.toString());
         }
 
     }
+
     //Read
     @Override
     public Weapon get(Long id) throws RepositoryException {
@@ -70,21 +70,21 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
         ArrayList<Pistol> pistolList = pistolDbCollection
                 .find(and(eq("type", "Pistol"), eq("serialNumber", id)))
                 .into(new ArrayList<>());
-        if(!pistolList.isEmpty()) return pistolList.getFirst();
+        if (!pistolList.isEmpty()) return pistolList.getFirst();
 
         MongoCollection<Rifle> rifleDbCollection =
                 this.database.getCollection(weaponCollectionName, Rifle.class);
         ArrayList<Rifle> rifleList = rifleDbCollection
                 .find(and(eq("type", "Rifle"), eq("serialNumber", id)))
                 .into(new ArrayList<>());
-        if(!rifleList.isEmpty()) return rifleList.getFirst();
+        if (!rifleList.isEmpty()) return rifleList.getFirst();
 
         MongoCollection<RecreationalMcNuke> nukeDbCollection =
                 this.database.getCollection(weaponCollectionName, RecreationalMcNuke.class);
         ArrayList<RecreationalMcNuke> nukeList = nukeDbCollection
                 .find(and(eq("type", "Nuke"), eq("serialNumber", id)))
                 .into(new ArrayList<>());
-        if(!nukeList.isEmpty()) return nukeList.getFirst();
+        if (!nukeList.isEmpty()) return nukeList.getFirst();
 
         MongoCollection<HandGrenade> grenadeDbCollection =
                 this.database.getCollection(weaponCollectionName, HandGrenade.class);
@@ -92,7 +92,7 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
                 .find(and(eq("type", "HandGrenade"), eq("serialNumber", id)))
                 .into(new ArrayList<>());
         if (!grenadeList.isEmpty()) return grenadeList.getFirst();
-        else{
+        else {
             throw new RepositoryException("NO WEAPON WITH GIVEN SERIAL NUMBER FOUND");
         }
     }
@@ -107,28 +107,28 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
         ArrayList<Pistol> pistolList = pistolDbCollection
                 .find(and(eq("type", "Pistol"), bson))
                 .into(new ArrayList<>());
-        if(!pistolList.isEmpty()) combinedList.addAll(pistolList);
+        if (!pistolList.isEmpty()) combinedList.addAll(pistolList);
 
         MongoCollection<Rifle> rifleDbCollection =
                 this.database.getCollection(weaponCollectionName, Rifle.class);
         ArrayList<Rifle> rifleList = rifleDbCollection
                 .find(and(eq("type", "Rifle"), bson))
                 .into(new ArrayList<>());
-        if(!rifleList.isEmpty()) combinedList.addAll(rifleList);
+        if (!rifleList.isEmpty()) combinedList.addAll(rifleList);
 
         MongoCollection<RecreationalMcNuke> nukeDbCollection =
                 this.database.getCollection(weaponCollectionName, RecreationalMcNuke.class);
         ArrayList<RecreationalMcNuke> nukeList = nukeDbCollection
                 .find(and(eq("type", "Nuke"), bson))
                 .into(new ArrayList<>());
-        if(!nukeList.isEmpty()) combinedList.addAll(nukeList);
+        if (!nukeList.isEmpty()) combinedList.addAll(nukeList);
 
         MongoCollection<HandGrenade> grenadeDbCollection =
                 this.database.getCollection(weaponCollectionName, HandGrenade.class);
         ArrayList<HandGrenade> grenadeList = grenadeDbCollection
                 .find(and(eq("type", "HandGrenade"), bson))
                 .into(new ArrayList<>());
-        if(!nukeList.isEmpty()) combinedList.addAll(grenadeList);
+        if (!nukeList.isEmpty()) combinedList.addAll(grenadeList);
 
         return combinedList;
     }
@@ -136,7 +136,7 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
     @Override
     public ArrayList<Weapon> getAll() {
         MongoCollection<Pistol> pistolDbCollection =
-            this.database.getCollection(weaponCollectionName, Pistol.class);
+                this.database.getCollection(weaponCollectionName, Pistol.class);
         ArrayList<Pistol> pistolList = pistolDbCollection.find(eq("type", "Pistol")).into(new ArrayList<>());
 
         MongoCollection<Rifle> rifleDbCollection =
@@ -159,6 +159,7 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
         combinedList.addAll(grenadeList);
         return combinedList;
     }
+
     //Update
     @Override
     public boolean updateOne(Long id, org.bson.conversions.Bson updater) {
@@ -172,6 +173,7 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
         }
 
     }
+
     //Delete
     @Override
     public void remove(Long id) throws RepositoryException {
