@@ -1,12 +1,12 @@
 package org.ibd.controller;
 
-import org.apache.logging.log4j.LogManager;
+import org.bson.conversions.Bson;
 import org.ibd.enums.ClientParamEnum;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.manager.ClientManager;
 import org.ibd.manager.WeaponManager;
 import org.ibd.model.clients.Client;
-import org.ibd.model.weapons.Weapon;
+import org.ibd.model.weapons.*;
 import org.ibd.repository.ClientRepository;
 import org.ibd.repository.WeaponRepository;
 import org.slf4j.Logger;
@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class GunShop {
@@ -32,6 +33,16 @@ public class GunShop {
         }
     }
 
+    /*  CLIENT  */
+    public String formatClientInfo(Client client) {
+        return "Client(" + AnsiCodes.ANSI_RED + client.getClientId() + AnsiCodes.ANSI_RESET + "): \nName: " + AnsiCodes.ANSI_GREEN + client.getName() + AnsiCodes.ANSI_RESET
+                + "\nSurname: " + AnsiCodes.ANSI_GREEN + client.getSurname() + AnsiCodes.ANSI_RESET
+                + "\nAddress: " + AnsiCodes.ANSI_GREEN + client.getAddress() + AnsiCodes.ANSI_RESET
+                + "\nBirth: " + AnsiCodes.ANSI_GREEN + client.getBirth().toString() + AnsiCodes.ANSI_RESET
+                + "\nBalance: " + AnsiCodes.ANSI_GREEN + client.getBalance() + AnsiCodes.ANSI_RESET;
+    }
+    //Create
+
     /**
      * Method registering client in a database
      *
@@ -48,38 +59,124 @@ public class GunShop {
         }
     }
 
+    //Read
+    public Client getClient(Long clientId) {
+        try {
+            return clientManager.getClient(clientId);
+
+        } catch (Exception ex) {
+            System.out.println(AnsiCodes.ANSI_RED + "Could not find client!" + AnsiCodes.ANSI_RESET);
+            return null;
+        }
+    }
+
     public String getClientInfo(Long clientId) {
         try {
+            Client client = getClient(clientId);
+            return formatClientInfo(client);
+
+        } catch (Exception ex) {
+            return AnsiCodes.ANSI_RED + "Could not find client to print info!" + AnsiCodes.ANSI_RESET;
+        }
+    }
+
+    public BigDecimal getClientBalance(Long clientId) {
+        try {
             Client client = clientManager.getClient(clientId);
-            return
-                    "Client: \nName: " + AnsiCodes.ANSI_GREEN + client.getName() + AnsiCodes.ANSI_RESET
-                            + "\nSurname: " + AnsiCodes.ANSI_GREEN + client.getSurname() + AnsiCodes.ANSI_RESET
-                            + "\nAddress: " + AnsiCodes.ANSI_GREEN + client.getAddress() + AnsiCodes.ANSI_RESET
-                            + "\nBirth: " + AnsiCodes.ANSI_GREEN + client.getBirth().toString() + AnsiCodes.ANSI_RESET
-                            + "\nBalance: " + AnsiCodes.ANSI_GREEN + client.getBalance() + AnsiCodes.ANSI_RESET;
+            return client.getBalance();
         } catch (Exception ex) {
-            return AnsiCodes.ANSI_RED + "Could not find client!" + AnsiCodes.ANSI_RESET;
-            // clientId is temporary here
+            log.error(ex.toString());
+            return null;
         }
     }
 
-    public void getAllClients() {
-        try {
-            clientManager.getAllClients().forEach(System.out::println);
-        } catch (Exception ex) {
-//            return AnsiCodes.ANSI_RED + "Could not find client!" + AnsiCodes.ANSI_RESET;
-            // clientId is temporary here
-        }
+    public ArrayList<Client> getAllClients() {
+        return clientManager.getAllClients();
+
     }
-    public void getAllWeapons() {
-        try {
-            weaponManager.getAllWeapons().forEach(System.out::println);
-        } catch (Exception ex) {
-//            return AnsiCodes.ANSI_RED + "Could not find client!" + AnsiCodes.ANSI_RESET;
-            // clientId is temporary here
+
+    public void getAllClientsInfo() {
+        System.out.printf(AnsiCodes.ANSI_CYAN + "PRINTING ALL CLIENTS\n" + AnsiCodes.ANSI_RESET);
+        getAllClients().forEach(client -> System.out.println(formatClientInfo(client)));
+    }
+
+    public ArrayList<Client> findClients(Bson finder) {
+        return clientManager.findClients(finder);
+    }
+
+    public void findClientsInfo(Bson finder) {
+        System.out.printf(AnsiCodes.ANSI_CYAN + "PRINTING FOUND CLIENTS (condition : " + finder.toString() + ")\n" + AnsiCodes.ANSI_RESET);
+        findClients(finder).forEach(client -> System.out.println(formatClientInfo(client)));
+    }
+
+    //Update
+    public void updateClient(ClientParamEnum clientParamEnum, Object param, Long clientId) {
+        switch (clientParamEnum) {
+            case NAME -> {
+                String name = (String) param;
+                clientManager.changeName(clientId, name);
+            }
+            case SURNAME -> {
+                String surname = (String) param;
+                clientManager.changeSurname(clientId, surname);
+            }
+            case ADDRESS -> {
+                String address = (String) param;
+                clientManager.changeAddress(clientId, address);
+            }
+            case BIRTH -> {
+                try {
+                    LocalDate birth = (LocalDate) param;
+                    clientManager.changeBirth(clientId, birth);
+                } catch (Exception ex) {
+                    log.info("Wrong date!");
+                }
+            }
+            case BALANCE -> {
+                try {
+                    BigDecimal balance = (BigDecimal) param;
+                    clientManager.changeBalance(clientId, balance);
+                } catch (Exception ex) {
+                    log.info("Wrong balance!");
+                }
+            }
         }
     }
 
+    //Delete
+    public boolean deleteClient(Long clientId) {
+        return clientManager.unregisterClient(clientId);
+    }
+
+    /* WEAPON */
+
+    public String formatWeaponInfo(Weapon weapon) {
+        String weaponData =  "Weapon(" + AnsiCodes.ANSI_RED + weapon.getSerialNumber() + AnsiCodes.ANSI_RESET
+                + "): \nName: " + AnsiCodes.ANSI_GREEN + weapon.getName() + AnsiCodes.ANSI_RESET
+                + "\nType: " + AnsiCodes.ANSI_GREEN + weapon.getType() + AnsiCodes.ANSI_RESET
+                + "\nManufacturer: " + AnsiCodes.ANSI_GREEN + weapon.getManufacturer() + AnsiCodes.ANSI_RESET
+                + "\nPrice: " + AnsiCodes.ANSI_GREEN + weapon.getPrice().toString() + AnsiCodes.ANSI_RESET;
+        switch(weapon.getType()){
+            case "Pistol":
+                return weaponData
+                + "\nCaliber: " + AnsiCodes.ANSI_GREEN + ((Pistol) weapon).getCaliber() + AnsiCodes.ANSI_RESET;
+            case "Rifle":
+                return weaponData
+                + "\nCaliber: " + AnsiCodes.ANSI_GREEN + ((Rifle) weapon).getCaliber() + AnsiCodes.ANSI_RESET
+                + "\nLength: " + AnsiCodes.ANSI_GREEN + ((Rifle) weapon).getLength() + AnsiCodes.ANSI_RESET;
+            case "HandGrenade":
+                return weaponData
+                + "\nPower: " + AnsiCodes.ANSI_GREEN + ((HandGrenade) weapon).getPower() + AnsiCodes.ANSI_RESET
+                + "\nGrenade Type: " + AnsiCodes.ANSI_GREEN + ((HandGrenade) weapon).getGrenadeType() + AnsiCodes.ANSI_RESET;
+            case "Nuke":
+                return weaponData
+                + "\nPower: " + AnsiCodes.ANSI_GREEN + ((RecreationalMcNuke) weapon).getPower() + AnsiCodes.ANSI_RESET;
+        }
+        return weaponData;
+
+    }
+
+    //Create
     public Weapon registerWeapon(WeaponTypeEnum weaponTypeEnum, Map<String, String> paramsMap) {
         if (weaponManager.registerWeapon(weaponTypeEnum, paramsMap)) {
             System.out.println(AnsiCodes.ANSI_GREEN + "Registered weapon!" + AnsiCodes.ANSI_RESET);
@@ -89,7 +186,57 @@ public class GunShop {
         }
         return null;
     }
-//
+
+    //Read
+    public Weapon getWeapon(Long serialNumber) {
+        try {
+            return weaponManager.getWeapon(serialNumber);
+
+        } catch (Exception ex) {
+            System.out.println(AnsiCodes.ANSI_RED + "Could not find weapon!" + AnsiCodes.ANSI_RESET);
+            return null;
+        }
+    }
+
+    public String getWeaponInfo(Long serialNumber) {
+        try {
+            Weapon weapon = getWeapon(serialNumber);
+            return formatWeaponInfo(weapon);
+
+        } catch (Exception ex) {
+            return AnsiCodes.ANSI_RED + "Could not find weapon to print info!" + AnsiCodes.ANSI_RESET;
+        }
+    }
+
+    public ArrayList<Weapon> getAllWeapons() {
+        try {
+            return weaponManager.getAllWeapons();
+        } catch (Exception ex) {
+             return null;
+        }
+    }
+
+    public void getAllWeaponsInfo() {
+        System.out.printf(AnsiCodes.ANSI_CYAN + "PRINTING ALL WEAPONS\n" + AnsiCodes.ANSI_RESET);
+        getAllWeapons().forEach(weapon -> System.out.println(formatWeaponInfo(weapon)));
+    }
+
+    public ArrayList<Weapon> findWeapons(Bson finder) {
+        return weaponManager.findWeapons(finder);
+    }
+
+    public void findWeaponsInfo(Bson finder) {
+        System.out.printf(AnsiCodes.ANSI_CYAN + "PRINTING FOUND WEAPONS (condition : " + finder.toString() + ")\n" + AnsiCodes.ANSI_RESET);
+        findWeapons(finder).forEach(weapon -> System.out.println(formatWeaponInfo(weapon)));
+    }
+
+    //Update
+    //TODO WRITE ANY IMPLEMENTATION OF WEAPON UPDATE
+    //Delete
+    public boolean deleteWeapon(Long serialNumber) {
+        return weaponManager.unregisterWeapon(serialNumber);
+    }
+
 //    public Purchase registerPurchase(Long purchaseId, Client client, Weapon weapon) {
 //        if (Objects.isNull(client)) {
 //            System.out.println(AnsiCodes.ANSI_RED + "Client not provided!" + AnsiCodes.ANSI_RESET);
@@ -142,50 +289,7 @@ public class GunShop {
 //        }
 //    }
 
-    public BigDecimal getClientBalance(Long clientId) {
-        try {
-            Client client = clientManager.getClient(clientId);
-            return client.getBalance();
-        } catch (Exception ex) {
-            log.error(ex.toString());
-            return null;
-        }
-    }
 
 
-    public Client modifyClient(ClientParamEnum clientParamEnum, Object param, Long clientId) {
-        switch (clientParamEnum) {
-            case NAME -> {
-                String name = (String) param;
-                clientManager.changeName(clientId, name);
-            }
-            case SURNAME -> {
-                String surname = (String) param;
-                clientManager.changeSurname(clientId, surname);
-            }
-            case ADDRESS -> {
-                String address = (String) param;
-                clientManager.changeAddress(clientId, address);
-            }
-            case BIRTH -> {
-                try {
-                    LocalDate birth = (LocalDate) param;
-                    clientManager.changeBirth(clientId, birth);
-                } catch (Exception ex) {
-                    log.info("Wrong date!");
-                    return null;
-                }
-            }
-            case BALANCE -> {
-                try {
-                    BigDecimal balance = (BigDecimal) param;
-                    clientManager.changeBalance(clientId, balance);
-                } catch (Exception ex) {
-                    log.info("Wrong balance!");
-                    return null;
-                }
-            }
-        }
-        return clientManager.getClient(clientId);
-    }
+
 }

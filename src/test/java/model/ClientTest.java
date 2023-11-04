@@ -33,4 +33,23 @@ public class ClientTest {
         assertEquals(client.getBirth(), LocalDate.of(2222, 2, 2));
         assertEquals(client.getBalance(), new BigDecimal(400));
     }
+
+    @Test
+    void ClientEmptyTest() {
+        Client client = new Client();
+        assertNotNull(client);
+        assertNull(client.getClientId());
+        assertNull(client.getName());
+        assertNull(client.getSurname());
+        assertNull(client.getAddress());
+        assertNull(client.getBirth());
+        assertNull(client.getBalance());
+    }
+
+    @Test
+    void ClientToStringTest() {
+        Client client = new Client(1L, "Name", "Surname",
+                "Address", LocalDate.of(2000, 1, 1), BigDecimal.ZERO);
+        assertEquals(client.toString(), "Client{clientId=1, name='Name', surname='Surname', address='Address', birth=2000-01-01, balance=0}");
+    }
 }

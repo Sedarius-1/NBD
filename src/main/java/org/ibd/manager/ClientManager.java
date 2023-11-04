@@ -1,6 +1,7 @@
 package org.ibd.manager;
 
 import com.mongodb.client.model.Updates;
+import org.bson.conversions.Bson;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.factory.ClientFactory;
 import org.ibd.model.clients.Client;
@@ -21,6 +22,7 @@ public class ClientManager {
         this.clientRepository = clientRepository;
     }
 
+    //Create
     public Boolean registerClient(Long clientId, String name, String surname, String address, LocalDate birth, BigDecimal balance) {
 
         try {
@@ -40,16 +42,7 @@ public class ClientManager {
         return Boolean.TRUE;
     }
 
-    public Boolean unregisterClient(Long clientId) {
-        try {
-            clientRepository.remove(clientId);
-        } catch (RepositoryException e) {
-            log.error(e.toString());
-            return Boolean.FALSE;
-        }
-        return Boolean.TRUE;
-    }
-
+    //Read
     public Client getClient(Long clientId) {
         Client client = null;
         try {
@@ -60,12 +53,17 @@ public class ClientManager {
         }
         return client;
     }
-
+    public ArrayList<Client> findClients(Bson finder){
+        ArrayList<Client> clientList;
+        clientList = clientRepository.find(finder);
+        return clientList;
+    }
     public ArrayList<Client> getAllClients(){
         ArrayList<Client> clientList;
         clientList = clientRepository.getAll();
         return clientList;
     }
+    //Update
     public Boolean changeName(Long clientId, String name) {
         try {
             if (name != null) {
@@ -130,5 +128,19 @@ public class ClientManager {
         }
         return false;
     }
+
+    //Delete
+    public Boolean unregisterClient(Long clientId) {
+        try {
+            clientRepository.remove(clientId);
+        } catch (RepositoryException e) {
+            log.error(e.toString());
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
+
+
 
 }

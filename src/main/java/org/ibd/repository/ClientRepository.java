@@ -8,6 +8,7 @@ import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.ibd.repository.BongoConfig.*;
@@ -104,6 +105,8 @@ public class ClientRepository implements Repository<Client>, AutoCloseable {
     @Override
     public void remove(Long id) throws RepositoryException {
         try {
+            Client client = get(id);
+            if(Objects.isNull(client)) throw new RepositoryException("No such client exists!");
             database
                     .getCollection(clientCollectionName, Client.class)
                     .deleteOne(eq("clientId", id));

@@ -5,9 +5,11 @@ import com.mongodb.client.*;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.ibd.exceptions.RepositoryException;
+import org.ibd.model.clients.Client;
 import org.ibd.model.weapons.*;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -49,9 +51,15 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
     //Create
     @Override
     public void add(Weapon weapon) throws RepositoryException {
-        MongoCollection<Weapon> testDBItemMongoCollection =
-                this.database.getCollection(weaponCollectionName, Weapon.class);
-        testDBItemMongoCollection.insertOne(weapon);
+        try{
+            MongoCollection<Weapon> testDBItemMongoCollection =
+                    this.database.getCollection(weaponCollectionName, Weapon.class);
+            testDBItemMongoCollection.insertOne(weapon);
+        }
+        catch (Exception ex){
+            throw new RepositoryException(ex.toString());
+        }
+
     }
     //Read
     @Override
@@ -83,7 +91,10 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
         ArrayList<HandGrenade> grenadeList = grenadeDbCollection
                 .find(and(eq("type", "HandGrenade"), eq("serialNumber", id)))
                 .into(new ArrayList<>());
-        return grenadeList.getFirst();
+        if (!grenadeList.isEmpty()) return grenadeList.getFirst();
+        else{
+            throw new RepositoryException("NO WEAPON WITH GIVEN SERIAL NUMBER FOUND");
+        }
     }
 
     @Override
@@ -164,9 +175,15 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
     //Delete
     @Override
     public void remove(Long id) throws RepositoryException {
-        database
-                .getCollection(weaponCollectionName, Weapon.class)
-                .deleteOne(eq("serialNumber", id));
+        try {
+            Weapon weapon = get(id);
+            if (Objects.isNull(weapon)) throw new RepositoryException("No such weapon exists!");
+            database
+                    .getCollection(weaponCollectionName, Weapon.class)
+                    .deleteOne(eq("serialNumber", id));
+        } catch (Exception ex) {
+            throw new RepositoryException(ex.toString());
+        }
     }
 
     @Override

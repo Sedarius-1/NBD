@@ -1,85 +1,185 @@
 package repository;
 
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
 import org.ibd.repository.ClientRepository;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 public class ClientRepositoryTest {
+
+    /* CREATE TESTS */
     @Test
-    void ClientRepositoryCreateClientTest() throws RepositoryException {
+    @Order(1)
+    void ClientRepositoryCreateClientSuccessTest() throws RepositoryException {
 
-        ClientRepository clientRepository = new ClientRepository();
-        Client client1 = new Client(1L, "Name", "Surname",
-                "Address", LocalDate.of(2000, 1, 1), new BigDecimal(0));
-        clientRepository.add(client1); // TODO: add doesNotThrow assert
+        try(ClientRepository clientRepository = new ClientRepository()){
+            Client client1 = new Client(1L, "Name", "Surname",
+                    "Address", LocalDate.of(2000, 1, 1), new BigDecimal(0));
+            clientRepository.add(client1);
 
-        Client client2 = clientRepository.get(1L);
-        assertNotNull(client2);
-        assertEquals(client2.getClientId(), 1L);
-        assertEquals(client2.getName(), "Name");
-        assertEquals(client2.getSurname(), "Surname");
-        assertEquals(client2.getAddress(), "Address");
-        assertEquals(client2.getBirth(), LocalDate.of(2000, 1, 1));
-        assertEquals(client2.getBalance(), BigDecimal.ZERO);
+            Client client2 = clientRepository.get(1L);
+            assertNotNull(client2);
+            assertEquals(client2.getClientId(), 1L);
+            assertEquals(client2.getName(), "Name");
+            assertEquals(client2.getSurname(), "Surname");
+            assertEquals(client2.getAddress(), "Address");
+            assertEquals(client2.getBirth(), LocalDate.of(2000, 1, 1));
+            assertEquals(client2.getBalance(), BigDecimal.ZERO);
 
-        clientRepository.remove(1L);
+            clientRepository.remove(1L);
 
-        assertThrows(RepositoryException.class, () -> clientRepository.get(1L));
+            assertThrows(RepositoryException.class, () -> clientRepository.get(1L));
+        }
+
     }
-
     @Test
-    void ClientRepositoryClientModifyTest() throws RepositoryException {
-        ClientRepository clientRepository = new ClientRepository();
-        Client client1 = new Client(1L, "Name", "Surname",
-                "Address", LocalDate.of(2000, 1, 1), new BigDecimal(0));
-        clientRepository.add(client1);
-
-        clientRepository.updateOne(1L, Updates.set("name","Name2"));
-        clientRepository.updateOne(1L, Updates.set("surname","Surname2"));
-        clientRepository.updateOne(1L, Updates.set("address","Address2"));
-        clientRepository.updateOne(1L, Updates.set("birth",LocalDate.of(2222, 11, 22)));
-        clientRepository.updateOne(1L, Updates.set("balance",new BigDecimal(2137)));
-
-        Client client2 = clientRepository.get(1L);
-        assertNotNull(client2);
-        assertEquals(client2.getClientId(), 1L);
-        assertEquals("Name2", client2.getName());
-        assertEquals("Surname2", client2.getSurname());
-        assertEquals("Address2", client2.getAddress(), "Address2");
-        assertEquals(LocalDate.of(2222, 11, 22), client2.getBirth());
-        assertEquals(new BigDecimal(2137), client2.getBalance());
-    }
-
-    @Test
+    @Order(2)
     void ClientRepositoryCreateClientFailureTest() {
 
-        ClientRepository clientRepository = new ClientRepository();
-        assertThrows(RepositoryException.class, () -> clientRepository.add(null));
+        try(ClientRepository clientRepository = new ClientRepository()) {
+            assertThrows(RepositoryException.class, () -> clientRepository.add(null));
+        }
     }
 
-//    @Test
-//    void ClientRepositoryRemoveFailureTest() {
-//
-//        ClientRepository clientRepository = new ClientRepository();
-//        assertThrows(RepositoryException.class, () -> clientRepository.remove(5L));
-//    }
+    /* READ TESTS*/
+    @Test
+    @Order(3)
+    void ClientRepositoryGetSuccessTest() {
+        try (ClientRepository clientRepository = new ClientRepository()) {
+            assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
+            assertDoesNotThrow(() -> clientRepository.get(1L));
+        }
+    }
+    @Test
+    @Order(4)
+    void ClientRepositoryGetFailureTest() {
+        try (ClientRepository clientRepository = new ClientRepository()) {
+            assertThrows(RepositoryException.class,() -> clientRepository.get(1L));
+        }
+    }
+    @Test
+    @Order(5)
+    void ClientRepositoryGetAllTest() {
+        try (ClientRepository clientRepository = new ClientRepository()) {
+            assertEquals(0, clientRepository.getAll().size());
+            assertDoesNotThrow(() ->clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
+            assertDoesNotThrow(() ->clientRepository.add(new Client(2L, "ntest2", "stest2", "atest2", LocalDate.of(2002, 1, 1), new BigDecimal(10))));
+            assertEquals(2, clientRepository.getAll().size());
+            Client client = clientRepository.getAll().stream().filter(client1 -> Objects.equals(client1.getClientId(), 1L)).findFirst().get();
+            assertEquals(client.getClientId(), 1L);
+            assertEquals("ntest", client.getName());
+            assertEquals("stest", client.getSurname());
+            assertEquals("atest", client.getAddress());
+            assertEquals(LocalDate.of(2001, 1, 1), client.getBirth());
+            assertEquals(new BigDecimal(0), client.getBalance());
+            client = clientRepository.getAll().stream().filter(client1 -> Objects.equals(client1.getClientId(), 2L)).findFirst().get();
+            assertEquals(client.getClientId(), 2L);
+            assertEquals("ntest2", client.getName());
+            assertEquals("stest2", client.getSurname());
+            assertEquals("atest2", client.getAddress());
+            assertEquals(LocalDate.of(2002, 1, 1), client.getBirth());
+            assertEquals(new BigDecimal(10), client.getBalance());
+        }
+    }
 
-//    @Test
-//    void ClientRepositoryModifyFailureTest() {
-//
-//        ClientRepository clientRepository = new ClientRepository();
-//        assertThrows(RepositoryException.class, () ->  clientRepository.updateOne(125L, Updates.set("name","Name2")));
-//        assertThrows(RepositoryException.class, () ->  clientRepository.updateOne(125L, Updates.set("surname","Surname2")));
-//        assertThrows(RepositoryException.class, () ->  clientRepository.updateOne(125L, Updates.set("address","Address2")));
-//        assertThrows(RepositoryException.class, () ->  clientRepository.updateOne(125L, Updates.set("birth",LocalDate.of(2222, 11, 22))));
-//        assertThrows(RepositoryException.class, () ->  clientRepository.updateOne(125L, Updates.set("balance",new BigDecimal(2137))));
-//
-//    }
+    @Test
+    @Order(6)
+    void ClientRepositoryFindClientsTest(){
+        try (ClientRepository clientRepository = new ClientRepository()) {
+            assertDoesNotThrow(() ->clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
+            assertDoesNotThrow(() ->clientRepository.add(new Client(2L, "ntest2", "stest2", "atest2", LocalDate.of(2002, 1, 1), new BigDecimal(0))));
+            ArrayList<Client> clientArrayList = clientRepository.find(Filters.eq("balance", BigDecimal.ZERO));
+            assertEquals(2, clientArrayList.size());
+            Client client = clientArrayList.stream().filter(client1 -> Objects.equals(client1.getClientId(), 1L)).findFirst().get();
+            assertEquals(client.getClientId(), 1L);
+            assertEquals("ntest", client.getName());
+            assertEquals("stest", client.getSurname());
+            assertEquals("atest", client.getAddress());
+            assertEquals(LocalDate.of(2001, 1, 1), client.getBirth());
+            assertEquals(new BigDecimal(0), client.getBalance());
+            client = clientArrayList.stream().filter(client1 -> Objects.equals(client1.getClientId(), 2L)).findFirst().get();
+            assertEquals(client.getClientId(), 2L);
+            assertEquals("ntest2", client.getName());
+            assertEquals("stest2", client.getSurname());
+            assertEquals("atest2", client.getAddress());
+            assertEquals(LocalDate.of(2002, 1, 1), client.getBirth());
+            assertEquals(new BigDecimal(0), client.getBalance());
+            clientArrayList = clientRepository.find(Filters.eq("name", "ntest2"));
+            assertEquals(1, clientArrayList.size());
+            assertEquals(client.getClientId(), 2L);
+            assertEquals("ntest2", client.getName());
+            assertEquals("stest2", client.getSurname());
+            assertEquals("atest2", client.getAddress());
+            assertEquals(LocalDate.of(2002, 1, 1), client.getBirth());
+            assertEquals(new BigDecimal(0), client.getBalance());
+        }
+    }
+    @Test
+    @Order(7)
+    void ClientRepositoryClientModifySuccessTest() {
+        try (ClientRepository clientRepository = new ClientRepository()) {
+            Client client1 = new Client(1L, "Name", "Surname",
+                    "Address", LocalDate.of(2000, 1, 1), new BigDecimal(0));
+            assertDoesNotThrow(() ->clientRepository.add(client1));
+
+            clientRepository.updateOne(1L, Updates.set("name", "Name2"));
+            clientRepository.updateOne(1L, Updates.set("surname", "Surname2"));
+            clientRepository.updateOne(1L, Updates.set("address", "Address2"));
+            clientRepository.updateOne(1L, Updates.set("birth", LocalDate.of(2222, 11, 22)));
+            clientRepository.updateOne(1L, Updates.set("balance", new BigDecimal(2137)));
+
+            Client client2 = assertDoesNotThrow(() ->clientRepository.get(1L));
+            assertNotNull(client2);
+            assertEquals(client2.getClientId(), 1L);
+            assertEquals("Name2", client2.getName());
+            assertEquals("Surname2", client2.getSurname());
+            assertEquals("Address2", client2.getAddress(), "Address2");
+            assertEquals(LocalDate.of(2222, 11, 22), client2.getBirth());
+            assertEquals(new BigDecimal(2137), client2.getBalance());
+        }
+    }
+
+    @Test
+    @Order(8)
+    void ClientManagerModifyClientFailure() {
+        try (ClientRepository clientRepository = new ClientRepository()) {
+            assertDoesNotThrow(()->clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
+            assertFalse(clientRepository.updateOne(1L, null));
+        }
+
+
+    }
+
+    /* DELETE TESTS */
+    @Test
+    @Order(9)
+    void ClientRepositoryRemoveSuccessTest() {
+        try(ClientRepository clientRepository = new ClientRepository()){
+            assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
+            assertDoesNotThrow(() -> clientRepository.remove(1L));
+        }
+    }
+
+    @Test
+    @Order(10)
+    void ClientRepositoryRemoveFailureTest() {
+        try(ClientRepository clientRepository = new ClientRepository()){
+            assertThrows(RepositoryException.class, () -> clientRepository.remove(5L));
+        }
+    }
+
 }
