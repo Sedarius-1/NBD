@@ -18,11 +18,11 @@ public abstract class Explosive extends Weapon {
     private Integer power;
 
     @BsonCreator
-    public Explosive(@BsonProperty("serialNumber")Long serialNumber,
-                     @BsonProperty("manufacturer")String manufacturer,
-                     @BsonProperty("name")String name,
-                     @BsonProperty("price")BigDecimal price,
-                     @BsonProperty("power")Integer power) {
+    public Explosive(@BsonProperty("serialNumber") Long serialNumber,
+                     @BsonProperty("manufacturer") String manufacturer,
+                     @BsonProperty("name") String name,
+                     @BsonProperty("price") BigDecimal price,
+                     @BsonProperty("power") Integer power) {
         super(serialNumber, manufacturer, name, price);
         this.power = power;
     }

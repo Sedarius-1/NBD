@@ -5,8 +5,6 @@ import org.ibd.controller.GunShop;
 import org.ibd.enums.ClientParamEnum;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.model.enums.GrenadeType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -65,6 +63,5 @@ public class Main {
         gunShop.registerWeapon(WeaponTypeEnum.PISTOL, pistolMap);
         gunShop.getAllWeaponsInfo();
         gunShop.findWeaponsInfo(eq("manufacturer", "Smolinus Inc."));
-
     }
 }

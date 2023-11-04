@@ -12,11 +12,11 @@ import java.math.BigDecimal;
 public class Pistol extends Firearm {
 
     @BsonCreator
-    public Pistol(@BsonProperty("serialNumber")Long serialNumber,
-                  @BsonProperty("manufacturer")String manufacturer,
-                  @BsonProperty("name")String name,
-                  @BsonProperty("price")BigDecimal price,
-                  @BsonProperty("caliber")String caliber) {
+    public Pistol(@BsonProperty("serialNumber") Long serialNumber,
+                  @BsonProperty("manufacturer") String manufacturer,
+                  @BsonProperty("name") String name,
+                  @BsonProperty("price") BigDecimal price,
+                  @BsonProperty("caliber") String caliber) {
         super(serialNumber, manufacturer, name, price, caliber);
         setType("Pistol");
     }

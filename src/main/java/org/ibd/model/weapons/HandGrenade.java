@@ -18,12 +18,12 @@ public class HandGrenade extends Explosive {
     private GrenadeType grenadeType;
 
     @BsonCreator
-    public HandGrenade(@BsonProperty("serialNumber")Long serialNumber,
-                       @BsonProperty("manufacturer")String manufacturer,
-                       @BsonProperty("name")String name,
-                       @BsonProperty("price")BigDecimal price,
-                       @BsonProperty("power")Integer power,
-                       @BsonProperty("grenadeType")GrenadeType grenadeType) {
+    public HandGrenade(@BsonProperty("serialNumber") Long serialNumber,
+                       @BsonProperty("manufacturer") String manufacturer,
+                       @BsonProperty("name") String name,
+                       @BsonProperty("price") BigDecimal price,
+                       @BsonProperty("power") Integer power,
+                       @BsonProperty("grenadeType") GrenadeType grenadeType) {
         super(serialNumber, manufacturer, name, price, power);
         setType("HandGrenade");
         this.grenadeType = grenadeType;

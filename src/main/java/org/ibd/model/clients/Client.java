@@ -71,6 +71,6 @@ public class Client implements Serializable {
                 ", surname='" + surname + '\'' +
                 ", address='" + address + '\'' +
                 ", birth=" + birth +
-                ", balance=" + balance +'}';
+                ", balance=" + balance + '}';
     }
 }

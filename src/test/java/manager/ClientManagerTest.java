@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClientManagerTest {
 
@@ -59,20 +60,21 @@ public class ClientManagerTest {
 
     @Test
     @Order(5)
-    void ClientManagerGetAllClientsTest(){
+    void ClientManagerGetAllClientsTest() {
         ClientManager clientManager = new ClientManager(new ClientRepository());
-        assertEquals(0  , clientManager.getAllClients().size());
+        assertEquals(0, clientManager.getAllClients().size());
         clientManager.registerClient(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0));
         clientManager.registerClient(2L, "ntest2", "stest2", "atest2", LocalDate.of(2002, 1, 1), new BigDecimal(10));
         assertEquals(2, clientManager.getAllClients().size());
-        Client client = clientManager.getAllClients().stream().filter(client1 -> Objects.equals(client1.getClientId(),1L)).findFirst().get();
+        // TODO: fix warning on .get()
+        Client client = clientManager.getAllClients().stream().filter(client1 -> Objects.equals(client1.getClientId(), 1L)).findFirst().get();
         assertEquals(client.getClientId(), 1L);
         assertEquals("ntest", client.getName());
         assertEquals("stest", client.getSurname());
         assertEquals("atest", client.getAddress());
         assertEquals(LocalDate.of(2001, 1, 1), client.getBirth());
         assertEquals(new BigDecimal(0), client.getBalance());
-        client = clientManager.getAllClients().stream().filter(client1 -> Objects.equals(client1.getClientId(),2L)).findFirst().get();
+        client = clientManager.getAllClients().stream().filter(client1 -> Objects.equals(client1.getClientId(), 2L)).findFirst().get();
         assertEquals(client.getClientId(), 2L);
         assertEquals("ntest2", client.getName());
         assertEquals("stest2", client.getSurname());
@@ -83,20 +85,20 @@ public class ClientManagerTest {
 
     @Test
     @Order(6)
-    void ClientManagerFindClientsTest(){
+    void ClientManagerFindClientsTest() {
         ClientManager clientManager = new ClientManager(new ClientRepository());
         clientManager.registerClient(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0));
         clientManager.registerClient(2L, "ntest2", "stest2", "atest2", LocalDate.of(2002, 1, 1), new BigDecimal(0));
         ArrayList<Client> clientArrayList = clientManager.findClients(Filters.eq("balance", BigDecimal.ZERO));
-        assertEquals(2,clientArrayList.size());
-        Client client = clientArrayList.stream().filter(client1 -> Objects.equals(client1.getClientId(),1L)).findFirst().get();
+        assertEquals(2, clientArrayList.size());
+        Client client = clientArrayList.stream().filter(client1 -> Objects.equals(client1.getClientId(), 1L)).findFirst().get();
         assertEquals(client.getClientId(), 1L);
         assertEquals("ntest", client.getName());
         assertEquals("stest", client.getSurname());
         assertEquals("atest", client.getAddress());
         assertEquals(LocalDate.of(2001, 1, 1), client.getBirth());
         assertEquals(new BigDecimal(0), client.getBalance());
-        client = clientArrayList.stream().filter(client1 -> Objects.equals(client1.getClientId(),2L)).findFirst().get();
+        client = clientArrayList.stream().filter(client1 -> Objects.equals(client1.getClientId(), 2L)).findFirst().get();
         assertEquals(client.getClientId(), 2L);
         assertEquals("ntest2", client.getName());
         assertEquals("stest2", client.getSurname());
@@ -104,7 +106,7 @@ public class ClientManagerTest {
         assertEquals(LocalDate.of(2002, 1, 1), client.getBirth());
         assertEquals(new BigDecimal(0), client.getBalance());
         clientArrayList = clientManager.findClients(Filters.eq("name", "ntest2"));
-        assertEquals(1,clientArrayList.size());
+        assertEquals(1, clientArrayList.size());
         assertEquals(client.getClientId(), 2L);
         assertEquals("ntest2", client.getName());
         assertEquals("stest2", client.getSurname());
@@ -162,15 +164,13 @@ public class ClientManagerTest {
         clientManager.registerClient(1L, "test", "test", "test", LocalDate.now(), new BigDecimal(0));
         assertTrue(clientManager.unregisterClient(1L));
     }
+
     @Test
     @Order(10)
     void ClientManagerUnregisterClientFailureTest() {
         ClientManager clientManager = new ClientManager(new ClientRepository());
         assertFalse(clientManager.unregisterClient(1L));
     }
-
-
-
 
 
 }

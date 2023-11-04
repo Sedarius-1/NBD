@@ -106,7 +106,7 @@ public class ClientRepository implements Repository<Client>, AutoCloseable {
     public void remove(Long id) throws RepositoryException {
         try {
             Client client = get(id);
-            if(Objects.isNull(client)) throw new RepositoryException("No such client exists!");
+            if (Objects.isNull(client)) throw new RepositoryException("No such client exists!");
             database
                     .getCollection(clientCollectionName, Client.class)
                     .deleteOne(eq("clientId", id));

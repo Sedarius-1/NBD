@@ -1,6 +1,5 @@
 package org.ibd.model.weapons;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -19,17 +18,17 @@ public class Rifle extends Firearm {
     private Float length;
 
     @BsonCreator
-    public Rifle(@BsonProperty("serialNumber")Long serialNumber,
-                 @BsonProperty("manufacturer")String manufacturer,
-                 @BsonProperty("name")String name,
-                 @BsonProperty("price")BigDecimal price,
-                 @BsonProperty("caliber")String caliber,
+    public Rifle(@BsonProperty("serialNumber") Long serialNumber,
+                 @BsonProperty("manufacturer") String manufacturer,
+                 @BsonProperty("name") String name,
+                 @BsonProperty("price") BigDecimal price,
+                 @BsonProperty("caliber") String caliber,
                  @BsonProperty("length") Float length) {
         super(serialNumber, manufacturer, name, price, caliber);
         this.length = length;
         setType("Rifle");
-
     }
+
     @Override
     public String toString() {
         return "Rifle{" +

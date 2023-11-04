@@ -12,7 +12,6 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 import java.math.BigDecimal;
 
 
-
 @Setter
 @Getter
 @NoArgsConstructor
@@ -41,10 +40,10 @@ public abstract class Weapon {
     private String type;
 
     @BsonCreator
-    public Weapon(@BsonProperty("serialNumber")Long serialNumber,
-                  @BsonProperty("manufacturer")String manufacturer,
-                  @BsonProperty("name")String name,
-                  @BsonProperty("price")BigDecimal price) {
+    public Weapon(@BsonProperty("serialNumber") Long serialNumber,
+                  @BsonProperty("manufacturer") String manufacturer,
+                  @BsonProperty("name") String name,
+                  @BsonProperty("price") BigDecimal price) {
         this.serialNumber = serialNumber;
         this.manufacturer = manufacturer;
         this.name = name;

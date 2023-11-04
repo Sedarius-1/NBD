@@ -13,11 +13,11 @@ import java.math.BigDecimal;
 public class RecreationalMcNuke extends Explosive {
 
     @BsonCreator
-    public RecreationalMcNuke(@BsonProperty("serialNumber")Long serialNumber,
-                              @BsonProperty("manufacturer")String manufacturer,
-                              @BsonProperty("name")String name,
-                              @BsonProperty("price")BigDecimal price,
-                              @BsonProperty("power")Integer power){
+    public RecreationalMcNuke(@BsonProperty("serialNumber") Long serialNumber,
+                              @BsonProperty("manufacturer") String manufacturer,
+                              @BsonProperty("name") String name,
+                              @BsonProperty("price") BigDecimal price,
+                              @BsonProperty("power") Integer power) {
         super(serialNumber, manufacturer, name, price, power);
         setType("Nuke");
     }

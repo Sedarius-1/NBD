@@ -1,6 +1,5 @@
 package org.ibd.model.weapons;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -18,15 +17,13 @@ public abstract class Firearm extends Weapon {
     @BsonProperty("caliber")
     private String caliber;
 
-    public Firearm() {
-    }
 
     @BsonCreator
-    public Firearm(@BsonProperty("serialNumber")Long serialNumber,
-                   @BsonProperty("manufacturer")String manufacturer,
-                   @BsonProperty("name")String name,
-                   @BsonProperty("price")BigDecimal price,
-                   @BsonProperty("caliber")String caliber) {
+    public Firearm(@BsonProperty("serialNumber") Long serialNumber,
+                   @BsonProperty("manufacturer") String manufacturer,
+                   @BsonProperty("name") String name,
+                   @BsonProperty("price") BigDecimal price,
+                   @BsonProperty("caliber") String caliber) {
         super(serialNumber, manufacturer, name, price);
         this.caliber = caliber;
     }
