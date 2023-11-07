@@ -4,7 +4,12 @@ package org.ibd;
 import org.ibd.controller.GunShop;
 import org.ibd.enums.ClientParamEnum;
 import org.ibd.enums.WeaponTypeEnum;
+import org.ibd.exceptions.RepositoryException;
+import org.ibd.manager.PurchaseManager;
 import org.ibd.model.enums.GrenadeType;
+import org.ibd.model.purchases.Purchase;
+import org.ibd.model.purchases.PurchaseMap;
+import org.ibd.repository.PurchaseRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,7 +22,7 @@ import static com.mongodb.client.model.Filters.eq;
 public class Main {
 
     public static void main(String[] args) {
-
+        PurchaseManager purchaseManager = new PurchaseManager(new PurchaseRepository());
         GunShop gunShop = new GunShop();
         gunShop.registerClient(1L, "Name", "Surname", "Address", LocalDate.of(2000, 1, 1), BigDecimal.ZERO);
 
@@ -63,5 +68,7 @@ public class Main {
         gunShop.registerWeapon(WeaponTypeEnum.PISTOL, pistolMap);
         gunShop.getAllWeaponsInfo();
         gunShop.findWeaponsInfo(eq("manufacturer", "Smolinus Inc."));
+        purchaseManager.registerPurchase(1L,gunShop.getClient(1L), gunShop.getWeapon(15L));
+        System.out.printf(gunShop.formatPurchaseInfo(purchaseManager.getPurchase(1L)));
     }
 }

@@ -1,76 +1,127 @@
-//package org.ibd.repository;
-//
-//import jakarta.persistence.EntityManager;
-//import jakarta.persistence.Query;
-//import org.ibd.exceptions.RepositoryException;
-//import org.ibd.model.purchases.Purchase;
-//
-//import java.util.List;
-//
-//
-//public class PurchaseRepository implements Repository<Purchase> {
-//
-//    public PurchaseRepository(EntityManager entityManager) {
-//      A
-//    }
-//
-//    public void add(final Purchase purchase) throws RepositoryException {
-//        try {
-//            entityManager.getTransaction().begin();
-//            entityManager.persist(purchase);
-//            entityManager.getTransaction().commit();
-//        } catch (Exception e) {
-//            entityManager.getTransaction().rollback();
-//            throw new RepositoryException(e.toString());
-//        }
-//    }
-//
-//    public final Purchase get(Long purchaseId) throws RepositoryException {
-//        try {
-//            entityManager.getTransaction().begin();
-//            Query query = entityManager.createQuery("SELECT purchase FROM Purchase purchase WHERE purchase.purchaseId = :providedPurchaseId");
-//            query.setParameter("providedPurchaseId", purchaseId);
-//            Purchase purchase = (Purchase) query.getSingleResult();
-//            entityManager.getTransaction().commit();
-//            return purchase;
-//        } catch (Exception e) {
-//
-//            throw new RepositoryException(e.toString());
-//        }
-//    }
-//
-//
-//    public final List<Purchase> getAllPurchases() throws RepositoryException {
-//        try {
-//            return entityManager.createQuery("SELECT p FROM Purchase p", Purchase.class).getResultList();
-//        } catch (Exception e) {
-//
-//            throw new RepositoryException(e.toString());
-//        }
-//    }
-//
-//    public final List<Purchase> getAllPurchasesForSingleClient(Long clientId) throws RepositoryException {
-//        try {
-//            return entityManager.createQuery(
-//                            "SELECT p FROM Purchase p WHERE p.client.clientId = :providedClientId", Purchase.class)
-//                    .setParameter("providedClientId", clientId).getResultList();
-//        } catch (Exception e) {
-//
-//            throw new RepositoryException(e.toString());
-//        }
-//    }
-//
-//    public void remove(Purchase purchase) throws RepositoryException {
-//        try {
-//            entityManager.getTransaction().begin();
-//            Long purchaseId = purchase.getPurchaseId();
-//            Query query = entityManager.createQuery("DELETE FROM Purchase purchase WHERE purchase.purchaseId = :providedPurchaseId");
-//            query.setParameter("providedPurchaseId", purchaseId);
-//            query.executeUpdate();
-//            entityManager.getTransaction().commit();
-//        } catch (Exception e) {
-//            entityManager.getTransaction().rollback();
-//            throw new RepositoryException(e.toString());
-//        }
-//    }
-//}
+package org.ibd.repository;
+
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.*;
+import org.bson.UuidRepresentation;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.conversions.Bson;
+import org.ibd.exceptions.RepositoryException;
+import org.ibd.model.purchases.Purchase;
+import org.ibd.model.purchases.PurchaseMap;
+import org.ibd.model.weapons.Pistol;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static com.mongodb.client.model.Filters.eq;
+import static org.ibd.repository.BongoConfig.*;
+
+
+public class PurchaseRepository implements Repository<PurchaseMap>, AutoCloseable {
+
+    private final String purchaseCollectionName = "purchaseCollection";
+
+    private final MongoClient mongoClient;
+
+    private final MongoDatabase database;
+
+    public PurchaseRepository() {
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .credential(credential)
+                .applyConnectionString(connectionString)
+                .uuidRepresentation(UuidRepresentation.STANDARD)
+                .codecRegistry(CodecRegistries.fromRegistries(
+                        MongoClientSettings.getDefaultCodecRegistry(),
+                        pojoCodecRegistry
+                ))
+                .build();
+
+        this.mongoClient = MongoClients.create(settings);
+        this.database = mongoClient.getDatabase("admin");
+        // Delete test collection, if it exists
+        MongoIterable<String> list = this.database.listCollectionNames();
+        for (String name : list) {
+            if (name.equals(purchaseCollectionName)) {
+                this.database.getCollection(name).drop();
+                break;
+            }
+        }
+
+        // Create test collection
+        this.database.createCollection(purchaseCollectionName);
+    }
+
+    //Create
+    @Override
+    public void add(PurchaseMap purchaseMap) throws RepositoryException {
+        try {
+            MongoCollection<PurchaseMap> testDBItemMongoCollection =
+                    this.database.getCollection(purchaseCollectionName, PurchaseMap.class);
+            testDBItemMongoCollection.insertOne(purchaseMap);
+        } catch (Exception ex) {
+            throw new RepositoryException(ex.toString());
+        }
+    }
+
+    @Override
+    public final PurchaseMap get(Long id) throws RepositoryException {
+        try {
+            return this.database
+                    .getCollection(purchaseCollectionName, PurchaseMap.class)
+                    .find(eq("purchaseId", id))
+                    .into(new ArrayList<>())
+                    .getFirst();
+        } catch (Exception ex) {
+            throw new RepositoryException(ex.toString());
+        }
+    }
+
+    @Override
+    public ArrayList<PurchaseMap> find(Bson bson) {
+        return this.database
+                .getCollection(purchaseCollectionName, PurchaseMap.class)
+                .find(bson)
+                .into(new ArrayList<>());
+    }
+
+    @Override
+    public ArrayList<PurchaseMap> getAll() {
+        MongoCollection<PurchaseMap> testDBItemMongoCollection =
+                this.database.getCollection(purchaseCollectionName, PurchaseMap.class);
+        return testDBItemMongoCollection.find().into(new ArrayList<>());
+
+    }
+
+    //Update
+    @Override
+    public boolean updateOne(Long id, Bson updater) {
+        try {
+            database
+                    .getCollection(purchaseCollectionName, Purchase.class)
+                    .updateOne(eq("purchaseId", id), updater);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    //Delete
+    @Override
+    public void remove(Long id) throws RepositoryException {
+        try {
+            PurchaseMap purchaseMap = get(id);
+            if (Objects.isNull(purchaseMap)) throw new RepositoryException("No such client exists!");
+            database
+                    .getCollection(purchaseCollectionName, Purchase.class)
+                    .deleteOne(eq("purchaseId", id));
+        } catch (Exception ex) {
+            throw new RepositoryException(ex.toString());
+        }
+    }
+
+    @Override
+    public void close() {
+        this.mongoClient.close();
+    }
+}

@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 import org.ibd.model.clients.Client;
@@ -12,48 +15,35 @@ import org.ibd.model.weapons.Weapon;
 
 import java.util.UUID;
 
-@SuppressWarnings("JpaDataSourceORMInspection")
-@Entity
 @Getter
+@Setter
 @NoArgsConstructor
-@OptimisticLocking(type = OptimisticLockType.NONE)
-@Table(name = "Purchase")
+
+
 public class Purchase {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+
+    @BsonCreator
+    public Purchase(@BsonProperty("purchaseId") Long purchaseId,
+                    @BsonProperty("client") Client client,
+                    @BsonProperty("weapon") Weapon weapon) {
+        this.purchaseId = purchaseId;
+        this.client = client;
+        this.weapon = weapon;
+    }
 
     @NotNull
     @NotEmpty
-    @Column(name = "purchaseId")
+    @BsonProperty("purchaseId")
     private Long purchaseId;
+
     @NotNull
     @NotEmpty
-    @ManyToOne(cascade = CascadeType.ALL)
+    @BsonProperty("client")
     private Client client;
+
     @NotNull
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn
+    @BsonProperty("weapon")
     private Weapon weapon;
-
-    public Purchase(Long purchaseId, Client client, Weapon weapon) {
-        this.purchaseId = purchaseId;
-        this.client = client;
-        this.weapon = weapon;
-    }
-
-    public void setPurchaseId(Long purchaseId) {
-        this.purchaseId = purchaseId;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
-    }
 
 
 }

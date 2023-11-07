@@ -4,8 +4,10 @@ import org.bson.conversions.Bson;
 import org.ibd.enums.ClientParamEnum;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.manager.ClientManager;
+import org.ibd.manager.PurchaseManager;
 import org.ibd.manager.WeaponManager;
 import org.ibd.model.clients.Client;
+import org.ibd.model.purchases.Purchase;
 import org.ibd.model.weapons.*;
 import org.ibd.repository.ClientRepository;
 import org.ibd.repository.WeaponRepository;
@@ -20,7 +22,7 @@ import java.util.Map;
 public class GunShop {
     private ClientManager clientManager;
     private WeaponManager weaponManager;
-    //    private PurchaseManager purchaseManager;
+    private PurchaseManager purchaseManager;
     Logger log = LoggerFactory.getLogger("NBD");
 
     public GunShop() {
@@ -231,65 +233,88 @@ public class GunShop {
     }
 
     //Update
-    //TODO WRITE ANY IMPLEMENTATION OF WEAPON UPDATE
+    public void updateWeapon(BigDecimal price, Long serialNumber) {
+        weaponManager.changePrice(serialNumber, price);
+    }
     //Delete
     public boolean deleteWeapon(Long serialNumber) {
         return weaponManager.unregisterWeapon(serialNumber);
     }
 
-//    public Purchase registerPurchase(Long purchaseId, Client client, Weapon weapon) {
-//        if (Objects.isNull(client)) {
-//            System.out.println(AnsiCodes.ANSI_RED + "Client not provided!" + AnsiCodes.ANSI_RESET);
-//            return null;
-//        }
-//        if (Objects.isNull(weapon)) {
-//            System.out.println(AnsiCodes.ANSI_RED + "Weapon not provided!" + AnsiCodes.ANSI_RESET);
-//            return null;
-//        }
-//        client = clientManager.getClient(client.getClientId());
-//        if (client.getBalance().subtract(weapon.getPrice()).compareTo(BigDecimal.ZERO) < 0) {
-//            System.out.println(AnsiCodes.ANSI_RED + "Insufficient funds!" + AnsiCodes.ANSI_RESET);
-//            return null;
-//        }
-//        if (purchaseManager.registerPurchase(purchaseId, client, weapon)) {
-//            if (clientManager.changeBalance(client.getClientId(), client.getBalance().subtract(weapon.getPrice()))) {
-//                System.out.println(AnsiCodes.ANSI_GREEN + "Registered purchase!" + AnsiCodes.ANSI_RESET);
-//                return purchaseManager.getPurchase(purchaseId);
-//            } else {
-//                purchaseManager.undoPurchase(purchaseManager.getPurchase(purchaseId));
-//                System.out.println(AnsiCodes.ANSI_GREEN + "Purchase failed - could not save new balance" + AnsiCodes.ANSI_RESET);
-//                return null;
-//            }
-//        } else {
-//            System.out.println(AnsiCodes.ANSI_RED + "Could not register purchase!" + AnsiCodes.ANSI_RESET);
-//            return null;
-//        }
-//    }
-//
-//    public List<Weapon> getAvailableWeapons() {
-//        try {
-//            List<Weapon> allWeapons = weaponManager.getAllWeapons();
-//            List<Purchase> purchases = purchaseManager.getAllPurchases();
-//            List<Weapon> soldWeapons = new ArrayList<>();
-//            purchases.forEach(purchase -> soldWeapons.add(purchase.getWeapon()));
-//            allWeapons.removeAll(soldWeapons);
-//            return allWeapons;
-//        } catch (Exception ex) {
-//            logger.error(ex.toString());
-//            return null;
-//        }
-//    }
-//
-//    public List<Purchase> getAllPurchases() {
-//        try {
-//            return purchaseManager.getAllPurchases();
-//        } catch (Exception ex) {
-//            logger.error(ex.toString());
-//            return null;
-//        }
-//    }
+    /* PURCHASE */
 
+    public String formatPurchaseInfo(Purchase purchase) {
 
+        return "Purchase(" + AnsiCodes.ANSI_RED + purchase.getPurchaseId() + AnsiCodes.ANSI_RESET +"):\n"
+               + formatClientInfo(purchase.getClient()) + "\n"
+               + formatWeaponInfo(purchase.getWeapon());
+    }
+
+    //Create
+    public Purchase registerPurchase(Long purchaseId, Client client, Weapon weapon) {
+        client = clientManager.getClient(client.getClientId());
+        weapon = weaponManager.getWeapon(weapon.getSerialNumber());
+        if(client.getBalance().compareTo(weapon.getPrice()) < 0){
+            System.out.println(AnsiCodes.ANSI_RED + "Could not register purchase!" + AnsiCodes.ANSI_RESET);
+            return null;
+        }
+        if (purchaseManager.registerPurchase(purchaseId, client, weapon)) {
+            clientManager.changeBalance(client.getClientId(),client.getBalance().subtract(weapon.getPrice()));
+            System.out.println(AnsiCodes.ANSI_GREEN + "Registered purchase!" + AnsiCodes.ANSI_RESET);
+            return purchaseManager.getPurchase(purchaseId);
+        } else {
+            System.out.println(AnsiCodes.ANSI_RED + "Could not register purchase!" + AnsiCodes.ANSI_RESET);
+        }
+        return null;
+    }
+
+    //Read
+    public Purchase getPurchase(Long purchaseId) {
+        try {
+            return purchaseManager.getPurchase(purchaseId);
+
+        } catch (Exception ex) {
+            System.out.println(AnsiCodes.ANSI_RED + "Could not find purchase!" + AnsiCodes.ANSI_RESET);
+            return null;
+        }
+    }
+
+    public String getPurchaseInfo(Long purchaseId) {
+        try {
+            Purchase purchase = getPurchase(purchaseId);
+            return formatPurchaseInfo(purchase);
+
+        } catch (Exception ex) {
+            return AnsiCodes.ANSI_RED + "Could not find purchase to print info!" + AnsiCodes.ANSI_RESET;
+        }
+    }
+
+    public ArrayList<Purchase> getAllPurchases() {
+        try {
+            return purchaseManager.getAllPurchases();
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    public void getAllPurchasesInfo() {
+        System.out.printf(AnsiCodes.ANSI_CYAN + "PRINTING ALL PURCHASES\n" + AnsiCodes.ANSI_RESET);
+        getAllPurchases().forEach(purchase -> System.out.println(formatPurchaseInfo(purchase)));
+    }
+
+    public ArrayList<Purchase> findPurchases(Bson finder) {
+        return purchaseManager.findPurchases(finder);
+    }
+
+    public void findPurchasesInfo(Bson finder) {
+        System.out.printf(AnsiCodes.ANSI_CYAN + "PRINTING FOUND PURCHASES (condition : " + finder.toString() + ")\n" + AnsiCodes.ANSI_RESET);
+        findPurchases(finder).forEach(purchase -> System.out.println(formatPurchaseInfo(purchase)));
+    }
+
+    //Delete
+    public boolean deletePurchase(Long purchaseId) {
+        return purchaseManager.unregisterPurchase(purchaseId);
+    }
 
 
 }

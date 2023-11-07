@@ -26,6 +26,7 @@ public abstract class Weapon {
     @NotEmpty
     @BsonProperty("manufacturer")
     private String manufacturer;
+
     @NotNull
     @NotEmpty
     @BsonProperty("name")

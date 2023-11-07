@@ -3,6 +3,7 @@ package org.ibd.model.weapons;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public abstract class Firearm extends Weapon {
     @NotNull
     @NotEmpty
