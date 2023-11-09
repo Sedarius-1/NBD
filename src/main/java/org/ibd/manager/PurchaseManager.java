@@ -1,5 +1,6 @@
 package org.ibd.manager;
 
+import com.mongodb.client.ClientSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import org.bson.conversions.Bson;
@@ -22,6 +23,11 @@ public class PurchaseManager {
     public PurchaseManager(PurchaseRepository purchaseRepository) {
         this.purchaseRepository = purchaseRepository;
     }
+
+    public ClientSession getMongoClientSession() {
+        return purchaseRepository.getMongoClientSession();
+    }
+
     //CREATE
     public Boolean registerPurchase(Long purchaseId, Client client, Weapon weapon) {
         try {

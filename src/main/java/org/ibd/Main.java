@@ -24,7 +24,7 @@ public class Main {
     public static void main(String[] args) {
         PurchaseManager purchaseManager = new PurchaseManager(new PurchaseRepository());
         GunShop gunShop = new GunShop();
-        gunShop.registerClient(1L, "Name", "Surname", "Address", LocalDate.of(2000, 1, 1), BigDecimal.ZERO);
+        gunShop.registerClient(1L, "Name", "Surname", "Address", LocalDate.of(2000, 1, 1), BigDecimal.valueOf(1000000));
 
         gunShop.updateClient(ClientParamEnum.NAME, "Stanislaw", 1L);
         gunShop.registerClient(2L, "Name", "Surname1", "Address", LocalDate.of(2000, 1, 1), BigDecimal.ZERO);
@@ -69,6 +69,8 @@ public class Main {
         gunShop.getAllWeaponsInfo();
         gunShop.findWeaponsInfo(eq("manufacturer", "Smolinus Inc."));
         purchaseManager.registerPurchase(1L,gunShop.getClient(1L), gunShop.getWeapon(15L));
+        System.out.printf(gunShop.formatPurchaseInfo(purchaseManager.getPurchase(1L)));
+        purchaseManager.registerPurchase(2L,gunShop.getClient(1L), gunShop.getWeapon(15L));
         System.out.printf(gunShop.formatPurchaseInfo(purchaseManager.getPurchase(1L)));
     }
 }

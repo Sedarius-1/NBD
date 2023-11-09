@@ -1,8 +1,11 @@
 package org.ibd.controller;
 
+import com.mongodb.MongoCommandException;
+import com.mongodb.client.ClientSession;
 import org.bson.conversions.Bson;
 import org.ibd.enums.ClientParamEnum;
 import org.ibd.enums.WeaponTypeEnum;
+import org.ibd.exceptions.RepositoryException;
 import org.ibd.manager.ClientManager;
 import org.ibd.manager.PurchaseManager;
 import org.ibd.manager.WeaponManager;
@@ -251,22 +254,31 @@ public class GunShop {
     }
 
     //Create
-    public Purchase registerPurchase(Long purchaseId, Client client, Weapon weapon) {
-        client = clientManager.getClient(client.getClientId());
-        weapon = weaponManager.getWeapon(weapon.getSerialNumber());
-        if(client.getBalance().compareTo(weapon.getPrice()) < 0){
-            System.out.println(AnsiCodes.ANSI_RED + "Could not register purchase!" + AnsiCodes.ANSI_RESET);
-            return null;
+    public void registerPurchase(Long purchaseId, Client client, Weapon weapon) {
+        ClientSession clientSession = purchaseManager.getMongoClientSession();
+        try {
+            clientSession.startTransaction();
+            client = clientManager.getClient(client.getClientId());
+            weapon = weaponManager.getWeapon(weapon.getSerialNumber());
+            if (client.getBalance().compareTo(weapon.getPrice()) < 0) {
+                System.out.println(AnsiCodes.ANSI_RED + "Could not register purchase!" + AnsiCodes.ANSI_RESET);
+            }
+            if (purchaseManager.registerPurchase(purchaseId, client, weapon)) {
+                clientManager.changeBalance(client.getClientId(), client.getBalance().subtract(weapon.getPrice()));
+                System.out.println(AnsiCodes.ANSI_GREEN + "Registered purchase!" + AnsiCodes.ANSI_RESET);
+            } else {
+                System.out.println(AnsiCodes.ANSI_RED + "Could not register purchase!" + AnsiCodes.ANSI_RESET);
+            }
+            clientSession.commitTransaction();
+        } catch (MongoCommandException e) {
+            log.error(e.toString());
+            clientSession.abortTransaction();
+        } finally {
+            clientSession.close();
         }
-        if (purchaseManager.registerPurchase(purchaseId, client, weapon)) {
-            clientManager.changeBalance(client.getClientId(),client.getBalance().subtract(weapon.getPrice()));
-            System.out.println(AnsiCodes.ANSI_GREEN + "Registered purchase!" + AnsiCodes.ANSI_RESET);
-            return purchaseManager.getPurchase(purchaseId);
-        } else {
-            System.out.println(AnsiCodes.ANSI_RED + "Could not register purchase!" + AnsiCodes.ANSI_RESET);
-        }
-        return null;
     }
+
+
 
     //Read
     public Purchase getPurchase(Long purchaseId) {

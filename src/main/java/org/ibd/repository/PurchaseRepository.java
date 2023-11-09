@@ -22,6 +22,10 @@ public class PurchaseRepository implements Repository<PurchaseMap>, AutoCloseabl
 
     private final String purchaseCollectionName = "purchaseCollection";
 
+    public ClientSession getMongoClientSession() {
+        return mongoClient.startSession();
+    }
+
     private final MongoClient mongoClient;
 
     private final MongoDatabase database;
