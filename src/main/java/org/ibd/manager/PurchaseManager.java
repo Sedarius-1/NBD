@@ -13,6 +13,7 @@ import org.ibd.model.purchases.PurchaseMapper;
 import org.ibd.model.weapons.Weapon;
 import org.ibd.repository.PurchaseRepository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class PurchaseManager {
@@ -31,6 +32,7 @@ public class PurchaseManager {
     //CREATE
     public Boolean registerPurchase(Long purchaseId, Client client, Weapon weapon) {
         try {
+            client.setBalance(client.getBalance().subtract(weapon.getPrice()));
             Purchase purchase = PurchaseFactory.createPurchase(purchaseId, client, weapon);
             PurchaseMap purchaseMap = new PurchaseMap();
             PurchaseMapper.convertPurchaseToPurchaseMap(purchaseMap, purchase);

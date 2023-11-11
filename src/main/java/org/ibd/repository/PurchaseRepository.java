@@ -8,10 +8,8 @@ import org.bson.conversions.Bson;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.purchases.Purchase;
 import org.ibd.model.purchases.PurchaseMap;
-import org.ibd.model.weapons.Pistol;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import static com.mongodb.client.model.Filters.eq;

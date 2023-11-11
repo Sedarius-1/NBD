@@ -13,6 +13,7 @@ import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
 import org.ibd.model.weapons.*;
 import org.ibd.repository.ClientRepository;
+import org.ibd.repository.PurchaseRepository;
 import org.ibd.repository.WeaponRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ public class GunShop {
         try {
             clientManager = new ClientManager(new ClientRepository());
             weaponManager = new WeaponManager(new WeaponRepository());
+            purchaseManager = new PurchaseManager(new PurchaseRepository());
         } catch (Exception e) {
             log.error("FATAL ERROR CREATING GunShop INSTANCE! ABORTING!");
             System.exit(1);
@@ -248,7 +250,7 @@ public class GunShop {
 
     public String formatPurchaseInfo(Purchase purchase) {
 
-        return "Purchase(" + AnsiCodes.ANSI_RED + purchase.getPurchaseId() + AnsiCodes.ANSI_RESET +"):\n"
+        return "\nPurchase(" + AnsiCodes.ANSI_RED + purchase.getPurchaseId() + AnsiCodes.ANSI_RESET +"):\n"
                + formatClientInfo(purchase.getClient()) + "\n"
                + formatWeaponInfo(purchase.getWeapon());
     }

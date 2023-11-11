@@ -5,6 +5,7 @@ import com.mongodb.client.*;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.ibd.exceptions.RepositoryException;
+import org.ibd.model.purchases.PurchaseMap;
 import org.ibd.model.weapons.*;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static org.ibd.repository.BongoConfig.*;
 
-public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
+public class WeaponRepository implements Repository<WeaponMap>, AutoCloseable {
 
     private final String weaponCollectionName = "weaponCollection";
 
@@ -50,11 +51,11 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
 
     //Create
     @Override
-    public void add(Weapon weapon) throws RepositoryException {
+    public void add(WeaponMap weaponMap) throws RepositoryException {
         try {
-            MongoCollection<Weapon> testDBItemMongoCollection =
-                    this.database.getCollection(weaponCollectionName, Weapon.class);
-            testDBItemMongoCollection.insertOne(weapon);
+            MongoCollection<WeaponMap> testDBItemMongoCollection =
+                    this.database.getCollection(weaponCollectionName, WeaponMap.class);
+            testDBItemMongoCollection.insertOne(weaponMap);
         } catch (Exception ex) {
             throw new RepositoryException(ex.toString());
         }
@@ -63,101 +64,32 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
 
     //Read
     @Override
-    public Weapon get(Long id) throws RepositoryException {
-
-        MongoCollection<Pistol> pistolDbCollection =
-                this.database.getCollection(weaponCollectionName, Pistol.class);
-        ArrayList<Pistol> pistolList = pistolDbCollection
-                .find(and(eq("type", "Pistol"), eq("serialNumber", id)))
-                .into(new ArrayList<>());
-        if (!pistolList.isEmpty()) return pistolList.getFirst();
-
-        MongoCollection<Rifle> rifleDbCollection =
-                this.database.getCollection(weaponCollectionName, Rifle.class);
-        ArrayList<Rifle> rifleList = rifleDbCollection
-                .find(and(eq("type", "Rifle"), eq("serialNumber", id)))
-                .into(new ArrayList<>());
-        if (!rifleList.isEmpty()) return rifleList.getFirst();
-
-        MongoCollection<RecreationalMcNuke> nukeDbCollection =
-                this.database.getCollection(weaponCollectionName, RecreationalMcNuke.class);
-        ArrayList<RecreationalMcNuke> nukeList = nukeDbCollection
-                .find(and(eq("type", "Nuke"), eq("serialNumber", id)))
-                .into(new ArrayList<>());
-        if (!nukeList.isEmpty()) return nukeList.getFirst();
-
-        MongoCollection<HandGrenade> grenadeDbCollection =
-                this.database.getCollection(weaponCollectionName, HandGrenade.class);
-        ArrayList<HandGrenade> grenadeList = grenadeDbCollection
-                .find(and(eq("type", "HandGrenade"), eq("serialNumber", id)))
-                .into(new ArrayList<>());
-        if (!grenadeList.isEmpty()) return grenadeList.getFirst();
-        else {
-            throw new RepositoryException("NO WEAPON WITH GIVEN SERIAL NUMBER FOUND");
+    public final WeaponMap get(Long id) throws RepositoryException {
+        try {
+            return this.database
+                    .getCollection(weaponCollectionName, WeaponMap.class)
+                    .find(eq("serialNumber", id))
+                    .into(new ArrayList<>())
+                    .getFirst();
+        } catch (Exception ex) {
+            throw new RepositoryException(ex.toString());
         }
     }
 
     @Override
-    public ArrayList<Weapon> find(org.bson.conversions.Bson bson) {
+    public ArrayList<WeaponMap> find(org.bson.conversions.Bson bson) {
 
-        ArrayList<Weapon> combinedList = new ArrayList<>();
-
-        MongoCollection<Pistol> pistolDbCollection =
-                this.database.getCollection(weaponCollectionName, Pistol.class);
-        ArrayList<Pistol> pistolList = pistolDbCollection
-                .find(and(eq("type", "Pistol"), bson))
+        return this.database
+                .getCollection(weaponCollectionName, WeaponMap.class)
+                .find(bson)
                 .into(new ArrayList<>());
-        if (!pistolList.isEmpty()) combinedList.addAll(pistolList);
-
-        MongoCollection<Rifle> rifleDbCollection =
-                this.database.getCollection(weaponCollectionName, Rifle.class);
-        ArrayList<Rifle> rifleList = rifleDbCollection
-                .find(and(eq("type", "Rifle"), bson))
-                .into(new ArrayList<>());
-        if (!rifleList.isEmpty()) combinedList.addAll(rifleList);
-
-        MongoCollection<RecreationalMcNuke> nukeDbCollection =
-                this.database.getCollection(weaponCollectionName, RecreationalMcNuke.class);
-        ArrayList<RecreationalMcNuke> nukeList = nukeDbCollection
-                .find(and(eq("type", "Nuke"), bson))
-                .into(new ArrayList<>());
-        if (!nukeList.isEmpty()) combinedList.addAll(nukeList);
-
-        MongoCollection<HandGrenade> grenadeDbCollection =
-                this.database.getCollection(weaponCollectionName, HandGrenade.class);
-        ArrayList<HandGrenade> grenadeList = grenadeDbCollection
-                .find(and(eq("type", "HandGrenade"), bson))
-                .into(new ArrayList<>());
-        if (!nukeList.isEmpty()) combinedList.addAll(grenadeList);
-
-        return combinedList;
     }
 
     @Override
-    public ArrayList<Weapon> getAll() {
-        MongoCollection<Pistol> pistolDbCollection =
-                this.database.getCollection(weaponCollectionName, Pistol.class);
-        ArrayList<Pistol> pistolList = pistolDbCollection.find(eq("type", "Pistol")).into(new ArrayList<>());
-
-        MongoCollection<Rifle> rifleDbCollection =
-                this.database.getCollection(weaponCollectionName, Rifle.class);
-        ArrayList<Rifle> rifleList = rifleDbCollection.find(eq("type", "Rifle")).into(new ArrayList<>());
-
-        MongoCollection<RecreationalMcNuke> nukeDbCollection =
-                this.database.getCollection(weaponCollectionName, RecreationalMcNuke.class);
-        ArrayList<RecreationalMcNuke> nukeList = nukeDbCollection.find(eq("type", "Nuke")).into(new ArrayList<>());
-
-        MongoCollection<HandGrenade> grenadeDbCollection =
-                this.database.getCollection(weaponCollectionName, HandGrenade.class);
-        ArrayList<HandGrenade> grenadeList = grenadeDbCollection.find(eq("type", "HandGrenade")).into(new ArrayList<>());
-
-        ArrayList<Weapon> combinedList = new ArrayList<>();
-
-        combinedList.addAll(pistolList);
-        combinedList.addAll(rifleList);
-        combinedList.addAll(nukeList);
-        combinedList.addAll(grenadeList);
-        return combinedList;
+    public ArrayList<WeaponMap> getAll() {
+        MongoCollection<WeaponMap> testDBItemMongoCollection =
+                this.database.getCollection(weaponCollectionName, WeaponMap.class);
+        return testDBItemMongoCollection.find().into(new ArrayList<>());
     }
 
     //Update
@@ -165,7 +97,7 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
     public boolean updateOne(Long id, org.bson.conversions.Bson updater) {
         try {
             database
-                    .getCollection(weaponCollectionName, Weapon.class)
+                    .getCollection(weaponCollectionName, WeaponMap.class)
                     .updateOne(eq("serialNumber", id), updater);
             return true;
         } catch (Exception ex) {
@@ -178,10 +110,10 @@ public class WeaponRepository implements Repository<Weapon>, AutoCloseable {
     @Override
     public void remove(Long id) throws RepositoryException {
         try {
-            Weapon weapon = get(id);
-            if (Objects.isNull(weapon)) throw new RepositoryException("No such weapon exists!");
+            WeaponMap weaponMap = get(id);
+            if (Objects.isNull(weaponMap)) throw new RepositoryException("No such weapon exists!");
             database
-                    .getCollection(weaponCollectionName, Weapon.class)
+                    .getCollection(weaponCollectionName, WeaponMap.class)
                     .deleteOne(eq("serialNumber", id));
         } catch (Exception ex) {
             throw new RepositoryException(ex.toString());

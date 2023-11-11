@@ -68,9 +68,9 @@ public class Main {
         gunShop.registerWeapon(WeaponTypeEnum.PISTOL, pistolMap);
         gunShop.getAllWeaponsInfo();
         gunShop.findWeaponsInfo(eq("manufacturer", "Smolinus Inc."));
-        purchaseManager.registerPurchase(1L,gunShop.getClient(1L), gunShop.getWeapon(15L));
+        gunShop.registerPurchase(1L,gunShop.getClient(1L), gunShop.getWeapon(15L));
         System.out.printf(gunShop.formatPurchaseInfo(purchaseManager.getPurchase(1L)));
-        purchaseManager.registerPurchase(2L,gunShop.getClient(1L), gunShop.getWeapon(15L));
-        System.out.printf(gunShop.formatPurchaseInfo(purchaseManager.getPurchase(1L)));
+        gunShop.registerPurchase(2L,gunShop.getClient(1L), gunShop.getWeapon(15L));
+        System.out.printf(gunShop.formatPurchaseInfo(purchaseManager.getPurchase(2L)));
     }
 }
