@@ -32,6 +32,9 @@ public class PurchaseManager {
     //CREATE
     public Boolean registerPurchase(Long purchaseId, Client client, Weapon weapon) {
         try {
+            if(client.getBalance().subtract(weapon.getPrice()).signum() == -1){
+                throw new RepositoryException("Not sufficient Funds!");
+            }
             client.setBalance(client.getBalance().subtract(weapon.getPrice()));
             Purchase purchase = PurchaseFactory.createPurchase(purchaseId, client, weapon);
             PurchaseMap purchaseMap = new PurchaseMap();

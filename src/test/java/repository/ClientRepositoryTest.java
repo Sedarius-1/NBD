@@ -59,7 +59,7 @@ public class ClientRepositoryTest {
     /* READ TESTS*/
     @Test
     @Order(3)
-    void ClientRepositoryGetSuccessTest() {
+    void ClientRepositoryGetClientSuccessTest() {
         try (ClientRepository clientRepository = new ClientRepository()) {
             assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
             assertDoesNotThrow(() -> clientRepository.get(1L));
@@ -68,7 +68,7 @@ public class ClientRepositoryTest {
 
     @Test
     @Order(4)
-    void ClientRepositoryGetFailureTest() {
+    void ClientRepositoryGetClientFailureTest() {
         try (ClientRepository clientRepository = new ClientRepository()) {
             assertThrows(RepositoryException.class, () -> clientRepository.get(1L));
         }
@@ -76,21 +76,23 @@ public class ClientRepositoryTest {
 
     @Test
     @Order(5)
-    void ClientRepositoryGetAllTest() {
+    void ClientRepositoryGetAllClientTest() {
         try (ClientRepository clientRepository = new ClientRepository()) {
             assertEquals(0, clientRepository.getAll().size());
             assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
             assertDoesNotThrow(() -> clientRepository.add(new Client(2L, "ntest2", "stest2", "atest2", LocalDate.of(2002, 1, 1), new BigDecimal(10))));
             assertEquals(2, clientRepository.getAll().size());
             // TODO: fix warning on .get()
-            Client client = clientRepository.getAll().stream().filter(client1 -> Objects.equals(client1.getClientId(), 1L)).findFirst().get();
+            Client client = clientRepository.getAll().stream().filter(client1 -> Objects.equals(client1.getClientId(), 1L)).findFirst().orElse(null);
+            assertNotNull(client);
             assertEquals(client.getClientId(), 1L);
             assertEquals("ntest", client.getName());
             assertEquals("stest", client.getSurname());
             assertEquals("atest", client.getAddress());
             assertEquals(LocalDate.of(2001, 1, 1), client.getBirth());
             assertEquals(new BigDecimal(0), client.getBalance());
-            client = clientRepository.getAll().stream().filter(client1 -> Objects.equals(client1.getClientId(), 2L)).findFirst().get();
+            client = clientRepository.getAll().stream().filter(client1 -> Objects.equals(client1.getClientId(), 2L)).findFirst().orElse(null);
+            assertNotNull(client);
             assertEquals(client.getClientId(), 2L);
             assertEquals("ntest2", client.getName());
             assertEquals("stest2", client.getSurname());
@@ -102,20 +104,22 @@ public class ClientRepositoryTest {
 
     @Test
     @Order(6)
-    void ClientRepositoryFindClientsTest() {
+    void ClientRepositoryFindClientTest() {
         try (ClientRepository clientRepository = new ClientRepository()) {
             assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
             assertDoesNotThrow(() -> clientRepository.add(new Client(2L, "ntest2", "stest2", "atest2", LocalDate.of(2002, 1, 1), new BigDecimal(0))));
             ArrayList<Client> clientArrayList = clientRepository.find(Filters.eq("balance", BigDecimal.ZERO));
             assertEquals(2, clientArrayList.size());
-            Client client = clientArrayList.stream().filter(client1 -> Objects.equals(client1.getClientId(), 1L)).findFirst().get();
+            Client client = clientArrayList.stream().filter(client1 -> Objects.equals(client1.getClientId(), 1L)).findFirst().orElse(null);
+            assertNotNull(client);
             assertEquals(client.getClientId(), 1L);
             assertEquals("ntest", client.getName());
             assertEquals("stest", client.getSurname());
             assertEquals("atest", client.getAddress());
             assertEquals(LocalDate.of(2001, 1, 1), client.getBirth());
             assertEquals(new BigDecimal(0), client.getBalance());
-            client = clientArrayList.stream().filter(client1 -> Objects.equals(client1.getClientId(), 2L)).findFirst().get();
+            client = clientArrayList.stream().filter(client1 -> Objects.equals(client1.getClientId(), 2L)).findFirst().orElse(null);
+            assertNotNull(client);
             assertEquals(client.getClientId(), 2L);
             assertEquals("ntest2", client.getName());
             assertEquals("stest2", client.getSurname());
@@ -133,9 +137,10 @@ public class ClientRepositoryTest {
         }
     }
 
+    /*UPDATE TESTS*/
     @Test
     @Order(7)
-    void ClientRepositoryClientModifySuccessTest() {
+    void ClientRepositoryModifyClientSuccessTest() {
         try (ClientRepository clientRepository = new ClientRepository()) {
             Client client1 = new Client(1L, "Name", "Surname",
                     "Address", LocalDate.of(2000, 1, 1), new BigDecimal(0));
@@ -160,19 +165,17 @@ public class ClientRepositoryTest {
 
     @Test
     @Order(8)
-    void ClientManagerModifyClientFailure() {
+    void ClientRepositoryModifyClientFailureTest() {
         try (ClientRepository clientRepository = new ClientRepository()) {
             assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
             assertFalse(clientRepository.updateOne(1L, null));
         }
-
-
     }
 
     /* DELETE TESTS */
     @Test
     @Order(9)
-    void ClientRepositoryRemoveSuccessTest() {
+    void ClientRepositoryRemoveClientSuccessTest() {
         try (ClientRepository clientRepository = new ClientRepository()) {
             assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
             assertDoesNotThrow(() -> clientRepository.remove(1L));
@@ -181,7 +184,7 @@ public class ClientRepositoryTest {
 
     @Test
     @Order(10)
-    void ClientRepositoryRemoveFailureTest() {
+    void ClientRepositoryRemoveClientFailureTest() {
         try (ClientRepository clientRepository = new ClientRepository()) {
             assertThrows(RepositoryException.class, () -> clientRepository.remove(5L));
         }

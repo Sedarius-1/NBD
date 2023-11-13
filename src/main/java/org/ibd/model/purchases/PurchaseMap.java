@@ -24,7 +24,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
 public class PurchaseMap {
 
     @NotNull

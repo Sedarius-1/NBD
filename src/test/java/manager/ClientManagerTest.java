@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClientManagerTest {
@@ -48,7 +50,9 @@ public class ClientManagerTest {
     @Order(3)
     void ClientManagerGetClientSuccessTest() {
         ClientManager clientManager = new ClientManager(new ClientRepository());
-        assertNull(clientManager.getClient(1L));
+        clientManager.registerClient(1L, "Name", "Surname",
+                "Address", LocalDate.of(2000, 1, 1), new BigDecimal(0));
+        assertNotNull(clientManager.getClient(1L));
     }
 
     @Test

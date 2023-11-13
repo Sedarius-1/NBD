@@ -113,7 +113,6 @@ public class PurchaseRepository implements Repository<PurchaseMap>, AutoCloseabl
     public void remove(Long id) throws RepositoryException {
         try {
             PurchaseMap purchaseMap = get(id);
-            if (Objects.isNull(purchaseMap)) throw new RepositoryException("No such client exists!");
             database
                     .getCollection(purchaseCollectionName, Purchase.class)
                     .deleteOne(eq("purchaseId", id));

@@ -111,7 +111,6 @@ public class WeaponRepository implements Repository<WeaponMap>, AutoCloseable {
     public void remove(Long id) throws RepositoryException {
         try {
             WeaponMap weaponMap = get(id);
-            if (Objects.isNull(weaponMap)) throw new RepositoryException("No such weapon exists!");
             database
                     .getCollection(weaponCollectionName, WeaponMap.class)
                     .deleteOne(eq("serialNumber", id));

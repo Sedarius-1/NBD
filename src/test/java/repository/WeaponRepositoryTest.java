@@ -4,7 +4,9 @@ import com.mongodb.client.model.Updates;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.factory.WeaponFactory;
+import org.ibd.model.purchases.PurchaseMap;
 import org.ibd.model.weapons.*;
+import org.ibd.repository.PurchaseRepository;
 import org.ibd.repository.WeaponRepository;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -18,6 +20,8 @@ import java.util.Objects;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WeaponRepositoryTest {
@@ -72,7 +76,7 @@ public class WeaponRepositoryTest {
     /* READ TESTS */
     @Test
     @Order(3)
-    void WeaponRepositoryGetSuccessTest() {
+    void WeaponRepositoryGetWeaponSuccessTest() {
         try (WeaponRepository weaponRepository = new WeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
@@ -91,7 +95,7 @@ public class WeaponRepositoryTest {
 
     @Test
     @Order(4)
-    void WeaponRepositoryGetFailureTest() {
+    void WeaponRepositoryGetWeaponFailureTest() {
         try (WeaponRepository weaponRepository = new WeaponRepository()) {
             assertThrows(RepositoryException.class, () -> weaponRepository.get(1L));
         }
@@ -100,7 +104,7 @@ public class WeaponRepositoryTest {
 
     @Test
     @Order(5)
-    void WeaponRepositoryGetAllTest() {
+    void WeaponRepositoryGetAllWeaponTest() {
         try (WeaponRepository weaponRepository = new WeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
@@ -155,7 +159,7 @@ public class WeaponRepositoryTest {
 
     @Test
     @Order(6)
-    void WeaponRepositoryFindTest() {
+    void WeaponRepositoryFindWeaponTest() {
         try (WeaponRepository weaponRepository = new WeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
@@ -199,8 +203,8 @@ public class WeaponRepositoryTest {
 
     /* UPDATE TESTS */
     @Test
-    @Order(9)
-    void WeaponRepositoryUpdateTest() {
+    @Order(7)
+    void WeaponRepositoryModifyWeaponSuccessTest() {
         try (WeaponRepository weaponRepository = new WeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
@@ -217,10 +221,29 @@ public class WeaponRepositoryTest {
             assertDoesNotThrow(() -> assertEquals(weaponRepository.get(1L).getPrice(), BigDecimal.ONE));
         }
     }
+    @Test
+    @Order(8)
+    void WeaponRepositoryModifyWeaponFailureTest() {
+        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+            Map<String, String> map = new HashMap<>();
+            map.put("serialNumber", "1");
+            map.put("manufacturer", "Glock");
+            map.put("name", "Glock 19");
+            map.put("price", "2500");
+            map.put("caliber", "9mm");
+            Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, map);
+            WeaponMap weaponMap = new WeaponMap();
+            assertNotNull(pistol);
+            WeaponMapper.convertWeaponToWeaponMap(weaponMap, pistol);
+            assertDoesNotThrow(() -> weaponRepository.add(weaponMap));
+            assertFalse(weaponRepository.updateOne(1L, null));
+
+        }
+    }
 
     /*DELETE TESTS */
     @Test
-    @Order(10)
+    @Order(9)
     void WeaponRepositoryDeleteWeaponSuccessTest() {
 
         try (WeaponRepository weaponRepository = new WeaponRepository()) {
@@ -240,7 +263,7 @@ public class WeaponRepositoryTest {
     }
 
     @Test
-    @Order(11)
+    @Order(10)
     void WeaponRepositoryDeleteWeaponFailureTest() {
         try (WeaponRepository weaponRepository = new WeaponRepository()) {
             assertThrows(RepositoryException.class, () -> weaponRepository.remove(5L));
