@@ -13,7 +13,6 @@ import org.ibd.model.purchases.PurchaseMapper;
 import org.ibd.model.weapons.Weapon;
 import org.ibd.repository.PurchaseRepository;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class PurchaseManager {
@@ -55,6 +54,7 @@ public class PurchaseManager {
 
         } catch (RepositoryException e) {
             logger.error(e.toString());
+            return null;
 
         }
         return PurchaseMapper.convertPurchaseMapToPurchase(purchaseMap);

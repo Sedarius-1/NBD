@@ -50,6 +50,7 @@ public class WeaponManager {
             weaponMap = weaponRepository.get(serialNumber);
         } catch (RepositoryException e) {
             log.error(e.toString());
+            return null;
 
         }
         return WeaponMapper.convertWeaponMapToWeapon(weaponMap);

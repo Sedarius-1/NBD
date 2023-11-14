@@ -100,7 +100,7 @@ public class WeaponManagerTest {
     @Test
     @Order(4)
     void WeaponManagerGetWeaponFail() {
-        assertThrows(NullPointerException.class, ()->weaponManager.getWeapon((null)));
+        assertNull(weaponManager.getWeapon((null)));
     }
 
     /* UPDATE TESTS */
