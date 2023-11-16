@@ -16,6 +16,14 @@ version: '3.8'
 #   at the end of your C:/Windows/System32/drivers/etc/hosts file
 
 services:
+  redis-stack:
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    environment:
+      - REDIS_ARGS="--requirepass password"
+
   mongo0:
     build: .
     image: mongocustom:6.0.2
