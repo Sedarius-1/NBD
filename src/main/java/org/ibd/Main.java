@@ -1,6 +1,7 @@
 package org.ibd;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.ibd.controller.GunShop;
 import org.ibd.enums.ClientParamEnum;
 import org.ibd.enums.WeaponTypeEnum;
@@ -10,6 +11,7 @@ import org.ibd.model.enums.GrenadeType;
 import org.ibd.model.purchases.Purchase;
 import org.ibd.model.purchases.PurchaseMap;
 import org.ibd.repository.PurchaseRepository;
+import redis.clients.jedis.search.Document;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,7 +23,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         PurchaseManager purchaseManager = new PurchaseManager(new PurchaseRepository());
         GunShop gunShop = new GunShop();
         gunShop.registerClient(1L, "Name", "Surname", "Address", LocalDate.of(2000, 1, 1), BigDecimal.valueOf(1000000));
@@ -72,5 +74,15 @@ public class Main {
         System.out.printf(gunShop.formatPurchaseInfo(purchaseManager.getPurchase(1L)));
         gunShop.registerPurchase(2L,gunShop.getClient(1L), gunShop.getWeapon(15L));
         System.out.printf(gunShop.formatPurchaseInfo(purchaseManager.getPurchase(2L)));
+
+        System.out.printf(String.valueOf(gunShop.getCachedClient(2L)));
+
+        System.out.printf(String.valueOf(gunShop.getCachedWeapon(13L)));
+        if(gunShop.deleteCachedClient(2L)){
+            System.out.print("DZIALA");
+        }
+        else{
+            System.out.print("NIE DZIALA");
+        }
     }
 }
