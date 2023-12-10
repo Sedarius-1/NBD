@@ -5,6 +5,7 @@ import org.bson.conversions.Bson;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.factory.ClientFactory;
 import org.ibd.model.clients.Client;
+import org.ibd.redisrepository.decoratedRepositories.CachedClientRepository;
 import org.ibd.repository.ClientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
