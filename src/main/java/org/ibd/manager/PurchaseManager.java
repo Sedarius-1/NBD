@@ -31,7 +31,7 @@ public class PurchaseManager {
     //CREATE
     public Boolean registerPurchase(Long purchaseId, Client client, Weapon weapon) {
         try {
-            if(client.getBalance().subtract(weapon.getPrice()).signum() == -1){
+            if (client.getBalance().subtract(weapon.getPrice()).signum() == -1) {
                 throw new RepositoryException("Not sufficient Funds!");
             }
             client.setBalance(client.getBalance().subtract(weapon.getPrice()));
@@ -48,7 +48,7 @@ public class PurchaseManager {
 
     //READ
     public Purchase getPurchase(Long purchaseId) {
-        PurchaseMap purchaseMap = null;
+        PurchaseMap purchaseMap;
         try {
             purchaseMap = purchaseRepository.get(purchaseId);
 
@@ -60,7 +60,7 @@ public class PurchaseManager {
         return PurchaseMapper.convertPurchaseMapToPurchase(purchaseMap);
     }
 
-    public ArrayList<Purchase> findPurchases(Bson finder){
+    public ArrayList<Purchase> findPurchases(Bson finder) {
         ArrayList<PurchaseMap> purchaseMapList;
         purchaseMapList = purchaseRepository.find(finder);
         ArrayList<Purchase> purchaseList = new ArrayList<>();
@@ -71,7 +71,7 @@ public class PurchaseManager {
         return purchaseList;
     }
 
-    public ArrayList<Purchase> getAllPurchases(){
+    public ArrayList<Purchase> getAllPurchases() {
         ArrayList<PurchaseMap> purchaseMapList;
         purchaseMapList = purchaseRepository.getAll();
         ArrayList<Purchase> purchaseList = new ArrayList<>();

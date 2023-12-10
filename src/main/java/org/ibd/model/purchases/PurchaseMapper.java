@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class PurchaseMapper {
 
-    public static PurchaseMap convertPurchaseToPurchaseMap(PurchaseMap purchaseMap, Purchase purchase){
+    public static void convertPurchaseToPurchaseMap(PurchaseMap purchaseMap, Purchase purchase) {
         purchaseMap.setPurchaseId(purchase.getPurchaseId());
         purchaseMap.setClientId(purchase.getClient().getClientId());
         purchaseMap.setName(purchase.getClient().getName());
@@ -24,68 +24,69 @@ public class PurchaseMapper {
         purchaseMap.setWeaponName(purchase.getWeapon().getName());
         purchaseMap.setPrice(purchase.getWeapon().getPrice());
         purchaseMap.setType(purchase.getWeapon().getType());
-        if(Objects.equals(purchaseMap.getType(), "Nuke")){
+        if (Objects.equals(purchaseMap.getType(), "Nuke")) {
             RecreationalMcNuke nuke = (RecreationalMcNuke) purchase.getWeapon();
             purchaseMap.setPower(nuke.getPower());
         }
-        if(Objects.equals(purchaseMap.getType(), "HandGrenade")){
+        if (Objects.equals(purchaseMap.getType(), "HandGrenade")) {
             HandGrenade grenade = (HandGrenade) purchase.getWeapon();
             purchaseMap.setPower(grenade.getPower());
             purchaseMap.setGrenadeType(grenade.getGrenadeType());
         }
-        if(Objects.equals(purchaseMap.getType(), "Pistol")){
+        if (Objects.equals(purchaseMap.getType(), "Pistol")) {
             Pistol pistol = (Pistol) purchase.getWeapon();
             purchaseMap.setCaliber(pistol.getCaliber());
         }
-        if(Objects.equals(purchaseMap.getType(), "Rifle")){
+        if (Objects.equals(purchaseMap.getType(), "Rifle")) {
             Rifle rifle = (Rifle) purchase.getWeapon();
             purchaseMap.setCaliber(rifle.getCaliber());
             purchaseMap.setLength(rifle.getLength());
         }
-        return purchaseMap;
     }
 
-    public static Purchase convertPurchaseMapToPurchase(PurchaseMap purchaseMap){
-        Client client = new Client( purchaseMap.getClientId(),
-                                    purchaseMap.getName(),
-                                    purchaseMap.getSurname(),
-                                    purchaseMap.getAddress(),
-                                    purchaseMap.getBirth(),
-                                    purchaseMap.getBalance());
-        switch (purchaseMap.getType()) {
-            case("Pistol"):
-                Pistol pistol = new Pistol( purchaseMap.getSerialNumber(),
-                                            purchaseMap.getManufacturer(),
-                                            purchaseMap.getWeaponName(),
-                                            purchaseMap.getPrice(),
-                                            purchaseMap.getCaliber());
-                return PurchaseFactory.createPurchase(purchaseMap.getPurchaseId(), client, pistol);
-            case("Rifle"):
+    public static Purchase convertPurchaseMapToPurchase(PurchaseMap purchaseMap) {
+        Client client = new Client(purchaseMap.getClientId(),
+                purchaseMap.getName(),
+                purchaseMap.getSurname(),
+                purchaseMap.getAddress(),
+                purchaseMap.getBirth(),
+                purchaseMap.getBalance());
+        return switch (purchaseMap.getType()) {
+            case ("Pistol") -> {
+                Pistol pistol = new Pistol(purchaseMap.getSerialNumber(),
+                        purchaseMap.getManufacturer(),
+                        purchaseMap.getWeaponName(),
+                        purchaseMap.getPrice(),
+                        purchaseMap.getCaliber());
+                yield PurchaseFactory.createPurchase(purchaseMap.getPurchaseId(), client, pistol);
+            }
+            case ("Rifle") -> {
                 Rifle rifle = new Rifle(purchaseMap.getSerialNumber(),
-                                        purchaseMap.getManufacturer(),
-                                        purchaseMap.getWeaponName(),
-                                        purchaseMap.getPrice(),
-                                        purchaseMap.getCaliber(),
-                                        purchaseMap.getLength());
-                return PurchaseFactory.createPurchase(purchaseMap.getPurchaseId(), client, rifle);
-            case("HandGrenade"):
-                HandGrenade handGrenade = new HandGrenade(  purchaseMap.getSerialNumber(),
-                                                            purchaseMap.getManufacturer(),
-                                                            purchaseMap.getWeaponName(),
-                                                            purchaseMap.getPrice(),
-                                                            purchaseMap.getPower(),
-                                                            purchaseMap.getGrenadeType());
-                return PurchaseFactory.createPurchase(purchaseMap.getPurchaseId(), client, handGrenade);
-            case("Nuke"):
-                RecreationalMcNuke nuke = new RecreationalMcNuke(   purchaseMap.getSerialNumber(),
-                                                                    purchaseMap.getManufacturer(),
-                                                                    purchaseMap.getWeaponName(),
-                                                                    purchaseMap.getPrice(),
-                                                                    purchaseMap.getPower());
-                return PurchaseFactory.createPurchase(purchaseMap.getPurchaseId(), client, nuke);
-
-
-        }
-        return new Purchase();
+                        purchaseMap.getManufacturer(),
+                        purchaseMap.getWeaponName(),
+                        purchaseMap.getPrice(),
+                        purchaseMap.getCaliber(),
+                        purchaseMap.getLength());
+                yield PurchaseFactory.createPurchase(purchaseMap.getPurchaseId(), client, rifle);
+            }
+            case ("HandGrenade") -> {
+                HandGrenade handGrenade = new HandGrenade(purchaseMap.getSerialNumber(),
+                        purchaseMap.getManufacturer(),
+                        purchaseMap.getWeaponName(),
+                        purchaseMap.getPrice(),
+                        purchaseMap.getPower(),
+                        purchaseMap.getGrenadeType());
+                yield PurchaseFactory.createPurchase(purchaseMap.getPurchaseId(), client, handGrenade);
+            }
+            case ("Nuke") -> {
+                RecreationalMcNuke nuke = new RecreationalMcNuke(purchaseMap.getSerialNumber(),
+                        purchaseMap.getManufacturer(),
+                        purchaseMap.getWeaponName(),
+                        purchaseMap.getPrice(),
+                        purchaseMap.getPower());
+                yield PurchaseFactory.createPurchase(purchaseMap.getPurchaseId(), client, nuke);
+            }
+            default -> new Purchase();
+        };
     }
 }

@@ -4,38 +4,34 @@ import java.util.Objects;
 public class WeaponMapper {
 
     public static Weapon convertWeaponMapToWeapon(WeaponMap weaponMap) {
-        switch (weaponMap.getType()) {
-            case ("Pistol"):
-                return new Pistol(weaponMap.getSerialNumber(),
-                        weaponMap.getManufacturer(),
-                        weaponMap.getName(),
-                        weaponMap.getPrice(),
-                        weaponMap.getCaliber());
-            case ("Rifle"):
-                return new Rifle(weaponMap.getSerialNumber(),
-                        weaponMap.getManufacturer(),
-                        weaponMap.getName(),
-                        weaponMap.getPrice(),
-                        weaponMap.getCaliber(),
-                        weaponMap.getLength());
-            case ("HandGrenade"):
-                return new HandGrenade(weaponMap.getSerialNumber(),
-                        weaponMap.getManufacturer(),
-                        weaponMap.getName(),
-                        weaponMap.getPrice(),
-                        weaponMap.getPower(),
-                        weaponMap.getGrenadeType());
-            case ("Nuke"):
-                return new RecreationalMcNuke(weaponMap.getSerialNumber(),
-                        weaponMap.getManufacturer(),
-                        weaponMap.getName(),
-                        weaponMap.getPrice(),
-                        weaponMap.getPower());
-        }
-        return null;
+        return switch (weaponMap.getType()) {
+            case ("Pistol") -> new Pistol(weaponMap.getSerialNumber(),
+                    weaponMap.getManufacturer(),
+                    weaponMap.getName(),
+                    weaponMap.getPrice(),
+                    weaponMap.getCaliber());
+            case ("Rifle") -> new Rifle(weaponMap.getSerialNumber(),
+                    weaponMap.getManufacturer(),
+                    weaponMap.getName(),
+                    weaponMap.getPrice(),
+                    weaponMap.getCaliber(),
+                    weaponMap.getLength());
+            case ("HandGrenade") -> new HandGrenade(weaponMap.getSerialNumber(),
+                    weaponMap.getManufacturer(),
+                    weaponMap.getName(),
+                    weaponMap.getPrice(),
+                    weaponMap.getPower(),
+                    weaponMap.getGrenadeType());
+            case ("Nuke") -> new RecreationalMcNuke(weaponMap.getSerialNumber(),
+                    weaponMap.getManufacturer(),
+                    weaponMap.getName(),
+                    weaponMap.getPrice(),
+                    weaponMap.getPower());
+            default -> null;
+        };
     }
 
-    public static WeaponMap convertWeaponToWeaponMap(WeaponMap weaponMap, Weapon weapon){
+    public static void convertWeaponToWeaponMap(WeaponMap weaponMap, Weapon weapon){
         weaponMap.setSerialNumber(weapon.getSerialNumber());
         weaponMap.setManufacturer(weapon.getManufacturer());
         weaponMap.setName(weapon.getName());
@@ -46,19 +42,21 @@ public class WeaponMapper {
             weaponMap.setPower(nuke.getPower());
         }
         if(Objects.equals(weaponMap.getType(), "HandGrenade")){
+            assert weapon instanceof HandGrenade;
             HandGrenade grenade = (HandGrenade) weapon;
             weaponMap.setPower(grenade.getPower());
             weaponMap.setGrenadeType(grenade.getGrenadeType());
         }
         if(Objects.equals(weaponMap.getType(), "Pistol")){
+            assert weapon instanceof Pistol;
             Pistol pistol = (Pistol) weapon;
             weaponMap.setCaliber(pistol.getCaliber());
         }
         if(Objects.equals(weaponMap.getType(), "Rifle")){
+            assert weapon instanceof Rifle;
             Rifle rifle = (Rifle) weapon;
             weaponMap.setCaliber(rifle.getCaliber());
             weaponMap.setLength(rifle.getLength());
         }
-        return weaponMap;
     }
 }

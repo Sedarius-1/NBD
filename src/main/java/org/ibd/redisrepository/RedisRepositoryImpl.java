@@ -14,7 +14,6 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.io.*;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 @Getter
 @Setter
@@ -23,7 +22,7 @@ public class RedisRepositoryImpl implements RedisRepository, AutoCloseable {
     private String hashPrefix;
     private String index;
     private JedisPooled jedisPooled;
-    private Class<Object> objectClass;
+    private Class objectClass;
     private Jsonb jsonb;
 
     private ObjectMapper objectMapper;
@@ -36,7 +35,7 @@ public class RedisRepositoryImpl implements RedisRepository, AutoCloseable {
         this.objectClass = objectClass;
         this.index = index;
         initRedisConnection(configPath);
-        cleanCashe();
+        cleanCache();
 
     }
 
@@ -74,25 +73,11 @@ public class RedisRepositoryImpl implements RedisRepository, AutoCloseable {
     }
 
     @Override
-    public boolean deleteObjectFromCache(Long id) {
-        long removedKeys;
-        removedKeys = jedisPooled.del(hashPrefix + id.toString());
-        return removedKeys != 0;
+    public void deleteObjectFromCache(Long id) {
+        jedisPooled.del(hashPrefix + id.toString());
     }
 
-    public void setHashPrefix(String hashPrefix) {
-        this.hashPrefix = hashPrefix;
-    }
-
-    public void setObjectClass(Class objectClass) {
-        this.objectClass = objectClass;
-    }
-
-    public void setIndex(String index) {
-        this.index = index;
-    }
-
-    public void cleanCashe() throws JedisConnectionException {
+    public void cleanCache() throws JedisConnectionException {
         jedisPooled.flushAll();
     }
 

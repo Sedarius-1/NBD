@@ -5,7 +5,6 @@ import org.bson.conversions.Bson;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.factory.ClientFactory;
 import org.ibd.model.clients.Client;
-import org.ibd.redisrepository.decoratedRepositories.CachedClientRepository;
 import org.ibd.repository.ClientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,21 +53,24 @@ public class ClientManager {
         }
         return client;
     }
-    public ArrayList<Client> findClients(Bson finder){
+
+    public ArrayList<Client> findClients(Bson finder) {
         ArrayList<Client> clientList;
         clientList = clientRepository.find(finder);
         return clientList;
     }
-    public ArrayList<Client> getAllClients(){
+
+    public ArrayList<Client> getAllClients() {
         ArrayList<Client> clientList;
         clientList = clientRepository.getAll();
         return clientList;
     }
+
     //Update
     public Boolean changeName(Long clientId, String name) {
         try {
             if (name != null) {
-                clientRepository.updateOne(clientId, Updates.set("name",name));
+                clientRepository.updateOne(clientId, Updates.set("name", name));
             } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
@@ -94,7 +96,7 @@ public class ClientManager {
     public Boolean changeAddress(Long clientId, String address) {
         try {
             if (address != null) {
-                clientRepository.updateOne(clientId, Updates.set("address",address));
+                clientRepository.updateOne(clientId, Updates.set("address", address));
             } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
@@ -107,7 +109,7 @@ public class ClientManager {
     public Boolean changeBirth(Long clientId, LocalDate birth) {
         try {
             if (birth != null) {
-                clientRepository.updateOne(clientId, Updates.set("birth",birth));
+                clientRepository.updateOne(clientId, Updates.set("birth", birth));
             } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
@@ -120,7 +122,7 @@ public class ClientManager {
     public Boolean changeBalance(Long clientId, BigDecimal newBalance) {
         try {
             if (newBalance != null) {
-                clientRepository.updateOne(clientId, Updates.set("balance",newBalance));
+                clientRepository.updateOne(clientId, Updates.set("balance", newBalance));
             } else throw new RepositoryException("null passed");
             return true;
         } catch (RepositoryException e) {
@@ -140,8 +142,6 @@ public class ClientManager {
         }
         return Boolean.TRUE;
     }
-
-
 
 
 }

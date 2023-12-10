@@ -8,7 +8,6 @@ import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.ibd.repository.BongoConfig.*;

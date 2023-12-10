@@ -5,13 +5,10 @@ import com.mongodb.client.*;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.ibd.exceptions.RepositoryException;
-import org.ibd.model.purchases.PurchaseMap;
-import org.ibd.model.weapons.*;
+import org.ibd.model.weapons.WeaponMap;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
-import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static org.ibd.repository.BongoConfig.*;
 
@@ -64,7 +61,7 @@ public class WeaponRepository implements Repository<WeaponMap>, AutoCloseable {
 
     //Read
     @Override
-    public final WeaponMap get(Long id) throws RepositoryException {
+    public WeaponMap get(Long id) throws RepositoryException {
         try {
             return this.database
                     .getCollection(weaponCollectionName, WeaponMap.class)

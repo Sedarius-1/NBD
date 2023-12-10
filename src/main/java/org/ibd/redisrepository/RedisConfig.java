@@ -11,6 +11,7 @@ public class RedisConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(new File(configPath), RedisConfigFile.class);
     }
+
     public static JedisPooled prepareRedisConfig(String configPath) throws IOException {
         RedisConfigFile redisConfigFile = readConfigFile(configPath);
         JedisClientConfig clientConfig = DefaultJedisClientConfig.builder().build();

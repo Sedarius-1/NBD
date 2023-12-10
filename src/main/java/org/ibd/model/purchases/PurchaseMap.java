@@ -3,23 +3,15 @@ package org.ibd.model.purchases;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.ibd.factory.PurchaseFactory;
-import org.ibd.model.clients.Client;
 import org.ibd.model.enums.GrenadeType;
-import org.ibd.model.weapons.HandGrenade;
-import org.ibd.model.weapons.Pistol;
-import org.ibd.model.weapons.RecreationalMcNuke;
-import org.ibd.model.weapons.Rifle;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Getter
 @Setter

@@ -1,6 +1,5 @@
 package org.ibd.model.purchases;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -8,12 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.hibernate.annotations.OptimisticLockType;
-import org.hibernate.annotations.OptimisticLocking;
 import org.ibd.model.clients.Client;
 import org.ibd.model.weapons.Weapon;
-
-import java.util.UUID;
 
 @Getter
 @Setter

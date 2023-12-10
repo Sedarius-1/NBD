@@ -10,7 +10,6 @@ import org.ibd.model.purchases.Purchase;
 import org.ibd.model.purchases.PurchaseMap;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.ibd.repository.BongoConfig.*;

@@ -5,9 +5,6 @@ import org.bson.conversions.Bson;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.factory.WeaponFactory;
-import org.ibd.model.purchases.Purchase;
-import org.ibd.model.purchases.PurchaseMap;
-import org.ibd.model.purchases.PurchaseMapper;
 import org.ibd.model.weapons.Weapon;
 import org.ibd.model.weapons.WeaponMap;
 import org.ibd.model.weapons.WeaponMapper;
@@ -45,7 +42,7 @@ public class WeaponManager {
 
     //Read
     public Weapon getWeapon(Long serialNumber) {
-        WeaponMap weaponMap = null;
+        WeaponMap weaponMap;
         try {
             weaponMap = weaponRepository.get(serialNumber);
         } catch (RepositoryException e) {
