@@ -1,38 +1,21 @@
 package org.ibd.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoCommandException;
 import com.mongodb.client.ClientSession;
 import org.bson.conversions.Bson;
 import org.ibd.enums.ClientParamEnum;
 import org.ibd.enums.WeaponTypeEnum;
-import org.ibd.factory.ClientFactory;
-import org.ibd.factory.WeaponFactory;
 import org.ibd.manager.ClientManager;
 import org.ibd.manager.PurchaseManager;
 import org.ibd.manager.WeaponManager;
 import org.ibd.model.clients.Client;
 import org.ibd.model.purchases.Purchase;
 import org.ibd.model.weapons.*;
-//import org.ibd.redisrepository.RedisRepositoryDecorated;
-import org.ibd.redisrepository.RedisRepositoryImpl;
 import org.ibd.redisrepository.decoratedRepositories.CachedClientRepository;
-//import org.ibd.redisrepository.decoratedRepositories.ClientDecorator;
-//import org.ibd.redisrepository.decoratedRepositories.WeaponDecorator;
-import org.ibd.repository.ClientRepository;
+import org.ibd.redisrepository.decoratedRepositories.CachedWeaponRepository;
 import org.ibd.repository.PurchaseRepository;
-import org.ibd.redisrepository.RedisConfig;
-import org.ibd.repository.WeaponRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.JedisPooled;
-import redis.clients.jedis.search.Document;
-import redis.clients.jedis.search.FTCreateParams;
-import redis.clients.jedis.search.IndexDataType;
-import redis.clients.jedis.search.schemafields.NumericField;
-import redis.clients.jedis.search.schemafields.TextField;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -43,25 +26,16 @@ public class GunShop {
     private ClientManager clientManager;
     private WeaponManager weaponManager;
     private PurchaseManager purchaseManager;
-    private RedisRepositoryImpl redisRepository;
-    private CachedClientRepository clientDecorator;
-//    private RedisRepositoryDecorated weaponDecorator;
-    private JedisPooled jedisPooled;
-    private ObjectMapper objectMapper;
+
     Logger log = LoggerFactory.getLogger("NBD");
 
     public GunShop() {
         try {
 
             clientManager = new ClientManager(new CachedClientRepository());
-            weaponManager = new WeaponManager(new WeaponRepository());
+            weaponManager = new WeaponManager(new CachedWeaponRepository());
             purchaseManager = new PurchaseManager(new PurchaseRepository());
-//            redisRepository = new RedisRepositoryImpl("config.json");
-//            clientDecorator = new ClientDecorator(redisRepository);
-//            weaponDecorator = new WeaponDecorator(redisRepository);
-            clientDecorator = new CachedClientRepository();
-//            jedisPooled = RedisConfig.prepareRedisConfig("config.json");
-//            setupJedisClients();
+
         } catch (Exception e) {
             log.error("FATAL ERROR CREATING GunShop INSTANCE! ABORTING!");
             System.exit(1);
@@ -84,7 +58,7 @@ public class GunShop {
      *
      * @return an instance of {@link Client}, previously saved in a database
      */
-    public Client registerClient(Long clientId, String name, String surname, String address, LocalDate birth, BigDecimal balance) throws Exception {
+    public Client registerClient(Long clientId, String name, String surname, String address, LocalDate birth, BigDecimal balance) {
         // clientId is temporary here
         if (clientManager.registerClient(clientId, name, surname, address, birth, balance)) {
             System.out.println(AnsiCodes.ANSI_GREEN + "Registered client!" + AnsiCodes.ANSI_RESET);
@@ -171,7 +145,7 @@ public class GunShop {
             case BALANCE -> {
                 try {
                     BigDecimal balance = (BigDecimal) param;
-                   clientManager.changeBalance(clientId, balance);
+                    clientManager.changeBalance(clientId, balance);
                 } catch (Exception ex) {
                     log.info("Wrong balance!");
                 }
@@ -187,35 +161,31 @@ public class GunShop {
     /* WEAPON */
 
     public String formatWeaponInfo(Weapon weapon) {
-        String weaponData =  "Weapon(" + AnsiCodes.ANSI_RED + weapon.getSerialNumber() + AnsiCodes.ANSI_RESET
+        String weaponData = "Weapon(" + AnsiCodes.ANSI_RED + weapon.getSerialNumber() + AnsiCodes.ANSI_RESET
                 + "): \nName: " + AnsiCodes.ANSI_GREEN + weapon.getName() + AnsiCodes.ANSI_RESET
                 + "\nType: " + AnsiCodes.ANSI_GREEN + weapon.getType() + AnsiCodes.ANSI_RESET
                 + "\nManufacturer: " + AnsiCodes.ANSI_GREEN + weapon.getManufacturer() + AnsiCodes.ANSI_RESET
                 + "\nPrice: " + AnsiCodes.ANSI_GREEN + weapon.getPrice().toString() + AnsiCodes.ANSI_RESET;
-        switch(weapon.getType()){
-            case "Pistol":
-                return weaponData
-                + "\nCaliber: " + AnsiCodes.ANSI_GREEN + ((Pistol) weapon).getCaliber() + AnsiCodes.ANSI_RESET;
-            case "Rifle":
-                return weaponData
-                + "\nCaliber: " + AnsiCodes.ANSI_GREEN + ((Rifle) weapon).getCaliber() + AnsiCodes.ANSI_RESET
-                + "\nLength: " + AnsiCodes.ANSI_GREEN + ((Rifle) weapon).getLength() + AnsiCodes.ANSI_RESET;
-            case "HandGrenade":
-                return weaponData
-                + "\nPower: " + AnsiCodes.ANSI_GREEN + ((HandGrenade) weapon).getPower() + AnsiCodes.ANSI_RESET
-                + "\nGrenade Type: " + AnsiCodes.ANSI_GREEN + ((HandGrenade) weapon).getGrenadeType() + AnsiCodes.ANSI_RESET;
-            case "Nuke":
-                return weaponData
-                + "\nPower: " + AnsiCodes.ANSI_GREEN + ((RecreationalMcNuke) weapon).getPower() + AnsiCodes.ANSI_RESET;
-        }
-        return weaponData;
+        return switch (weapon.getType()) {
+            case "Pistol" -> weaponData
+                    + "\nCaliber: " + AnsiCodes.ANSI_GREEN + ((Pistol) weapon).getCaliber() + AnsiCodes.ANSI_RESET;
+            case "Rifle" -> weaponData
+                    + "\nCaliber: " + AnsiCodes.ANSI_GREEN + ((Rifle) weapon).getCaliber() + AnsiCodes.ANSI_RESET
+                    + "\nLength: " + AnsiCodes.ANSI_GREEN + ((Rifle) weapon).getLength() + AnsiCodes.ANSI_RESET;
+            case "HandGrenade" -> weaponData
+                    + "\nPower: " + AnsiCodes.ANSI_GREEN + ((HandGrenade) weapon).getPower() + AnsiCodes.ANSI_RESET
+                    + "\nGrenade Type: " + AnsiCodes.ANSI_GREEN + ((HandGrenade) weapon).getGrenadeType() + AnsiCodes.ANSI_RESET;
+            case "Nuke" -> weaponData
+                    + "\nPower: " + AnsiCodes.ANSI_GREEN + ((RecreationalMcNuke) weapon).getPower() + AnsiCodes.ANSI_RESET;
+            default -> weaponData;
+        };
 
     }
 
     //Create
 
 
-    public Weapon registerWeapon(WeaponTypeEnum weaponTypeEnum, Map<String, String> paramsMap) throws Exception {
+    public Weapon registerWeapon(WeaponTypeEnum weaponTypeEnum, Map<String, String> paramsMap) {
         if (weaponManager.registerWeapon(weaponTypeEnum, paramsMap)) {
             System.out.println(AnsiCodes.ANSI_GREEN + "Registered weapon!" + AnsiCodes.ANSI_RESET);
             return weaponManager.getWeapon(Long.valueOf(paramsMap.get("serialNumber")));
@@ -236,29 +206,6 @@ public class GunShop {
         }
     }
 
-//    public Weapon getCachedWeapon(Long serialNumber) {
-//        try {
-//            Object weapon =  weaponDecorator.findObjectInCache(serialNumber);
-//            if(weapon.toString().contains("Rifle")){
-//                return (Rifle) weapon;
-//            }
-//            if(weapon.toString().contains("Pistol")){
-//                return (Pistol) weapon;
-//            }
-//            if(weapon.toString().contains("Nuke")){
-//                return (RecreationalMcNuke) weapon;
-//            }
-//            if(weapon.toString().contains("HandGrenade")){
-//                return (HandGrenade) weapon;
-//            }
-//            return null;
-//
-//        } catch (Exception ex) {
-//            System.out.println(AnsiCodes.ANSI_RED + "Could not find client!" + AnsiCodes.ANSI_RESET);
-//            return null;
-//        }
-//    }
-
     public String getWeaponInfo(Long serialNumber) {
         try {
             Weapon weapon = getWeapon(serialNumber);
@@ -273,7 +220,7 @@ public class GunShop {
         try {
             return weaponManager.getAllWeapons();
         } catch (Exception ex) {
-             return null;
+            return null;
         }
     }
 
@@ -295,6 +242,7 @@ public class GunShop {
     public void updateWeapon(BigDecimal price, Long serialNumber) {
         weaponManager.changePrice(serialNumber, price);
     }
+
     //Delete
     public boolean deleteWeapon(Long serialNumber) {
         return weaponManager.unregisterWeapon(serialNumber);
@@ -304,9 +252,9 @@ public class GunShop {
 
     public String formatPurchaseInfo(Purchase purchase) {
 
-        return "\nPurchase(" + AnsiCodes.ANSI_RED + purchase.getPurchaseId() + AnsiCodes.ANSI_RESET +"):\n"
-               + formatClientInfo(purchase.getClient()) + "\n"
-               + formatWeaponInfo(purchase.getWeapon());
+        return "\nPurchase(" + AnsiCodes.ANSI_RED + purchase.getPurchaseId() + AnsiCodes.ANSI_RESET + "):\n"
+                + formatClientInfo(purchase.getClient()) + "\n"
+                + formatWeaponInfo(purchase.getWeapon());
     }
 
     //Create
@@ -333,7 +281,6 @@ public class GunShop {
             clientSession.close();
         }
     }
-
 
 
     //Read

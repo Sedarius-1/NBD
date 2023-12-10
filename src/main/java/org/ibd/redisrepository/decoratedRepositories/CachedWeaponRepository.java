@@ -1,62 +1,55 @@
 package org.ibd.redisrepository.decoratedRepositories;
 
-
 import org.ibd.exceptions.NotInCacheException;
 import org.ibd.exceptions.RepositoryException;
-import org.ibd.model.clients.Client;
+import org.ibd.model.weapons.WeaponMap;
 import org.ibd.redisrepository.RedisRepositoryImpl;
-import org.ibd.repository.ClientRepository;
+import org.ibd.repository.WeaponRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class CachedClientRepository extends ClientRepository {
-
+public class CachedWeaponRepository extends WeaponRepository {
     private RedisRepositoryImpl redisRepository;
     Logger log = LoggerFactory.getLogger("NBD");
 
-
-    public CachedClientRepository() {
+    public CachedWeaponRepository() {
         super();
         try {
-            redisRepository = new RedisRepositoryImpl("config.json", "client:", "idx:client", Client.class);
+            redisRepository = new RedisRepositoryImpl("config.json", "weapon:", "idx:weapon", WeaponMap.class);
         } catch (Exception ex) {
             log.error("Could not establish connection to redis");
         }
-
     }
 
-    //Create
     @Override
-    public void add(Client client) throws RepositoryException {
-        super.add(client);
+    public void add(WeaponMap weaponMap) throws RepositoryException {
+        super.add(weaponMap);
         try {
-            redisRepository.cacheObject(client, client.getClientId());
+            redisRepository.cacheObject(weaponMap, weaponMap.getSerialNumber());
         } catch (Exception ex) {
             log.warn("Could not cache object");
         }
     }
 
-    //Read
     @Override
-    public Client get(Long id) throws RepositoryException {
+    public WeaponMap get(Long id) throws RepositoryException {
         try {
-            return (Client) redisRepository.findObjectInCache(id);
+            return (WeaponMap) redisRepository.findObjectInCache(id);
         } catch (NotInCacheException notInCacheException) {
             log.debug("Item not in cache! Getting from database.");
-            Client client = super.get(id);
+            WeaponMap weaponMap = super.get(id);
             try {
-                redisRepository.cacheObject(client, client.getClientId());
+                redisRepository.cacheObject(weaponMap, weaponMap.getSerialNumber());
             } catch (Exception ex) {
                 log.warn("Could not cache object");
             }
-            return client;
+            return weaponMap;
         } catch (Exception ex) {
             log.warn(ex.toString());
         }
         return super.get(id);
     }
-
 
     //Update
     @Override
@@ -86,7 +79,6 @@ public class CachedClientRepository extends ClientRepository {
         super.remove(id);
     }
 
-
     @Override
     public void close() {
         try {
@@ -96,5 +88,4 @@ public class CachedClientRepository extends ClientRepository {
         }
         super.close();
     }
-
 }
