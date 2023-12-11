@@ -65,7 +65,6 @@ public class WeaponFactoryTest {
             map3.put("name", "Ovirt mk 2");
             map3.put("price", "2135");
             map3.put("power", "9001");
-            //map3.put("grenadeType", GrenadeType.Fag.toString());
 
             // McNuke
             Map<String, String> map4 = new HashMap<>();
@@ -133,7 +132,7 @@ public class WeaponFactoryTest {
             map3.put("manufacturer", "Smolinus Inc.");
             map3.put("name", "VIRTuL");
             map3.put("price", "69420");
-            map3.put("power", "jebutna");
+            map3.put("power", "duza");
 
             // Grenade - bad power
             Map<String, String> map4 = new HashMap<>();
@@ -143,7 +142,7 @@ public class WeaponFactoryTest {
             map4.put("name", "Ovirt mk 2");
             map4.put("price", "2135");
             map4.put("power", "mogło być więcej");
-            map4.put("grenadeType", GrenadeType.Fag.toString());
+            map4.put("grenadeType", GrenadeType.Far.toString());
 
             // Grenade - bad type
             Map<String, String> map5 = new HashMap<>();
@@ -252,7 +251,7 @@ public class WeaponFactoryTest {
             map6.put("name", "Ovirt mk 2");
             map6.put("price", "2135");
             map6.put("notpower", "9001");
-            map6.put("grenadeType", GrenadeType.Fag.toString());
+            map6.put("grenadeType", GrenadeType.Far.toString());
 
             // Grenade - missing type
             Map<String, String> map7 = new HashMap<>();
@@ -262,7 +261,7 @@ public class WeaponFactoryTest {
             map7.put("name", "Ovirt mk 2");
             map7.put("price", "2135");
             map7.put("power", "9001");
-            map7.put("notgrenadeType", GrenadeType.Fag.toString());
+            map7.put("notgrenadeType", GrenadeType.Far.toString());
 
             // McNuke - missing power
             Map<String, String> map8 = new HashMap<>();
@@ -336,7 +335,7 @@ public class WeaponFactoryTest {
         map.put("name", "Ovirt mk 2");
         map.put("price", "2135");
         map.put("power", "9001");
-        map.put("grenadeType", GrenadeType.Fag.toString());
+        map.put("grenadeType", GrenadeType.Far.toString());
         HandGrenade grenade = WeaponFactory.manufactureWeapon(WeaponTypeEnum.HANDGRENADE, map);
         assertNotNull(grenade);
         assertEquals(grenade.getSerialNumber(), 2137L);
@@ -345,7 +344,7 @@ public class WeaponFactoryTest {
         assertEquals(grenade.getName(), "Ovirt mk 2");
         assertEquals(grenade.getPrice(), new BigDecimal("2135"));
         assertEquals(grenade.getPower(), 9001);
-        assertEquals(grenade.getGrenadeType(), GrenadeType.Fag);
+        assertEquals(grenade.getGrenadeType(), GrenadeType.Far);
     }
 
     @Test

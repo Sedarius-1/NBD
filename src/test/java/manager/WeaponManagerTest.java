@@ -4,6 +4,7 @@ import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.manager.WeaponManager;
 import org.ibd.model.weapons.Rifle;
 import org.ibd.model.weapons.Weapon;
+import org.ibd.redisrepository.decoratedRepositories.CachedWeaponRepository;
 import org.ibd.repository.WeaponRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -21,7 +22,7 @@ public class WeaponManagerTest {
 
     @BeforeEach
     void InitWeaponManager() {
-        weaponManager = new WeaponManager(new WeaponRepository());
+        weaponManager = new WeaponManager(new CachedWeaponRepository());
     }
 
     /* CREATE TESTS */
@@ -32,7 +33,7 @@ public class WeaponManagerTest {
         map.put("serialNumber", "2137");
         map.put("manufacturer", "Ruger");
         map.put("name", "PPC");
-        map.put("price", "4000");
+        map.put("price", "4000.0");
         map.put("caliber", "22LR");
         map.put("length", "15.6");
         weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
@@ -44,7 +45,7 @@ public class WeaponManagerTest {
         assertEquals(rifle.getType(), "Rifle");
         assertEquals(rifle.getManufacturer(), "Ruger");
         assertEquals(rifle.getName(), "PPC");
-        assertEquals(rifle.getPrice(), new BigDecimal("4000"));
+        assertEquals(rifle.getPrice(), new BigDecimal("4000.0"));
         assertEquals(rifle.getCaliber(), "22LR");
         assertEquals(rifle.getLength(), Float.valueOf("15.6"));
     }
@@ -115,8 +116,8 @@ public class WeaponManagerTest {
         map.put("caliber", "22LR");
         map.put("length", "15.6");
         weaponManager.registerWeapon(WeaponTypeEnum.RIFLE, map);
-        weaponManager.changePrice(2137L, BigDecimal.ONE);
-        assertEquals(weaponManager.getWeapon(2137L).getPrice(), BigDecimal.ONE);
+        weaponManager.changePrice(2137L,new BigDecimal("1.0"));
+        assertEquals(weaponManager.getWeapon(2137L).getPrice(), new BigDecimal("1.0"));
     }
 
     @Test

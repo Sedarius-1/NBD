@@ -4,6 +4,7 @@ package manager;
 import com.mongodb.client.model.Filters;
 import org.ibd.manager.ClientManager;
 import org.ibd.model.clients.Client;
+import org.ibd.redisrepository.decoratedRepositories.CachedClientRepository;
 import org.ibd.repository.ClientRepository;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -26,7 +27,7 @@ public class ClientManagerTest {
     @Test
     @Order(1)
     void ClientManagerRegisterClientSuccessTest() {
-        ClientManager clientManager = new ClientManager(new ClientRepository());
+        ClientManager clientManager = new ClientManager(new CachedClientRepository());
         assertTrue(clientManager.registerClient(1L, "Name", "Surname",
                 "Address", LocalDate.of(2000, 1, 1), BigDecimal.ZERO));
 
@@ -35,7 +36,7 @@ public class ClientManagerTest {
     @Test
     @Order(2)
     void ClientManagerRegisterClientFailTest() {
-        ClientManager clientManager = new ClientManager(new ClientRepository());
+        ClientManager clientManager = new ClientManager(new CachedClientRepository());
         assertFalse(clientManager.registerClient(null, null, null, null, null, null));
         assertFalse(clientManager.registerClient(1L, null, null, null, null, null));
         assertFalse(clientManager.registerClient(1L, "jan", null, null, null, null));
@@ -49,7 +50,7 @@ public class ClientManagerTest {
     @Test
     @Order(3)
     void ClientManagerGetClientSuccessTest() {
-        ClientManager clientManager = new ClientManager(new ClientRepository());
+        ClientManager clientManager = new ClientManager(new CachedClientRepository());
         clientManager.registerClient(1L, "Name", "Surname",
                 "Address", LocalDate.of(2000, 1, 1), new BigDecimal(0));
         assertNotNull(clientManager.getClient(1L));
@@ -58,14 +59,14 @@ public class ClientManagerTest {
     @Test
     @Order(4)
     void ClientManagerGetClientFailTest() {
-        ClientManager clientManager = new ClientManager(new ClientRepository());
+        ClientManager clientManager = new ClientManager(new CachedClientRepository());
         assertNull(clientManager.getClient(1L));
     }
 
     @Test
     @Order(5)
     void ClientManagerGetAllClientsTest() {
-        ClientManager clientManager = new ClientManager(new ClientRepository());
+        ClientManager clientManager = new ClientManager(new CachedClientRepository());
         assertEquals(0, clientManager.getAllClients().size());
         clientManager.registerClient(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0));
         clientManager.registerClient(2L, "ntest2", "stest2", "atest2", LocalDate.of(2002, 1, 1), new BigDecimal(10));
@@ -90,7 +91,7 @@ public class ClientManagerTest {
     @Test
     @Order(6)
     void ClientManagerFindClientsTest() {
-        ClientManager clientManager = new ClientManager(new ClientRepository());
+        ClientManager clientManager = new ClientManager(new CachedClientRepository());
         clientManager.registerClient(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0));
         clientManager.registerClient(2L, "ntest2", "stest2", "atest2", LocalDate.of(2002, 1, 1), new BigDecimal(0));
         ArrayList<Client> clientArrayList = clientManager.findClients(Filters.eq("balance", BigDecimal.ZERO));
@@ -124,27 +125,27 @@ public class ClientManagerTest {
     @Test
     @Order(7)
     void ClientManagerModifyClientSuccessTest() {
-        ClientManager clientManager = new ClientManager(new ClientRepository());
+        ClientManager clientManager = new ClientManager(new CachedClientRepository());
         clientManager.registerClient(1L, "test", "test", "test", LocalDate.now(), new BigDecimal(0));
         assertTrue(clientManager.changeName(1L, "ntest2"));
         assertTrue(clientManager.changeSurname(1L, "stest2"));
         assertTrue(clientManager.changeAddress(1L, "atest2"));
         assertTrue(clientManager.changeBirth(1L, LocalDate.of(2001, 1, 1)));
-        assertTrue(clientManager.changeBalance(1L, new BigDecimal(200L)));
+        assertTrue(clientManager.changeBalance(1L, new BigDecimal("200.0")));
         Client client = clientManager.getClient(1L);
         assertEquals(client.getClientId(), 1L);
         assertEquals("ntest2", client.getName());
         assertEquals("stest2", client.getSurname());
         assertEquals("atest2", client.getAddress());
         assertEquals(LocalDate.of(2001, 1, 1), client.getBirth());
-        assertEquals(new BigDecimal(200L), client.getBalance());
+        assertEquals(new BigDecimal("200.0"), client.getBalance());
     }
 
     @Test
     @Order(8)
     void ClientManagerModifyClientFailureTest() {
-        ClientManager clientManager = new ClientManager(new ClientRepository());
-        clientManager.registerClient(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0));
+        ClientManager clientManager = new ClientManager(new CachedClientRepository());
+        clientManager.registerClient(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal("0.0"));
         assertFalse(clientManager.changeName(1L, null));
         assertFalse(clientManager.changeSurname(1L, null));
         assertFalse(clientManager.changeAddress(1L, null));
@@ -156,7 +157,7 @@ public class ClientManagerTest {
         assertEquals("stest", client.getSurname());
         assertEquals("atest", client.getAddress());
         assertEquals(LocalDate.of(2001, 1, 1), client.getBirth());
-        assertEquals(new BigDecimal(0), client.getBalance());
+        assertEquals(new BigDecimal("0.0"), client.getBalance());
     }
 
     /* DELETE TESTS */
@@ -164,7 +165,7 @@ public class ClientManagerTest {
     @Test
     @Order(9)
     void ClientManagerUnregisterClientSuccessTest() {
-        ClientManager clientManager = new ClientManager(new ClientRepository());
+        ClientManager clientManager = new ClientManager(new CachedClientRepository());
         clientManager.registerClient(1L, "test", "test", "test", LocalDate.now(), new BigDecimal(0));
         assertTrue(clientManager.unregisterClient(1L));
     }
@@ -172,7 +173,7 @@ public class ClientManagerTest {
     @Test
     @Order(10)
     void ClientManagerUnregisterClientFailureTest() {
-        ClientManager clientManager = new ClientManager(new ClientRepository());
+        ClientManager clientManager = new ClientManager(new CachedClientRepository());
         assertFalse(clientManager.unregisterClient(1L));
     }
 

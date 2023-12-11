@@ -78,12 +78,13 @@ public class CachedClientRepository extends ClientRepository {
     //Delete
     @Override
     public void remove(Long id) throws RepositoryException {
+        super.remove(id);
         try {
             redisRepository.deleteObjectFromCache(id);
         } catch (Exception e) {
             log.warn("Could not delete from cache");
         }
-        super.remove(id);
+
     }
 
 

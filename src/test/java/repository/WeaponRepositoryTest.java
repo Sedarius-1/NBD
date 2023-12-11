@@ -4,9 +4,8 @@ import com.mongodb.client.model.Updates;
 import org.ibd.enums.WeaponTypeEnum;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.factory.WeaponFactory;
-import org.ibd.model.purchases.PurchaseMap;
 import org.ibd.model.weapons.*;
-import org.ibd.repository.PurchaseRepository;
+import org.ibd.redisrepository.decoratedRepositories.CachedWeaponRepository;
 import org.ibd.repository.WeaponRepository;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -20,8 +19,6 @@ import java.util.Objects;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WeaponRepositoryTest {
@@ -31,12 +28,12 @@ public class WeaponRepositoryTest {
     @Order(1)
     void WeaponRepositoryCreateWeaponSuccessTest() {
 
-        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository =new CachedWeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
             map.put("name", "Glock 19");
-            map.put("price", "2500");
+            map.put("price", "2500.0");
             map.put("caliber", "9mm");
             Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, map);
             WeaponMap weaponMap = new WeaponMap();
@@ -53,7 +50,7 @@ public class WeaponRepositoryTest {
             assertEquals(pistol2.getSerialNumber(), 1L);
             assertEquals(pistol2.getManufacturer(), "Glock");
             assertEquals(pistol2.getName(), "Glock 19");
-            assertEquals(pistol2.getPrice(), new BigDecimal(2500));
+            assertEquals(pistol2.getPrice(), new BigDecimal("2500.0"));
             assertEquals(pistol2.getCaliber(), "9mm");
 
             assertDoesNotThrow(() -> weaponRepository.remove(1L));
@@ -68,7 +65,7 @@ public class WeaponRepositoryTest {
     @Order(2)
     void WeaponRepositoryCreateWeaponFailureTest() {
 
-        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository =new CachedWeaponRepository()) {
             assertThrows(RepositoryException.class, () -> weaponRepository.add(null));
         }
     }
@@ -77,7 +74,7 @@ public class WeaponRepositoryTest {
     @Test
     @Order(3)
     void WeaponRepositoryGetWeaponSuccessTest() {
-        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository =new CachedWeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
@@ -96,7 +93,7 @@ public class WeaponRepositoryTest {
     @Test
     @Order(4)
     void WeaponRepositoryGetWeaponFailureTest() {
-        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository =new CachedWeaponRepository()) {
             assertThrows(RepositoryException.class, () -> weaponRepository.get(1L));
         }
 
@@ -105,7 +102,7 @@ public class WeaponRepositoryTest {
     @Test
     @Order(5)
     void WeaponRepositoryGetAllWeaponTest() {
-        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository =new CachedWeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
@@ -160,7 +157,7 @@ public class WeaponRepositoryTest {
     @Test
     @Order(6)
     void WeaponRepositoryFindWeaponTest() {
-        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository =new CachedWeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
@@ -205,26 +202,26 @@ public class WeaponRepositoryTest {
     @Test
     @Order(7)
     void WeaponRepositoryModifyWeaponSuccessTest() {
-        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository =new CachedWeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
             map.put("name", "Glock 19");
-            map.put("price", "2500");
+            map.put("price", "2500.0");
             map.put("caliber", "9mm");
             Pistol pistol = WeaponFactory.manufactureWeapon(WeaponTypeEnum.PISTOL, map);
             WeaponMap weaponMap = new WeaponMap();
             assertNotNull(pistol);
             WeaponMapper.convertWeaponToWeaponMap(weaponMap, pistol);
             assertDoesNotThrow(() -> weaponRepository.add(weaponMap));
-            assertTrue(weaponRepository.updateOne(1L, Updates.set("price", BigDecimal.ONE)));
-            assertDoesNotThrow(() -> assertEquals(weaponRepository.get(1L).getPrice(), BigDecimal.ONE));
+            assertTrue(weaponRepository.updateOne(1L, Updates.set("price", new BigDecimal("1.0"))));
+            assertDoesNotThrow(() -> assertEquals(weaponRepository.get(1L).getPrice(), new BigDecimal("1.0")));
         }
     }
     @Test
     @Order(8)
     void WeaponRepositoryModifyWeaponFailureTest() {
-        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository =new CachedWeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
@@ -246,7 +243,7 @@ public class WeaponRepositoryTest {
     @Order(9)
     void WeaponRepositoryDeleteWeaponSuccessTest() {
 
-        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository =new CachedWeaponRepository()) {
             Map<String, String> map = new HashMap<>();
             map.put("serialNumber", "1");
             map.put("manufacturer", "Glock");
@@ -265,7 +262,7 @@ public class WeaponRepositoryTest {
     @Test
     @Order(10)
     void WeaponRepositoryDeleteWeaponFailureTest() {
-        try (WeaponRepository weaponRepository = new WeaponRepository()) {
+        try (WeaponRepository weaponRepository =new CachedWeaponRepository()) {
             assertThrows(RepositoryException.class, () -> weaponRepository.remove(5L));
         }
     }

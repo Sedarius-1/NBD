@@ -4,6 +4,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
+import org.ibd.redisrepository.decoratedRepositories.CachedClientRepository;
 import org.ibd.repository.ClientRepository;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -26,9 +27,9 @@ public class ClientRepositoryTest {
     @Order(1)
     void ClientRepositoryCreateClientSuccessTest() throws RepositoryException {
 
-        try (ClientRepository clientRepository = new ClientRepository()) {
+        try (ClientRepository clientRepository = new CachedClientRepository()) {
             Client client1 = new Client(1L, "Name", "Surname",
-                    "Address", LocalDate.of(2000, 1, 1), new BigDecimal(0));
+                    "Address", LocalDate.of(2000, 1, 1), new BigDecimal("0.0"));
             clientRepository.add(client1);
 
             Client client2 = clientRepository.get(1L);
@@ -38,7 +39,7 @@ public class ClientRepositoryTest {
             assertEquals(client2.getSurname(), "Surname");
             assertEquals(client2.getAddress(), "Address");
             assertEquals(client2.getBirth(), LocalDate.of(2000, 1, 1));
-            assertEquals(client2.getBalance(), BigDecimal.ZERO);
+            assertEquals(client2.getBalance(), new BigDecimal("0.0"));
 
             clientRepository.remove(1L);
 
@@ -51,7 +52,7 @@ public class ClientRepositoryTest {
     @Order(2)
     void ClientRepositoryCreateClientFailureTest() {
 
-        try (ClientRepository clientRepository = new ClientRepository()) {
+        try (ClientRepository clientRepository = new CachedClientRepository()) {
             assertThrows(RepositoryException.class, () -> clientRepository.add(null));
         }
     }
@@ -60,7 +61,7 @@ public class ClientRepositoryTest {
     @Test
     @Order(3)
     void ClientRepositoryGetClientSuccessTest() {
-        try (ClientRepository clientRepository = new ClientRepository()) {
+        try (ClientRepository clientRepository = new CachedClientRepository()) {
             assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
             assertDoesNotThrow(() -> clientRepository.get(1L));
         }
@@ -69,7 +70,7 @@ public class ClientRepositoryTest {
     @Test
     @Order(4)
     void ClientRepositoryGetClientFailureTest() {
-        try (ClientRepository clientRepository = new ClientRepository()) {
+        try (ClientRepository clientRepository = new CachedClientRepository()) {
             assertThrows(RepositoryException.class, () -> clientRepository.get(1L));
         }
     }
@@ -77,7 +78,7 @@ public class ClientRepositoryTest {
     @Test
     @Order(5)
     void ClientRepositoryGetAllClientTest() {
-        try (ClientRepository clientRepository = new ClientRepository()) {
+        try (ClientRepository clientRepository = new CachedClientRepository()) {
             assertEquals(0, clientRepository.getAll().size());
             assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
             assertDoesNotThrow(() -> clientRepository.add(new Client(2L, "ntest2", "stest2", "atest2", LocalDate.of(2002, 1, 1), new BigDecimal(10))));
@@ -105,7 +106,7 @@ public class ClientRepositoryTest {
     @Test
     @Order(6)
     void ClientRepositoryFindClientTest() {
-        try (ClientRepository clientRepository = new ClientRepository()) {
+        try (ClientRepository clientRepository = new CachedClientRepository()) {
             assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
             assertDoesNotThrow(() -> clientRepository.add(new Client(2L, "ntest2", "stest2", "atest2", LocalDate.of(2002, 1, 1), new BigDecimal(0))));
             ArrayList<Client> clientArrayList = clientRepository.find(Filters.eq("balance", BigDecimal.ZERO));
@@ -141,7 +142,7 @@ public class ClientRepositoryTest {
     @Test
     @Order(7)
     void ClientRepositoryModifyClientSuccessTest() {
-        try (ClientRepository clientRepository = new ClientRepository()) {
+        try (ClientRepository clientRepository = new CachedClientRepository()) {
             Client client1 = new Client(1L, "Name", "Surname",
                     "Address", LocalDate.of(2000, 1, 1), new BigDecimal(0));
             assertDoesNotThrow(() -> clientRepository.add(client1));
@@ -150,7 +151,7 @@ public class ClientRepositoryTest {
             clientRepository.updateOne(1L, Updates.set("surname", "Surname2"));
             clientRepository.updateOne(1L, Updates.set("address", "Address2"));
             clientRepository.updateOne(1L, Updates.set("birth", LocalDate.of(2222, 11, 22)));
-            clientRepository.updateOne(1L, Updates.set("balance", new BigDecimal(2137)));
+            clientRepository.updateOne(1L, Updates.set("balance", new BigDecimal("2137.0")));
 
             Client client2 = assertDoesNotThrow(() -> clientRepository.get(1L));
             assertNotNull(client2);
@@ -159,14 +160,14 @@ public class ClientRepositoryTest {
             assertEquals("Surname2", client2.getSurname());
             assertEquals("Address2", client2.getAddress(), "Address2");
             assertEquals(LocalDate.of(2222, 11, 22), client2.getBirth());
-            assertEquals(new BigDecimal(2137), client2.getBalance());
+            assertEquals(new BigDecimal("2137.0"), client2.getBalance());
         }
     }
 
     @Test
     @Order(8)
     void ClientRepositoryModifyClientFailureTest() {
-        try (ClientRepository clientRepository = new ClientRepository()) {
+        try (ClientRepository clientRepository = new CachedClientRepository()) {
             assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
             assertFalse(clientRepository.updateOne(1L, null));
         }
@@ -176,7 +177,7 @@ public class ClientRepositoryTest {
     @Test
     @Order(9)
     void ClientRepositoryRemoveClientSuccessTest() {
-        try (ClientRepository clientRepository = new ClientRepository()) {
+        try (ClientRepository clientRepository = new CachedClientRepository()) {
             assertDoesNotThrow(() -> clientRepository.add(new Client(1L, "ntest", "stest", "atest", LocalDate.of(2001, 1, 1), new BigDecimal(0))));
             assertDoesNotThrow(() -> clientRepository.remove(1L));
         }
@@ -185,7 +186,7 @@ public class ClientRepositoryTest {
     @Test
     @Order(10)
     void ClientRepositoryRemoveClientFailureTest() {
-        try (ClientRepository clientRepository = new ClientRepository()) {
+        try (ClientRepository clientRepository = new CachedClientRepository()) {
             assertThrows(RepositoryException.class, () -> clientRepository.remove(5L));
         }
     }

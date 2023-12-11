@@ -61,7 +61,7 @@ public class WeaponTest {
 
     @Test
     void HandGrenadeTest() {
-        HandGrenade grenade = new HandGrenade(1L, "Smolinus Inc.", "Ovirt mk 2", new BigDecimal("2135"), 9001, GrenadeType.Fag);
+        HandGrenade grenade = new HandGrenade(1L, "Smolinus Inc.", "Ovirt mk 2", new BigDecimal("2135"), 9001, GrenadeType.Far);
         assertNotNull(grenade);
         assertEquals(grenade.getSerialNumber(), 1L);
         assertEquals(grenade.getType(), "HandGrenade");
@@ -69,7 +69,7 @@ public class WeaponTest {
         assertEquals(grenade.getName(), "Ovirt mk 2");
         assertEquals(grenade.getPrice(), new BigDecimal("2135"));
         assertEquals(grenade.getPower(), 9001);
-        assertEquals(grenade.getGrenadeType(), GrenadeType.Fag);
+        assertEquals(grenade.getGrenadeType(), GrenadeType.Far);
 
         grenade.setManufacturer("a");
         grenade.setName("aa");
