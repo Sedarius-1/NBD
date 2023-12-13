@@ -4,9 +4,6 @@ import org.ibd.exceptions.NotInCacheException;
 import org.ibd.redisrepository.RedisRepositoryImpl;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RedisRepositoryTest {

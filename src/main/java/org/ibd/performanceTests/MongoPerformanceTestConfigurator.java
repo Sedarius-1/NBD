@@ -4,13 +4,11 @@ import lombok.Getter;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.factory.ClientFactory;
 import org.ibd.model.clients.Client;
-import org.ibd.redisrepository.decoratedRepositories.CachedClientRepository;
 import org.ibd.repository.ClientRepository;
 import org.openjdk.jmh.annotations.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 @State(Scope.Thread)

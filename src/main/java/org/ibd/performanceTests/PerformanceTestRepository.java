@@ -1,12 +1,8 @@
 package org.ibd.performanceTests;
 
-import org.ibd.factory.ClientFactory;
 import org.ibd.model.clients.Client;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.infra.Blackhole;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class PerformanceTestRepository {
 
