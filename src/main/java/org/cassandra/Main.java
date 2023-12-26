@@ -4,7 +4,6 @@ import org.cassandra.model.*;
 import org.cassandra.repo.GeneralRepo;
 import org.cassandra.repo.SessionController;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Main {
@@ -37,9 +36,6 @@ public class Main {
 
             clientRepo.insert(client);
 
-            Client selectedClient = clientRepo.select(client.getClientid(),
-                    client.getClass().getSimpleName());
-
             client.setName("Maciek");
             clientRepo.update(client);
 
@@ -52,8 +48,6 @@ public class Main {
 
             weaponRepo.insert(pistol);
             weaponRepo.insert(rifle);
-            Pistol selectedWeapon = (Pistol) weaponRepo.select(pistol.getSerialnumber(),
-                    pistol.getClass().getSimpleName());
 
             pistol.setName("Maciek");
             rifle.setName("arek");

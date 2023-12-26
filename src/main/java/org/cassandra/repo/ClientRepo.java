@@ -2,20 +2,17 @@ package org.cassandra.repo;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
-
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
-import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import org.cassandra.Consts;
-import org.cassandra.Enums;
 import org.cassandra.dao.ClientDao;
 import org.cassandra.model.Client;
 
 public class ClientRepo implements GeneralRepo<Client>{
 
-    private CqlSession currentSession;
-    private ClientDao clientDao;
+    private final CqlSession currentSession;
+    private final ClientDao clientDao;
 
     public ClientRepo(CqlSession currentSession) {
         this.currentSession = currentSession;

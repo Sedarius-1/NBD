@@ -1,12 +1,12 @@
 import org.cassandra.Consts;
 import org.cassandra.Enums;
-import org.cassandra.model.*;
+import org.cassandra.model.Pistol;
+import org.cassandra.model.Rifle;
+import org.cassandra.model.Weapon;
 import org.cassandra.repo.GeneralRepo;
 import org.cassandra.repo.SessionController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 

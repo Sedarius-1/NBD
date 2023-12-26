@@ -4,8 +4,6 @@ import com.datastax.oss.driver.api.mapper.annotations.*;
 import org.cassandra.Consts;
 import org.cassandra.model.Purchase;
 
-import java.util.UUID;
-
 @Dao
 public interface PurchaseDao {
 

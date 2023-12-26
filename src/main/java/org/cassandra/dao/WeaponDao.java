@@ -11,6 +11,7 @@ public interface WeaponDao {
     @Insert
     @StatementAttributes(consistencyLevel = Consts.writeConsistencyLevel)
     void insertPistol(Pistol pistol);
+
     @Insert
     @StatementAttributes(consistencyLevel = Consts.writeConsistencyLevel)
     void insertRifle(Rifle rifle);
@@ -18,6 +19,7 @@ public interface WeaponDao {
     @Select
     @StatementAttributes(consistencyLevel = Consts.readConsistencyLevel)
     Pistol selectPistol(String discriminator, Long entityId);
+
     @Select
     @StatementAttributes(consistencyLevel = Consts.readConsistencyLevel)
     Rifle selectRifle(String discriminator, Long entityId);
@@ -25,6 +27,7 @@ public interface WeaponDao {
     @Delete
     @StatementAttributes(consistencyLevel = Consts.writeConsistencyLevel)
     void deletePistol(Pistol pistol);
+
     @Delete
     @StatementAttributes(consistencyLevel = Consts.writeConsistencyLevel)
     void deleteRifle(Rifle rifle);
@@ -32,6 +35,7 @@ public interface WeaponDao {
     @Update
     @StatementAttributes(consistencyLevel = Consts.writeConsistencyLevel)
     void updatePistol(Pistol pistol);
+
     @Update
     @StatementAttributes(consistencyLevel = Consts.writeConsistencyLevel)
     void updateRifle(Rifle rifle);

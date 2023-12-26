@@ -1,14 +1,10 @@
 package org.cassandra.repo;
 
-import org.cassandra.Enums;
-
-import java.util.UUID;
-
 public interface GeneralRepo<T> {
 
-    public void createTable();
+    void createTable();
 
-    public void insert(T entity);
+    void insert(T entity);
 
     T select(Long entityId,
            String type);

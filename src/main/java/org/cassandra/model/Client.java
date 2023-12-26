@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.cassandra.Consts;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 @Entity(defaultKeyspace = Consts.defaultKeyspace)
 @CqlName(Consts.clientTable)

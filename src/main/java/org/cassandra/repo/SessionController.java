@@ -4,7 +4,6 @@ import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import lombok.Getter;
 import org.cassandra.Consts;
 import org.cassandra.Enums;
 
@@ -12,7 +11,6 @@ import java.net.InetSocketAddress;
 
 public class SessionController implements AutoCloseable {
 
-    @Getter
     private static CqlSession currentSession;
 
     public SessionController() {
@@ -42,7 +40,7 @@ public class SessionController implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         currentSession.close();
     }
 

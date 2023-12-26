@@ -11,8 +11,8 @@ import org.cassandra.model.Purchase;
 
 
 public class PurchaseRepo implements GeneralRepo<Purchase>{
-    private CqlSession currentSession;
-    private PurchaseDao purchaseDao;
+    private final CqlSession currentSession;
+    private final PurchaseDao purchaseDao;
 
     public PurchaseRepo(CqlSession currentSession) {
         this.currentSession = currentSession;

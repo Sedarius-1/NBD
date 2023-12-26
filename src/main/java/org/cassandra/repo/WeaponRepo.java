@@ -6,8 +6,6 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import org.cassandra.Consts;
-import org.cassandra.Enums;
-import org.cassandra.dao.ClientDao;
 import org.cassandra.dao.WeaponDao;
 import org.cassandra.model.Pistol;
 import org.cassandra.model.Rifle;
@@ -15,8 +13,8 @@ import org.cassandra.model.Weapon;
 
 public class WeaponRepo  implements GeneralRepo<Weapon>{
 
-    private CqlSession currentSession;
-    private WeaponDao weaponDao;
+    private final CqlSession currentSession;
+    private final WeaponDao weaponDao;
 
     public WeaponRepo(CqlSession currentSession) {
         this.currentSession = currentSession;

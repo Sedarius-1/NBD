@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.cassandra.Consts;
 
-import java.math.BigDecimal;
-
 @Entity(defaultKeyspace = Consts.defaultKeyspace)
 @CqlName(Consts.purchaseTable)
 @PropertyStrategy(mutable = true,

@@ -4,7 +4,6 @@ import com.datastax.oss.driver.api.mapper.annotations.*;
 import com.datastax.oss.driver.api.mapper.entity.naming.GetterStyle;
 import com.datastax.oss.driver.api.mapper.entity.naming.NamingConvention;
 import com.datastax.oss.driver.api.mapper.entity.naming.SetterStyle;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
