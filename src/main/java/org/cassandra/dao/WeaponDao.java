@@ -20,7 +20,7 @@ public interface WeaponDao {
     Pistol selectPistol(String discriminator, Long entityId);
     @Select
     @StatementAttributes(consistencyLevel = Consts.readConsistencyLevel)
-    Pistol selectRifle(String discriminator, Long entityId);
+    Rifle selectRifle(String discriminator, Long entityId);
 
     @Delete
     @StatementAttributes(consistencyLevel = Consts.writeConsistencyLevel)

@@ -29,12 +29,9 @@ public class SessionController implements AutoCloseable {
                 .withLocalDatacenter( "dc1" )
                 .withAuthCredentials("nbd",
                         "nbdpassword" )
-//                .withKeyspace(Consts.defaultKeyspace)
+                .withKeyspace(Consts.defaultKeyspace)
                 .build();
 
-        // REPLICATION FACTOR = 3
-        // WRITE CONSISTENCY LEVEL = ALL = 3
-        // READ CONSISTENCY LEVEL = ONE = 1
         SimpleStatement keyspace = SchemaBuilder
                 .createKeyspace(CqlIdentifier.fromCql(Consts.defaultKeyspace))
                 .ifNotExists()
@@ -53,9 +50,8 @@ public class SessionController implements AutoCloseable {
 
         return switch (accessType){
             case CLIENT -> new ClientRepo(currentSession);
-//            case WEAPON -> new WeaponRepo(currentSession);
 //            case PURCHASE -> new PurchaseRepo(currentSession);
-            case WEAPON -> null;
+            case WEAPON -> new WeaponRepo(currentSession);
             case PURCHASE -> null;
             case DEFAULT -> null;
         };

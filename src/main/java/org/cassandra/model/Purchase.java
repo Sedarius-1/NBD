@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 @Setter
 public class Purchase {
 
-    @ClusteringColumn
+    @PartitionKey
     private Long purchaseId;
     private Long clientId;
     private Long weaponId;

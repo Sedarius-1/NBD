@@ -31,7 +31,7 @@ public class ClientRepo implements GeneralRepo<Client>{
                 .createTable(CqlIdentifier.fromCql(Consts.clientTable))
                 .ifNotExists()
                 .withPartitionKey(CqlIdentifier
-                        .fromCql("clientId"), DataTypes.BIGINT)
+                        .fromCql("clientid"), DataTypes.BIGINT)
                 .withColumn(CqlIdentifier
                         .fromCql("name"), DataTypes.TEXT)
                 .withColumn(CqlIdentifier
@@ -52,8 +52,8 @@ public class ClientRepo implements GeneralRepo<Client>{
     }
 
     @Override
-    public Client select(Long entityId, Enums.classType type) {
-        return  clientDao.selectClient(entityId);
+    public Client select(Long entityId, String type) {
+        return clientDao.selectClient(entityId);
     }
 
     @Override

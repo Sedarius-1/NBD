@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @PropertyStrategy(mutable = true,
         getterStyle = GetterStyle.JAVABEANS,
         setterStyle = SetterStyle.JAVABEANS)
-@NamingStrategy(convention = NamingConvention.UPPER_CAMEL_CASE)
+@NamingStrategy(convention = NamingConvention.EXACT_CASE)
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,12 +25,12 @@ import java.time.LocalDate;
 public class Client {
 
     @PartitionKey
-    private Long clientId;
+    private Long clientid;
     private String name;
     private String surname;
     private String address;
     private LocalDate birth;
-    private BigDecimal balance;
+    private Long balance;
 
 
 }

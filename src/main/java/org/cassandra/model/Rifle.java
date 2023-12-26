@@ -18,9 +18,8 @@ import org.cassandra.Consts;
 @PropertyStrategy(mutable = true,
         getterStyle = GetterStyle.JAVABEANS,
         setterStyle = SetterStyle.JAVABEANS)
-@NamingStrategy(convention = NamingConvention.UPPER_CAMEL_CASE)
+@NamingStrategy(convention = NamingConvention.EXACT_CASE)
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -28,5 +27,8 @@ public class Rifle extends Weapon{
 
     private Float length;
 
-
+    public Rifle(Long serialnumber, String manufacturer, String name, Long price, String type, Float length) {
+        super(serialnumber, manufacturer, name, price, type);
+        this.length = length;
+    }
 }

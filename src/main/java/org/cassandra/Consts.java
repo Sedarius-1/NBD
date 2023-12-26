@@ -7,6 +7,6 @@ public class Consts {
     public static final String weaponTable = "weapon";
     public static final String purchaseTable = "purchase";
 
-    public static final String writeConsistencyLevel = "ALL";
+    public static final String writeConsistencyLevel = "TWO";
     public static final String readConsistencyLevel = "ONE";
 }

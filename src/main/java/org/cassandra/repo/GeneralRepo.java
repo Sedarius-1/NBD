@@ -11,7 +11,7 @@ public interface GeneralRepo<T> {
     public void insert(T entity);
 
     T select(Long entityId,
-             Enums.classType type);
+           String type);
 
     void delete(T entity);
 

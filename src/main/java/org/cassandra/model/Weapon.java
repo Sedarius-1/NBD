@@ -18,10 +18,10 @@ import java.math.BigDecimal;
 public abstract class Weapon {
 
     @ClusteringColumn
-    private Long serialNumber;
+    private Long serialnumber;
     private String manufacturer;
     private String name;
-    private BigDecimal price;
+    private Long price;
     @PartitionKey
     private String type;
 
