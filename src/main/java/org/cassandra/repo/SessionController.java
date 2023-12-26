@@ -2,9 +2,9 @@ package org.cassandra.repo;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
+import lombok.Getter;
 import org.cassandra.Consts;
 import org.cassandra.Enums;
 
@@ -12,6 +12,7 @@ import java.net.InetSocketAddress;
 
 public class SessionController implements AutoCloseable {
 
+    @Getter
     private static CqlSession currentSession;
 
     public SessionController() {
@@ -19,16 +20,15 @@ public class SessionController implements AutoCloseable {
         initSession();
     }
 
-
     public void initSession() {
 
         currentSession = CqlSession.builder()
-                .addContactPoint( new InetSocketAddress("cassandra1", 9042 ))
-                .addContactPoint( new InetSocketAddress("cassandra2", 9043 ))
-                .addContactPoint( new InetSocketAddress("cassandra3", 9044 ))
-                .withLocalDatacenter( "dc1" )
+                .addContactPoint(new InetSocketAddress("cassandra1", 9042))
+                .addContactPoint(new InetSocketAddress("cassandra2", 9043))
+                .addContactPoint(new InetSocketAddress("cassandra3", 9044))
+                .withLocalDatacenter("dc1")
                 .withAuthCredentials("nbd",
-                        "nbdpassword" )
+                        "nbdpassword")
                 .withKeyspace(Consts.defaultKeyspace)
                 .build();
 
@@ -46,14 +46,17 @@ public class SessionController implements AutoCloseable {
         currentSession.close();
     }
 
-    public GeneralRepo createClassRepository(Enums.accessType accessType){
+    public GeneralRepo createClassRepository(Enums.accessType accessType) {
 
-        return switch (accessType){
+        return switch (accessType) {
             case CLIENT -> new ClientRepo(currentSession);
-//            case PURCHASE -> new PurchaseRepo(currentSession);
             case WEAPON -> new WeaponRepo(currentSession);
-            case PURCHASE -> null;
+            case PURCHASE -> new PurchaseRepo(currentSession);
             case DEFAULT -> null;
         };
+    }
+
+    public CqlSession getCurrentSession(){
+        return currentSession;
     }
 }

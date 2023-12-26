@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @PropertyStrategy(mutable = true,
         getterStyle = GetterStyle.JAVABEANS,
         setterStyle = SetterStyle.JAVABEANS)
-@NamingStrategy(convention = NamingConvention.SNAKE_CASE_INSENSITIVE)
+@NamingStrategy(convention = NamingConvention.EXACT_CASE)
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,8 +26,8 @@ import java.math.BigDecimal;
 public class Purchase {
 
     @PartitionKey
-    private Long purchaseId;
-    private Long clientId;
-    private Long weaponId;
+    private Long purchaseid;
+    private Long clientid;
+    private Long weaponid;
 
 }
