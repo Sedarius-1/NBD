@@ -8,6 +8,8 @@ import org.cassandra.Consts;
 import org.cassandra.Enums;
 
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SessionController implements AutoCloseable {
 
@@ -25,8 +27,8 @@ public class SessionController implements AutoCloseable {
                 .addContactPoint(new InetSocketAddress("cassandra2", 9043))
                 .addContactPoint(new InetSocketAddress("cassandra3", 9044))
                 .withLocalDatacenter("dc1")
-                .withAuthCredentials("nbd",
-                        "nbdpassword")
+                .withAuthCredentials("admin",
+                        "password")
                 .withKeyspace(Consts.defaultKeyspace)
                 .build();
 
@@ -54,7 +56,7 @@ public class SessionController implements AutoCloseable {
         };
     }
 
-    public CqlSession getCurrentSession(){
+    public CqlSession getCurrentSession() {
         return currentSession;
     }
 }

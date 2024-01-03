@@ -18,11 +18,8 @@ services:
       - CASSANDRA_DC=dc1
       - CASSANDRA_PASSWORD_SEEDER=yes
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_USER=nbd
-      - CASSANDRA_PASSWORD=nbdpassword
-    # Not working
-    #      - MAX_HEAP_SIZE=2G
-    #      - HEAP_NEWSIZE=200M
+      - CASSANDRA_USER=admin
+      - CASSANDRA_PASSWORD=password
     healthcheck:
       test: [ "CMD-SHELL", "[ $$(nodetool statusgossip) = running ]" ]
       interval: 30s
@@ -46,11 +43,8 @@ services:
       - CASSANDRA_CLUSTER_NAME=cassandra-cluster-nbd
       - CASSANDRA_PASSWORD_SEEDER=yes
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_USER=nbd
-      - CASSANDRA_PASSWORD=nbdpassword
-    # Not working
-    #      - MAX_HEAP_SIZE=2G
-    #      - HEAP_NEWSIZE=200M
+      - CASSANDRA_USER=admin
+      - CASSANDRA_PASSWORD=password
     healthcheck:
       test: [ "CMD-SHELL", "[ $$(nodetool statusgossip) = running ]" ]
       interval: 30s
@@ -74,31 +68,13 @@ services:
       - CASSANDRA_CLUSTER_NAME=cassandra-cluster-nbd
       - CASSANDRA_PASSWORD_SEEDER=yes
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_USER=nbd
-      - CASSANDRA_PASSWORD=nbdpassword
-    # Not working
-    #      - MAX_HEAP_SIZE=2G
-    #      - HEAP_NEWSIZE=200M
+      - CASSANDRA_USER=admin
+      - CASSANDRA_PASSWORD=password
     healthcheck:
       test: [ "CMD-SHELL", "[ $$(nodetool statusgossip) = running ]" ]
       interval: 30s
       timeout: 20s
       retries: 5
-
-#  cassandrainit:
-#    build: .
-#    image: docker.io/bitnami/cassandra:latest
-#    hostname: cassandrainit
-#    container_name: cassandrainit
-#    networks:
-#      - cassandranet
-#    depends_on:
-#      cassandra_1:
-#        condition: service_healthy
-#      cassandra_2:
-#        condition: service_healthy
-#    command: >
-#      cqlsh --user=cassandra --password=cassandra
 
 volumes:
   cassandra1_data:

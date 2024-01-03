@@ -28,8 +28,8 @@ public class WeaponRepoTest {
     @Test
     public void overallWeaponTest() {
         try (SessionController sessionController = new SessionController()) {
-            sessionController.getCurrentSession().execute("TRUNCATE " + Consts.defaultKeyspace + "." + Consts.weaponTable + ";");
             GeneralRepo<Weapon> testWeaponRepo = sessionController.createClassRepository(Enums.accessType.WEAPON);
+            sessionController.getCurrentSession().execute("TRUNCATE " + Consts.defaultKeyspace + "." + Consts.weaponTable + ";");
 
             assertNull(testWeaponRepo.select(pistolid, pistol.getClass().getSimpleName()));
             assertNull(testWeaponRepo.select(rifleid, rifle.getClass().getSimpleName()));

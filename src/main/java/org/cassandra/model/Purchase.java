@@ -28,4 +28,12 @@ public class Purchase {
     private Long clientid;
     private Long weaponid;
 
+    @Override
+    public String toString() {
+        return "Purchase{" +
+                "purchaseid=" + purchaseid +
+                ", clientid=" + clientid +
+                ", weaponid=" + weaponid +
+                '}';
+    }
 }

@@ -18,8 +18,8 @@ public class WeaponRepo  implements GeneralRepo<Weapon>{
 
     public WeaponRepo(CqlSession currentSession) {
         this.currentSession = currentSession;
-        currentSession.execute("TRUNCATE "+Consts.defaultKeyspace+"."+Consts.weaponTable+";");
         createTable();
+
         GunShopMapper mapper = new GunShopMapperBuilder(currentSession).build();
         this.weaponDao = mapper.getWeaponDao(CqlIdentifier.fromCql(Consts.defaultKeyspace));
 

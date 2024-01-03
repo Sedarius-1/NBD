@@ -16,8 +16,8 @@ public class ClientRepo implements GeneralRepo<Client>{
 
     public ClientRepo(CqlSession currentSession) {
         this.currentSession = currentSession;
-        currentSession.execute("TRUNCATE "+Consts.defaultKeyspace+"."+Consts.clientTable+";");
         createTable();
+
         GunShopMapper mapper = new GunShopMapperBuilder(currentSession).build();
         this.clientDao = mapper.getClientDao(CqlIdentifier.fromCql(Consts.defaultKeyspace));
     }

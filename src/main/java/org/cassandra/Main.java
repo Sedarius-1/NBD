@@ -62,7 +62,6 @@ public class Main {
 
             purchaseRepo.insert(purchase);
             purchase.setWeaponid(rifle.getSerialnumber());
-            purchaseRepo.update(purchase);
             Purchase selectedPurchase = purchaseRepo.select(purchase.getPurchaseid(), purchase.getClass().getSimpleName());
 
             System.out.println(selectedClient2);
