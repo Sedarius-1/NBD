@@ -19,11 +19,11 @@ public class Purchase {
 
     @BsonCreator
     public Purchase(@BsonProperty("purchaseId") Long purchaseId,
-                    @BsonProperty("client") Client client,
-                    @BsonProperty("weapon") Weapon weapon) {
+                    @BsonProperty("client") Long clientId,
+                    @BsonProperty("weapon") Long weaponId) {
         this.purchaseId = purchaseId;
-        this.client = client;
-        this.weapon = weapon;
+        this.clientId = clientId;
+        this.weaponId = weaponId;
     }
 
     @NotNull
@@ -33,12 +33,12 @@ public class Purchase {
 
     @NotNull
     @NotEmpty
-    @BsonProperty("client")
-    private Client client;
+    @BsonProperty("clientId")
+    private Long clientId;
 
     @NotNull
-    @BsonProperty("weapon")
-    private Weapon weapon;
+    @BsonProperty("weaponId")
+    private Long weaponId;
 
 
 }

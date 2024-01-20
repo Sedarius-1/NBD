@@ -30,7 +30,7 @@ public class Client implements Serializable {
                   @BsonProperty("surname") String surname,
                   @BsonProperty("address") String address,
                   @BsonProperty("birth") LocalDate birth,
-                  @BsonProperty("balance") BigDecimal balance) {
+                  @BsonProperty("balance") Float balance) {
         this.clientId = clientId;
         this.name = name;
         this.surname = surname;
@@ -68,7 +68,7 @@ public class Client implements Serializable {
 
     @NotNull
     @BsonProperty("balance")
-    private BigDecimal balance;
+    private Float balance;
 
 
     @Override

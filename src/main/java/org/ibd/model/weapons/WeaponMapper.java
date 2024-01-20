@@ -16,17 +16,6 @@ public class WeaponMapper {
                     weaponMap.getPrice(),
                     weaponMap.getCaliber(),
                     weaponMap.getLength());
-            case ("HandGrenade") -> new HandGrenade(weaponMap.getSerialNumber(),
-                    weaponMap.getManufacturer(),
-                    weaponMap.getName(),
-                    weaponMap.getPrice(),
-                    weaponMap.getPower(),
-                    weaponMap.getGrenadeType());
-            case ("Nuke") -> new RecreationalMcNuke(weaponMap.getSerialNumber(),
-                    weaponMap.getManufacturer(),
-                    weaponMap.getName(),
-                    weaponMap.getPrice(),
-                    weaponMap.getPower());
             default -> null;
         };
     }
@@ -37,16 +26,7 @@ public class WeaponMapper {
         weaponMap.setName(weapon.getName());
         weaponMap.setPrice(weapon.getPrice());
         weaponMap.setType(weapon.getType());
-        if(Objects.equals(weaponMap.getType(), "Nuke")){
-            RecreationalMcNuke nuke = (RecreationalMcNuke) weapon;
-            weaponMap.setPower(nuke.getPower());
-        }
-        if(Objects.equals(weaponMap.getType(), "HandGrenade")){
-            assert weapon instanceof HandGrenade;
-            HandGrenade grenade = (HandGrenade) weapon;
-            weaponMap.setPower(grenade.getPower());
-            weaponMap.setGrenadeType(grenade.getGrenadeType());
-        }
+
         if(Objects.equals(weaponMap.getType(), "Pistol")){
             assert weapon instanceof Pistol;
             Pistol pistol = (Pistol) weapon;

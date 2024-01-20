@@ -7,7 +7,6 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.conversions.Bson;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.purchases.Purchase;
-import org.ibd.model.purchases.PurchaseMap;
 
 import java.util.ArrayList;
 
@@ -15,7 +14,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static org.ibd.repository.BongoConfig.*;
 
 
-public class PurchaseRepository implements Repository<PurchaseMap>, AutoCloseable {
+public class PurchaseRepository implements Repository<Purchase>, AutoCloseable {
 
     private final String purchaseCollectionName = "purchaseCollection";
 
@@ -55,21 +54,21 @@ public class PurchaseRepository implements Repository<PurchaseMap>, AutoCloseabl
 
     //Create
     @Override
-    public void add(PurchaseMap purchaseMap) throws RepositoryException {
+    public void add(Purchase purchase) throws RepositoryException {
         try {
-            MongoCollection<PurchaseMap> testDBItemMongoCollection =
-                    this.database.getCollection(purchaseCollectionName, PurchaseMap.class);
-            testDBItemMongoCollection.insertOne(purchaseMap);
+            MongoCollection<Purchase> testDBItemMongoCollection =
+                    this.database.getCollection(purchaseCollectionName, Purchase.class);
+            testDBItemMongoCollection.insertOne(purchase);
         } catch (Exception ex) {
             throw new RepositoryException(ex.toString());
         }
     }
 
     @Override
-    public final PurchaseMap get(Long id) throws RepositoryException {
+    public final Purchase get(Long id) throws RepositoryException {
         try {
             return this.database
-                    .getCollection(purchaseCollectionName, PurchaseMap.class)
+                    .getCollection(purchaseCollectionName, Purchase.class)
                     .find(eq("purchaseId", id))
                     .into(new ArrayList<>())
                     .getFirst();
@@ -79,17 +78,17 @@ public class PurchaseRepository implements Repository<PurchaseMap>, AutoCloseabl
     }
 
     @Override
-    public ArrayList<PurchaseMap> find(Bson bson) {
+    public ArrayList<Purchase> find(Bson bson) {
         return this.database
-                .getCollection(purchaseCollectionName, PurchaseMap.class)
+                .getCollection(purchaseCollectionName, Purchase.class)
                 .find(bson)
                 .into(new ArrayList<>());
     }
 
     @Override
-    public ArrayList<PurchaseMap> getAll() {
-        MongoCollection<PurchaseMap> testDBItemMongoCollection =
-                this.database.getCollection(purchaseCollectionName, PurchaseMap.class);
+    public ArrayList<Purchase> getAll() {
+        MongoCollection<Purchase> testDBItemMongoCollection =
+                this.database.getCollection(purchaseCollectionName, Purchase.class);
         return testDBItemMongoCollection.find().into(new ArrayList<>());
 
     }
@@ -111,7 +110,7 @@ public class PurchaseRepository implements Repository<PurchaseMap>, AutoCloseabl
     @Override
     public void remove(Long id) throws RepositoryException {
         try {
-            PurchaseMap purchaseMap = get(id);
+            Purchase purchase = get(id);
             database
                     .getCollection(purchaseCollectionName, Purchase.class)
                     .deleteOne(eq("purchaseId", id));

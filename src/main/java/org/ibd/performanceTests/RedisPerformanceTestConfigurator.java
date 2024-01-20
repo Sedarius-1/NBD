@@ -2,7 +2,6 @@ package org.ibd.performanceTests;
 
 import lombok.Getter;
 import org.ibd.exceptions.RepositoryException;
-import org.ibd.factory.ClientFactory;
 import org.ibd.model.clients.Client;
 import org.ibd.redisrepository.decoratedRepositories.CachedClientRepository;
 import org.ibd.repository.ClientRepository;
@@ -21,14 +20,13 @@ public class RedisPerformanceTestConfigurator {
     @Setup(Level.Invocation)
     public void setUp() throws RepositoryException {
 
-        testClient = ClientFactory.createClient(
+        testClient = new Client(
                 1L,
                 "TestName",
                 "TestSurname",
                 "TestAddress",
                 LocalDate.now(),
-                new BigDecimal("200.0")
-        );
+                200.0F);
 
         redisClientRepository = new CachedClientRepository();
 
