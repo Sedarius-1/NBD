@@ -9,6 +9,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.ibd.model.clients.Client;
+import org.ibd.model.purchases.Purchase;
 
 
 import java.time.LocalDate;
@@ -53,6 +54,16 @@ public class KafkaCustomProducer {
         }
     }
 
+    public void produceMessage(Purchase purchase){
+        try {
+            String purchaseString = this.objectMapper.writeValueAsString(purchase);
+            ProducerRecord<String,String> producerRecord = new ProducerRecord<>(KafkaController.topic, purchase.getClientId()+" "+purchase.getWeaponId(), purchaseString);
+            Future<RecordMetadata> sentMessage = this.kafkaProducer.send(producerRecord);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+    }
+
     public void closeProducer() {
         this.kafkaProducer.close();
     }
@@ -60,21 +71,37 @@ public class KafkaCustomProducer {
     public static void main(String[] args) {
             KafkaCustomProducer kafkaCustomProducer = new KafkaCustomProducer();
 
+//        for (int i = 0; i < 100; i++) {
+//            Client client = null;
+//            if(i % 3 == 0)
+//            {
+//                client = new Client((long) i, "Jan", "Zerownik", "Łódź", LocalDate.now(), 1F);
+//            }
+//            else if(i%3==1)
+//            {
+//                client = new Client((long) i, "Johann", "Jedenik", "Piotrków", LocalDate.now(), 2F);
+//            }
+//            else{
+//                client = new Client((long) i, "Jean", "Dwójnik", "Stryków", LocalDate.now(), 3F);
+//            }
+//            System.out.println(client);
+//            kafkaCustomProducer.produceMessage(client);
+//        }
         for (int i = 0; i < 100; i++) {
-            Client client = null;
+            Purchase purchase;
             if(i % 3 == 0)
             {
-                client = new Client((long) i, "Jan", "Zerownik", "Łódź", LocalDate.now(), 1F);
+                purchase = new Purchase(1L,2L,3L);
             }
             else if(i%3==1)
             {
-                client = new Client((long) i, "Johann", "Jedenik", "Piotrków", LocalDate.now(), 2F);
+                purchase = new Purchase(2L,1L,3L);
             }
             else{
-                client = new Client((long) i, "Jean", "Dwójnik", "Stryków", LocalDate.now(), 3F);
+                purchase = new Purchase(3L,2L,1L);
             }
-            System.out.println(client.toString());
-            kafkaCustomProducer.produceMessage(client);
+            System.out.println(purchase);
+            kafkaCustomProducer.produceMessage(purchase);
         }
     }
 }

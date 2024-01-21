@@ -9,6 +9,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.ibd.exceptions.RepositoryException;
 import org.ibd.model.clients.Client;
+import org.ibd.model.purchases.Purchase;
 
 import java.util.Collections;
 import java.util.Properties;
@@ -28,7 +29,7 @@ public class KafkaCustomConsumer {
 
         Properties consumerProperties = new Properties();
         consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG,
-                KafkaConfig.CONSUMER_GROUP);
+                KafkaController.CONSUMER_GROUP);
         consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 "kafka1:9192,kafka2:9292,kafka3:9392");
         consumerProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,
@@ -48,14 +49,27 @@ public class KafkaCustomConsumer {
         ConsumerRecords<String, String> recordsCollection = this.kafkaConsumer.poll(0);
 
 
+//        recordsCollection.forEach(record ->
+//        {
+//            try {
+//                Client newClient = this.objectMapper.readValue(record.value(), Client.class);
+//                System.out.println("Record's partition: "+record.partition());
+//                KafkaController.repository.add(newClient);
+//                System.out.println(record.offset() + " " + KafkaController.repository.get(newClient.getClientId()));
+//                KafkaController.repository.remove(newClient.getClientId());
+//            } catch (JsonProcessingException | RepositoryException e) {
+//                throw new RuntimeException(e);
+//            }
+//            this.kafkaConsumer.commitAsync();
+//        });
         recordsCollection.forEach(record ->
         {
             try {
-                Client newClient = this.objectMapper.readValue(record.value(), Client.class);
+                Purchase newPurchase = this.objectMapper.readValue(record.value(), Purchase.class);
                 System.out.println("Record's partition: "+record.partition());
-                KafkaController.repository.add(newClient);
-                System.out.println(record.offset() + " " + KafkaController.repository.get(newClient.getClientId()));
-                KafkaController.repository.remove(newClient.getClientId());
+                KafkaController.repository.add(newPurchase);
+                System.out.println(record.offset() + " " + KafkaController.repository.get(newPurchase.getPurchaseId()));
+                KafkaController.repository.remove(newPurchase.getPurchaseId());
             } catch (JsonProcessingException | RepositoryException e) {
                 throw new RuntimeException(e);
             }
