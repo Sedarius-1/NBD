@@ -37,11 +37,11 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     command: "--config /etc/mongod.conf --port 27017"
-    healthcheck:
-      test: [ "CMD", "mongosh", "--port", "27017", "--eval", "db.adminCommand('ping')" ]
-      interval: 10s
-      timeout: 2s
-      retries: 5
+#    healthcheck:
+#      test: [ "CMD", "mongosh", "--port", "27017", "--eval", "db.adminCommand('ping')" ]
+#      interval: 10s
+#      timeout: 2s
+#      retries: 5
 
   mongo1:
     build: .
@@ -56,11 +56,11 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     command: "--config /etc/mongod.conf --port 27018"
-    healthcheck:
-      test: [ "CMD", "mongosh", "--port", "27018", "--eval", "db.adminCommand('ping')" ]
-      interval: 10s
-      timeout: 2s
-      retries: 5
+#    healthcheck:
+#      test: [ "CMD", "mongosh", "--port", "27018", "--eval", "db.adminCommand('ping')" ]
+#      interval: 10s
+#      timeout: 2s
+#      retries: 5
 
   mongo2:
     build: .
@@ -75,11 +75,11 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     command: "--config /etc/mongod.conf --port 27019"
-    healthcheck:
-      test: [ "CMD", "mongosh", "--port", "27019","--eval", "db.adminCommand('ping')" ]
-      interval: 10s
-      timeout: 2s
-      retries: 5
+#    healthcheck:
+#      test: [ "CMD", "mongosh", "--port", "27019","--eval", "db.adminCommand('ping')" ]
+#      interval: 10s
+#      timeout: 2s
+#      retries: 5
 
   mongoInit:
     build: .
@@ -88,13 +88,13 @@ services:
     networks:
       - mongonet
     container_name: mongoinit
-    depends_on:
-      mongo0:
-        condition: service_healthy
-      mongo1:
-        condition: service_healthy
-      mongo2:
-        condition: service_healthy
+#    depends_on:
+#      mongo0:
+#        condition: service_healthy
+#      mongo1:
+#        condition: service_healthy
+#      mongo2:
+#        condition: service_healthy
     command: >
       mongosh --host mongo0:27017 --username admin --password password --authenticationDatabase admin --eval
       '
